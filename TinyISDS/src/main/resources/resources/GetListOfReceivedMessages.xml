@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <GetListOfReceivedMessages xmlns="http://isds.czechpoint.cz">
+            <dmFromTime>${DATE_FROM}</dmFromTime>
+            <dmToTime>${DATE_TO}</dmToTime>
+            <dmOffset>${OFFSET}</dmOffset>
+            <dmLimit>${LIMIT}</dmLimit>
+        </GetListOfReceivedMessages>
+    </soap:Body>
+</soap:Envelope>

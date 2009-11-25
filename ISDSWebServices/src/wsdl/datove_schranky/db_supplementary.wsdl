@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--  *********************************************************************
+     WSDL pro doplňkové služby manipulujícími s datovými schránkami 
+     
+                       3.6.2009  verze 2.0 novela
+      *********************************************************************                    
+Seznam služeb: 
+==============
+  GetDataBoxUsers                         
+  GetOwnerInfoFromLogin
+  StoreAccessDataDeliveryInfo
+
+  Změny:  
+     9.02.2009  verze 0.1
+     2.03.2009  verze 0.4   - změna zápisu importu XSD                                 
+    20.03.2009  verze 1.0   - formální úpravy vyhovující WS-I Basic Profile                               
+      3.6.2009  verze 2.0   - novela                          
+************************************************************************ -->
+
+<definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20" 
+                                  xmlns="http://schemas.xmlsoap.org/wsdl/" 
+                                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                                  xmlns:tns="http://isds.czechpoint.cz/v20">
+                                
+  <types>
+    <xs:schema targetNamespace="http://isds.czechpoint.cz/v20">
+      <xs:include schemaLocation="dbTypes.xsd" />
+    </xs:schema>
+  </types>
+  
+  <!-- ******************************************************************* -->
+  <message name="GetDataBoxUsersRequest">
+    <part name="parameter" element="tns:GetDataBoxUsers" />        
+  </message>
+  <message name="GetDataBoxUsersResponse">
+    <part name="parameter" element="tns:GetDataBoxUsersResponse" />        
+  </message>
+
+  <message name="GetOwnerInfoFromLoginRequest">
+    <part name="parameter" element="tns:GetOwnerInfoFromLogin" />        
+  </message>
+  <message name="GetOwnerInfoFromLoginResponse">
+    <part name="parameter" element="tns:GetOwnerInfoFromLoginResponse" />        
+  </message>
+
+  <message name="StoreAccessDataDeliveryInfoRequest">
+    <part name="parameter" element="tns:StoreAccessDataDeliveryInfo" />        
+  </message>
+  <message name="StoreAccessDataDeliveryInfoResponse">
+    <part name="parameter" element="tns:StoreAccessDataDeliveryInfoResponse" />        
+  </message>
+
+  <!-- ******************************************************************* -->
+  <portType name="DataBoxSupplementaryPortType">
+    <operation name="GetDataBoxUsers">
+      <input  message="tns:GetDataBoxUsersRequest"/>
+      <output message="tns:GetDataBoxUsersResponse"/>
+    </operation>
+
+    <operation name="GetOwnerInfoFromLogin"> 
+      <input   message="tns:GetOwnerInfoFromLoginRequest"/>
+      <output  message="tns:GetOwnerInfoFromLoginResponse"/>
+    </operation>
+  
+    <operation name="StoreAccessDataDeliveryInfo">
+      <input  message="tns:StoreAccessDataDeliveryInfoRequest"/>
+      <output message="tns:StoreAccessDataDeliveryInfoResponse"/>
+    </operation>
+  
+  </portType>
+
+  <!-- ******************************************************************* -->
+  <binding name="DataBoxSupplementaryBinding" type="tns:DataBoxSupplementaryPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetDataBoxUsers">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
+    <operation name="GetOwnerInfoFromLogin">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
+    <operation name="StoreAccessDataDeliveryInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
+  </binding>
+
+  <!-- ******************************************************************* -->
+  <service name="DataBoxSupplementary">
+    <port name="DataBoxSupplementaryPortType" binding="tns:DataBoxSupplementaryBinding">
+      <soap:address location="https://www.mojedatovaschranka.cz/DS/DsManage"/>
+    </port>
+  </service>
+
+</definitions>
+

@@ -1,0 +1,517 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--  *********************************************************************
+     WSDL pro služby manipulujícími s datovými schránkami 
+     
+                          23.6.2009   verze 2.2 novela 
+      *********************************************************************                    
+Seznam služeb: 
+==============
+  FindDataBox
+  CheckDataBox
+                           
+  CreateDataBox
+  DeleteDataBox
+  UpdateDataBoxDescr
+  AddDataBoxUser
+  DeleteDataBoxUser
+  UpdateDataBoxUser
+  NewAccessData
+  DisableDataBoxExternally
+  DisableOwnDataBox
+  EnableOwnDataBox
+  SetOpenAddressing
+  ClearOpenAddressing
+  SetEffectiveOVM
+  ClearEffectiveOVM
+  Activate
+  CreateDataBoxPFOInfo
+  SetVault
+  ClearVault
+                          
+ změny:
+   3.2.2009  verze 0.1
+  23.2.2009  verze 0.2   - do CreateDataBoxRequest přidán další part name="dbFormerNames"
+                          - sjednoceny jména parts z dbUser na dbUserInfo   
+  24.2.2009  verze 0.3   - změna namespace                        
+   2.3.2009  verze 0.4   - změna zápisu importu XSD                                 
+  20.3.2009  verze 1.0   - formální úpravy vyhovující WS-I Basic Profile    
+  28.4.2009  verze 1.1   - přidána WS CheckDataBox    
+   3.6.2009  verze 2.0   - novela  
+                         - přidána dvojice služeb [Set|Clear]OpenAddressing                  
+                         - přidána dvojice služeb [Set|Clear]EffectiveOVM
+  11.6.2009  verze 2.1   - přidána WS Activate
+                         - přidána WS CreateDataBoxPFOInfo
+  23.6.2009  verze 2.2   - přidána dvojice služeb [Set|Clear]Vault                     
+ ************************************************************************ -->
+
+<definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
+                                  xmlns="http://schemas.xmlsoap.org/wsdl/" 
+                                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                                  xmlns:tns="http://isds.czechpoint.cz/v20">
+                                
+  <types>
+    <xs:schema targetNamespace="http://isds.czechpoint.cz/v20">
+      <xs:include schemaLocation="dbTypes.xsd" />
+    </xs:schema>
+  </types>
+  
+  <!-- ******************************************************************* -->
+  <message name="FindDataBoxRequest">
+    <part name="parameter" element="tns:FindDataBox" />        
+  </message>
+  <message name="FindDataBoxResponse">
+    <part name="parameter" element="tns:FindDataBoxResponse" />        
+  </message>
+
+  <message name="CheckDataBoxRequest">
+    <part name="parameter" element="tns:CheckDataBox" />        
+  </message>
+  <message name="CheckDataBoxResponse">
+    <part name="parameter" element="tns:CheckDataBoxResponse" />        
+  </message>
+
+  <message name="CreateDataBoxRequest">
+    <part name="parameter" element="tns:CreateDataBox" />        
+  </message>
+  <message name="CreateDataBoxResponse">
+    <part name="parameter" element="tns:CreateDataBoxResponse" />        
+  </message>
+
+  <message name="DeleteDataBoxRequest">
+    <part name="parameter" element="tns:DeleteDataBox" />        
+  </message>
+  <message name="DeleteDataBoxResponse">
+    <part name="parameter" element="tns:DeleteDataBoxResponse" />        
+  </message>
+  
+  <message name="UpdateDataBoxDescrRequest">
+    <part name="parameter" element="tns:UpdateDataBoxDescr" />        
+  </message>
+  <message name="UpdateDataBoxDescrResponse">
+    <part name="parameter" element="tns:UpdateDataBoxDescrResponse" />        
+  </message>
+
+  <message name="AddDataBoxUserRequest">
+    <part name="parameter" element="tns:AddDataBoxUser" />        
+  </message>
+  <message name="AddDataBoxUserResponse">
+    <part name="parameter" element="tns:AddDataBoxUserResponse" />        
+  </message>
+
+  <message name="DeleteDataBoxUserRequest">
+    <part name="parameter" element="tns:DeleteDataBoxUser" />        
+  </message>
+  <message name="DeleteDataBoxUserResponse">
+    <part name="parameter" element="tns:DeleteDataBoxUserResponse" />        
+  </message>
+
+  <message name="UpdateDataBoxUserRequest">
+    <part name="parameter" element="tns:UpdateDataBoxUser" />        
+  </message>
+  <message name="UpdateDataBoxUserResponse">
+    <part name="parameter" element="tns:UpdateDataBoxUserResponse" />        
+  </message>
+
+  <message name="NewAccessDataRequest">
+    <part name="parameter" element="tns:NewAccessData" />        
+  </message>
+  <message name="NewAccessDataResponse">
+    <part name="parameter" element="tns:NewAccessDataResponse" />        
+  </message>
+
+  <message name="DisableDataBoxExternallyRequest">
+    <part name="parameter" element="tns:DisableDataBoxExternally" />        
+  </message>
+  <message name="DisableDataBoxExternallyResponse">
+    <part name="parameter" element="tns:DisableDataBoxExternallyResponse" />        
+  </message>
+
+  <message name="DisableOwnDataBoxRequest">
+    <part name="parameter" element="tns:DisableOwnDataBox" />        
+  </message>
+  <message name="DisableOwnDataBoxResponse">
+    <part name="parameter" element="tns:DisableOwnDataBoxResponse" />        
+  </message>
+
+  <message name="EnableOwnDataBoxRequest">
+    <part name="parameter" element="tns:EnableOwnDataBox" />        
+  </message>
+  <message name="EnableOwnDataBoxResponse">
+    <part name="parameter" element="tns:EnableOwnDataBoxResponse" />        
+  </message>
+
+  <message name="SetOpenAddressingRequest">
+    <part name="parameter" element="tns:SetOpenAddressing" />        
+  </message>
+  <message name="SetOpenAddressingResponse">
+    <part name="parameter" element="tns:SetOpenAddressingResponse" />        
+  </message>
+
+  <message name="ClearOpenAddressingRequest">
+    <part name="parameter" element="tns:ClearOpenAddressing" />        
+  </message>
+  <message name="ClearOpenAddressingResponse">
+    <part name="parameter" element="tns:ClearOpenAddressingResponse" />        
+  </message>
+
+  <message name="SetEffectiveOVMRequest">
+    <part name="parameter" element="tns:SetEffectiveOVM" />        
+  </message>
+  <message name="SetEffectiveOVMResponse">
+    <part name="parameter" element="tns:SetEffectiveOVMResponse" />        
+  </message>
+
+  <message name="ClearEffectiveOVMRequest">
+    <part name="parameter" element="tns:ClearEffectiveOVM" />        
+  </message>
+  <message name="ClearEffectiveOVMResponse">
+    <part name="parameter" element="tns:ClearEffectiveOVMResponse" />        
+  </message>
+
+  <message name="ActivateRequest">
+    <part name="parameter" element="tns:Activate" />        
+  </message>
+  <message name="ActivateResponse">
+    <part name="parameter" element="tns:ActivateResponse" />        
+  </message>
+
+  <message name="CreateDataBoxPFOInfoRequest">
+    <part name="parameter" element="tns:CreateDataBoxPFOInfo" />        
+  </message>
+  <message name="CreateDataBoxPFOInfoResponse">
+    <part name="parameter" element="tns:CreateDataBoxPFOInfoResponse" />        
+  </message>
+
+  <message name="SetVaultRequest">
+    <part name="parameter" element="tns:SetVault" />        
+  </message>
+  <message name="SetVaultResponse">
+    <part name="parameter" element="tns:SetVaultResponse" />        
+  </message>
+
+  <message name="ClearVaultRequest">
+    <part name="parameter" element="tns:ClearVault" />        
+  </message>
+  <message name="ClearVaultResponse">
+    <part name="parameter" element="tns:ClearVaultResponse" />        
+  </message>
+
+  <!-- ******************************************************************* -->
+  <portType name="DataBoxManipulationPortType">
+    <operation name="FindDataBox">
+      <input  message="tns:FindDataBoxRequest"/>
+      <output message="tns:FindDataBoxResponse"/>
+    </operation>
+
+    <operation name="CheckDataBox">
+      <input  message="tns:CheckDataBoxRequest"/>
+      <output message="tns:CheckDataBoxResponse"/>
+    </operation>
+  
+    <operation name="CreateDataBox">
+      <input  message="tns:CreateDataBoxRequest"/>
+      <output message="tns:CreateDataBoxResponse"/>
+    </operation>
+  
+    <operation name="DeleteDataBox">
+      <input  message="tns:DeleteDataBoxRequest"/>
+      <output message="tns:DeleteDataBoxResponse"/>
+    </operation>
+  
+    <operation name="UpdateDataBoxDescr">
+      <input  message="tns:UpdateDataBoxDescrRequest"/>
+      <output message="tns:UpdateDataBoxDescrResponse"/>
+    </operation>
+  
+    <operation name="AddDataBoxUser">
+      <input  message="tns:AddDataBoxUserRequest"/>
+      <output message="tns:AddDataBoxUserResponse"/>
+    </operation>
+  
+    <operation name="DeleteDataBoxUser">
+      <input  message="tns:DeleteDataBoxUserRequest"/>
+      <output message="tns:DeleteDataBoxUserResponse"/>
+    </operation>
+
+    <operation name="UpdateDataBoxUser">
+      <input  message="tns:UpdateDataBoxUserRequest"/>
+      <output message="tns:UpdateDataBoxUserResponse"/>
+    </operation>
+
+    <operation name="NewAccessData">
+      <input  message="tns:NewAccessDataRequest"/>
+      <output message="tns:NewAccessDataResponse"/>
+    </operation>
+
+    <operation name="DisableDataBoxExternally">
+      <input  message="tns:DisableDataBoxExternallyRequest"/>
+      <output message="tns:DisableDataBoxExternallyResponse"/>
+    </operation>
+
+    <operation name="DisableOwnDataBox">
+      <input  message="tns:DisableOwnDataBoxRequest"/>
+      <output message="tns:DisableOwnDataBoxResponse"/>
+    </operation>
+
+    <operation name="EnableOwnDataBox">
+      <input  message="tns:EnableOwnDataBoxRequest"/>
+      <output message="tns:EnableOwnDataBoxResponse"/>
+    </operation>
+
+    <operation name="SetOpenAddressing">
+      <input  message="tns:SetOpenAddressingRequest"/>
+      <output message="tns:SetOpenAddressingResponse"/>
+    </operation>
+
+    <operation name="ClearOpenAddressing">
+      <input  message="tns:ClearOpenAddressingRequest"/>
+      <output message="tns:ClearOpenAddressingResponse"/>
+    </operation>
+
+    <operation name="SetEffectiveOVM">
+      <input  message="tns:SetEffectiveOVMRequest"/>
+      <output message="tns:SetEffectiveOVMResponse"/>
+    </operation>
+
+    <operation name="ClearEffectiveOVM">
+      <input  message="tns:ClearEffectiveOVMRequest"/>
+      <output message="tns:ClearEffectiveOVMResponse"/>
+    </operation>
+
+    <operation name="Activate">
+      <input  message="tns:ActivateRequest"/>
+      <output message="tns:ActivateResponse"/>
+    </operation>
+
+    <operation name="CreateDataBoxPFOInfo">
+      <input  message="tns:CreateDataBoxPFOInfoRequest"/>
+      <output message="tns:CreateDataBoxPFOInfoResponse"/>
+    </operation>
+
+    <operation name="SetVault">
+      <input  message="tns:SetVaultRequest"/>
+      <output message="tns:SetVaultResponse"/>
+    </operation>
+
+    <operation name="ClearVault">
+      <input  message="tns:ClearVaultRequest"/>
+      <output message="tns:ClearVaultResponse"/>
+    </operation>
+
+  </portType>
+
+  <!-- ******************************************************************* -->
+  <binding name="DataBoxManipulationBinding" type="tns:DataBoxManipulationPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="FindDataBox">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="CheckDataBox">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="CreateDataBox">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="DeleteDataBox">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="UpdateDataBoxDescr">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="AddDataBoxUser">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="DeleteDataBoxUser">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="UpdateDataBoxUser">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="NewAccessData">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="DisableDataBoxExternally">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="DisableOwnDataBox">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="EnableOwnDataBox">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+ 
+    <operation name="SetOpenAddressing">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="ClearOpenAddressing">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="SetEffectiveOVM">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="ClearEffectiveOVM">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="Activate">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="CreateDataBoxPFOInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="SetVault">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="ClearVault">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+  </binding>
+
+  <!-- ******************************************************************* -->
+  <service name="DataBoxManipulation">
+    <port name="DataBoxManipulationPortType" binding="tns:DataBoxManipulationBinding">
+      <soap:address location="https://www.mojedatovaschranka.cz/DS/DsManage"/>
+    </port>
+  </service>
+
+</definitions>
+
