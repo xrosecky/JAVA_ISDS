@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
      
-                          3.6.2009   verze 2.0 novela 
+                          verze 2.5 
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -12,7 +12,8 @@ Seznam služeb:
  změny:
   25.4.2009  verze 0.9
   28.4.2009  verze 1.0    
-   3.6.2009  verze 2.0  - novela                         
+   3.6.2009  verze 2.0 - novela   
+  1.10.2009  verze 2.5                      
  ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 

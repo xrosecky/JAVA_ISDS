@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro doplňkové služby manipulujícími s datovými schránkami 
      
-                       3.6.2009  verze 2.0 novela
+                       verze 2.5
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -12,9 +12,10 @@ Seznam služeb:
 
   Změny:  
      9.02.2009  verze 0.1
-     2.03.2009  verze 0.4   - změna zápisu importu XSD                                 
-    20.03.2009  verze 1.0   - formální úpravy vyhovující WS-I Basic Profile                               
-      3.6.2009  verze 2.0   - novela                          
+     2.03.2009  verze 0.4 - změna zápisu importu XSD                                 
+    20.03.2009  verze 1.0 - formální úpravy vyhovující WS-I Basic Profile                               
+      3.6.2009  verze 2.0 - novela     
+     1.10.2009  verze 2.5 - komerční provoz                     
 ************************************************************************ -->
 
 <definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20" 

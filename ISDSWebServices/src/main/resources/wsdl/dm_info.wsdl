@@ -10,13 +10,14 @@
         7. Stažení seznamů přijatých datových zpráv - GetListOfReceivedMessages
         
               
-                         3.6.2009   verze 2.0 novela 
+                          verze 2.5  
 
    Změny:  
      4.2.2009 verze 0.1
     20.3.2009 verze 1.0   - formální úpravy vyhovující WS-I Basic Profile   
      8.4.2009 verze 1.2   - změna názvů WSDL, rozložení operací mezi WSDL
      3.6.2009 verze 2.0   - novela                               
+    1.10.2009 verze 2.5   -  
 ************************************************************************ -->
 
 <definitions name="ISDS_dmMessCreate" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -81,7 +82,7 @@
   <message name="ListOfReceivedMessagesResponse">
     <part name="parameter" element="tns:GetListOfReceivedMessagesResponse" />        
   </message>
-  
+
 <!-- ******************************************************************* -->
   <portType name="dmInfoPortType">
 
@@ -120,7 +121,7 @@
       <output message="tns:ListOfReceivedMessagesResponse"/>
     </operation>
 
-  </portType>
+ </portType>
 
   <!-- ******************************************************************* -->
  <binding name="dmInfoBinding" type="tns:dmInfoPortType">
