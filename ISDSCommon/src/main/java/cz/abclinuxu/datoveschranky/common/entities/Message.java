@@ -11,14 +11,17 @@ import java.util.List;
  */
 public class Message {
 
-    protected MessageEnvelope envelope;
-    protected TimeStamp timeStamp;
-    protected Hash hash;
-    protected List<Attachment> attachments;
+    protected MessageEnvelope envelope = null;
+    protected TimeStamp timeStamp = null;
+    protected Hash hash = null;
+    protected List<Attachment> attachments = null;
 
     public Message() {
-        envelope = new MessageEnvelope();
-        attachments = new ArrayList<Attachment>();
+    }
+    
+    public Message(MessageEnvelope env, List<Attachment> attachs) {
+        this.envelope = env;
+        this.attachments = attachs;
     }
     
     public Message(MessageEnvelope envelope, TimeStamp ts, Hash hs, List<Attachment> attachments) {

@@ -7,13 +7,16 @@ import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.TimeStamp;
+import cz.abclinuxu.datoveschranky.common.entities.content.Content;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
+import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage.DmDm;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +29,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 import org.xml.sax.Attributes;
@@ -81,7 +85,13 @@ public class MessageValidator {
      * @throws DataBoxException při neúspěšné validaci
      * 
      */
-    public Message validateAndBuildMessage(byte[] asPCKS7, AttachmentStorer storer) throws DataBoxException {
+    public Message validateAndCreateMessage(Content content, AttachmentStorer storer) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        Utils.copy(content.getInputStream(), bos);
+        return this.validateAndCreateMessage(bos.toByteArray(), storer);
+    }
+    
+    Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer) throws DataBoxException {
         byte[] asXML = validator.readPKCS7(asPCKS7);
         MarshallerResult result = null;
         try {
@@ -153,8 +163,14 @@ public class MessageValidator {
         DmDm mess = message.getDmDm();
         result.setMessageID(mess.getDmID());
         result.setAnnotation(mess.getDmAnnotation());
-        result.setAcceptanceTime(message.getDmAcceptanceTime().toGregorianCalendar());
-        result.setDeliveryTime(message.getDmDeliveryTime().toGregorianCalendar());
+        XMLGregorianCalendar accepted = message.getDmAcceptanceTime();
+        if (accepted != null) {
+            result.setAcceptanceTime(accepted.toGregorianCalendar());
+        }
+        XMLGregorianCalendar delivered = message.getDmAcceptanceTime();
+        if (delivered != null) {
+            result.setDeliveryTime(delivered.toGregorianCalendar());
+        }
         result.setType(MessageType.CREATED);
         String senderID = mess.getDbIDSender();
         String senderIdentity = mess.getDmSender();

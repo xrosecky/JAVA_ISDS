@@ -53,41 +53,46 @@
             <id>db</id>
             <configuration>
               <phase>generate-sources</phase>
-              <staleFile>${project.build.directory}/jaxws/stale/wsdl.db_supplementary.done</staleFile>
-              <!--<packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>-->
+              <staleFile>${project.build.directory}/jaxws/stale/wsdl.db.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
-              <!--
-              <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-              <wsdlLocation>http://anna.fi.muni.cz/~xrosecky/DS/</wsdlLocation>
-              -->
+              <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
               <wsdlFiles>
-                 <wsdlFile>datove_schranky/db_manipulations.wsdl</wsdlFile>
-                 <wsdlFile>datove_schranky/db_search.wsdl</wsdlFile>
-                 <wsdlFile>datove_schranky/db_supplementary.wsdl</wsdlFile>
+                <wsdlFile>db_manipulations.wsdl</wsdlFile>
+                <wsdlFile>db_search.wsdl</wsdlFile>
+                <wsdlFile>db_supplementary.wsdl</wsdlFile>
               </wsdlFiles>
+              <!--
+              <wsdlUrls>
+                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_manipulations.wsdl</wsdlUrl>
+                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_search.wsdl</wsdlUrl>
+                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_supplementary.wsdl</wsdlUrl>
+              </wsdlUrls>
+              -->
             </configuration>
             <goals>
               <goal>wsimport</goal>
             </goals>
           </execution>
-          
-          
+
           <execution>
             <id>dm</id>
             <configuration>
               <phase>generate-sources</phase>
-              <staleFile>${project.build.directory}/jaxws/stale/dm_operations.done</staleFile>
+              <staleFile>${project.build.directory}/jaxws/stale/wsdl.dm.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
+              <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+              <wsdlFiles> 
+                <wsdlFile>dm_info.wsdl</wsdlFile>
+                <wsdlFile>dm_operations.wsdl</wsdlFile>
+              </wsdlFiles> 
               <!--
-              <wsdlDirectory>src/main/wsdl</wsdlDirectory>
-              <wsdlLocation>http://anna.fi.muni.cz/~xrosecky/DS/</wsdlLocation>
+              <wsdlUrls> 
+                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/dm_info.wsdl</wsdlUrl>
+                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/dm_operations.wsdl</wsdlUrl>
+              </wsdlUrls>
               -->
-              <wsdlFiles>
-                <wsdlFile>datove_zpravy/dm_info.wsdl</wsdlFile>
-                <wsdlFile>datove_zpravy/dm_operations.wsdl</wsdlFile>
-              </wsdlFiles>
             </configuration>
             <goals>
               <goal>wsimport</goal>
@@ -95,9 +100,10 @@
           </execution>
           
         </executions>
-    </plugin>
+        
+      </plugin>
 
-      </plugins>
-   </build>
-  
+    </plugins>
+    
+  </build>
 </project>

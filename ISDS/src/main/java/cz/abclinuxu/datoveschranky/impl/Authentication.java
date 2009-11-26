@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -93,10 +94,13 @@ public class Authentication {
 
     protected void loginImpl(String userName, String password) {
         try {
-            this.socketFactory = Utils.createSSLSocketFactory();
+            // KeyStore keyStore = Utils.createTrustStore();
+            // Collection<X509Certificate> certs = Utils.readX509Certificates();
+            KeyStore keyStore = config.getKeyStore();
+            this.socketFactory = Utils.createSSLSocketFactory(keyStore);
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(config.getServiceURL() + "df");
-            httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme("https", new org.apache.http.conn.ssl.SSLSocketFactory(Utils.createTrustStore()), 443));
+            httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme("https", new org.apache.http.conn.ssl.SSLSocketFactory(config.getKeyStore()), 443));
             httpClient.getCredentialsProvider().setCredentials(new AuthScope(config.getLoginScope(), 443), new UsernamePasswordCredentials(userName, password));
             httpClient.setRedirectHandler(new MyRedirectHandler());
             HttpResponse result = httpClient.execute(post);

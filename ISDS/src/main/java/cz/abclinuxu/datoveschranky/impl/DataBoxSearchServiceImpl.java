@@ -9,6 +9,7 @@ import cz.abclinuxu.datoveschranky.ws.db.TDbOwnersArray;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 import cz.abclinuxu.datoveschranky.ws.db.TDbType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.ws.Holder;
 
@@ -19,6 +20,10 @@ import javax.xml.ws.Holder;
 public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 
     protected static final int MIN_PREFIX_LENGHT = 3;
+    protected final static String OK = "0000";
+    protected final static String SEARCH_LIMIT_REACHED = "0003";
+    protected final static String NOTHING_FOUND = "0002";
+    List<String> searchOKCodes = Arrays.asList(OK, SEARCH_LIMIT_REACHED, NOTHING_FOUND);
     
     protected DataBoxManipulationPortType service;
 
@@ -54,7 +59,9 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
         service.findDataBox(ownerInfo, owners, status);
-        ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
+        if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
+            ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
+        }
         List<DataBox> result = new ArrayList<DataBox>();
         for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
             result.add(create(owner));

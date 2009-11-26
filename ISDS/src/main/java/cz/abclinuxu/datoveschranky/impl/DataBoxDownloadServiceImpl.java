@@ -9,6 +9,7 @@ import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
+import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput.DmReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
             throw new DataBoxException("Mohu stahnout pouze prijatou zpravu.");
         }
         Holder<TStatus> status = new Holder<TStatus>();
-        Holder<TReturnedMessage> hMessage = new Holder<TReturnedMessage>();
+        Holder<DmReturnedMessage> hMessage = new Holder<DmReturnedMessage>();
         dmOp.messageDownload(envelope.getMessageID(), hMessage, status);
         ErrorHandling.throwIfError("Nemohu stahnout prijatou zpravu.", status.value);
         TReturnedMessage message = hMessage.value;
@@ -45,8 +46,15 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
             attachment.setMetaType(file.getDmFileMetaType());
             attachment.setMimeType(file.getDmMimeType());
             try {
-                OutputStream os = storer.store(envelope, attachment);
-                os.write(file.getDmEncodedContent());
+                OutputStream os = null;
+                try {
+                    os = storer.store(envelope, attachment);
+                    os.write(file.getDmEncodedContent());
+                } finally {
+                    if (os != null) {
+                        os.close();
+                    }
+                }
             } catch (IOException ioe) {
                 throw new DataBoxException("Nelze zapisovat do vystupniho proudu", ioe);
             }
@@ -56,7 +64,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
         result.setTimestamp(null/*message.getDmQTimestamp()*/);
         return result;
     }
-    
+
     public void downloadSignedMessage(MessageEnvelope env, OutputStream os) {
         String id = env.getMessageID();
         Holder<byte[]> messageAsPKCS7 = new Holder<byte[]>();

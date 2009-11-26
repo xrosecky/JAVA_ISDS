@@ -5,15 +5,32 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import java.util.List;
 
 /**
- *
- * @author xrosecky
+ * Třída pro vyhledávání datových schránek a ověřování jejich stavu.
+ * 
+ * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
 public interface DataBoxSearchService {
 
-    DataBoxState checkDataBox(DataBox db);
+    /*
+     * Vráti stav schránky.
+     * 
+     * @param db  datová schránka
+     */
+    public DataBoxState checkDataBox(DataBox db);
 
-    DataBox findDataBoxByID(String id);
+    /*
+     * Vrátí datovou schránku s daným id pokud existuje, v opačném případě 
+     * vrátí null
+     * 
+     * @param id  ID datové schránky
+     */
+    public DataBox findDataBoxByID(String id);
 
-    List<DataBox> findOVMsByName(String prefix);
+    /*
+     * Vrátí seznam datových schránek OVM, jejichž jméno začína na prefix.
+     * 
+     * @param prefix  prefix jména OVM
+     */
+    public List<DataBox> findOVMsByName(String prefix);
 
 }

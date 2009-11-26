@@ -31,24 +31,20 @@ import org.junit.Test;
  *
  * @author user
  */
-public class BasicTest {
+public class MessageDownloadTest {
 
-    private static final String loginName = "5s59sd";
-    private static final String password = "Ab123456";
-    private static Config config = null;
     private static DataBoxServices services = null;
     private static DataBoxMessagesService messagesService = null;
     private static DataBoxDownloadService downloader = null;
     private static GregorianCalendar begin = null;
     private static GregorianCalendar end = null;
 
-    public BasicTest() {
+    public MessageDownloadTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        config = new Config(Config.TEST_URL);
-        services = DataBoxManager.login(config, loginName, password);
+        services = TestHelper.connect();
         messagesService = services.getDataBoxMessagesService();
         downloader = services.getDataBoxDownloadService();
         begin = new GregorianCalendar();
@@ -67,34 +63,6 @@ public class BasicTest {
 
     @After
     public void tearDown() {
-    }
-
-    @Test
-    public void testSendMessage() throws Exception {
-        DataBoxUploadService uploadService = services.getDataBoxUploadService();
-        for (String recipientID : Arrays.asList("p36ab6k", "vqbab52", "hjyaavk")) {
-            MessageEnvelope env = new MessageEnvelope();
-            env.setRecipient(new DataBox(recipientID));
-            env.setAnnotation("Óda_na_příliš_žluťoučkého_koně");
-            List<Attachment> attachments = new ArrayList<Attachment>();
-            // prvni priloha
-            Attachment attach1 = new Attachment();
-            attach1.setDescription("ahoj.txt");
-            attach1.setMetaType("main");
-            attach1.setMimeType("txt");
-            attach1.setContents(new ByteContent("Vanoce jsou svatky klidu".getBytes("UTF-8")));
-            attachments.add(attach1);
-            // druha priloha
-            Attachment attach2 = new Attachment();
-            attach2.setDescription("Óda_na_příliš_žluťoučkého_koně.txt");
-            attach2.setMetaType("enclosure");
-            attach2.setMimeType("txt");
-            attach2.setContents(new ByteContent("Příliš žluťoučký kůň úpěl ďábelské ódy.".getBytes("UTF-8")));
-            attachments.add(attach2);
-            // a ted ji poslem
-            Message message = new Message(env, null, null, attachments);
-            uploadService.sendMessage(message);
-        }
     }
 
     @Test
@@ -129,13 +97,22 @@ public class BasicTest {
 
     @Test
     public void testIntegrityOfReceivedMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, 0, 15);
-        for (MessageEnvelope mess : messages) {
-            testIntegrity(mess);
+        List<MessageEnvelope> envelopes = messagesService.getListOfReceivedMessages(begin, end, 0, 15);
+        for (MessageEnvelope env : envelopes) {
+            Message mess1 = testIntegrity(env);
+            Message mess2 = downloader.downloadMessage(env, new ByteArrayAttachmentStorer());
+            List<Attachment> list1 = mess1.getAttachments();
+            List<Attachment> list2 = mess2.getAttachments();
+            Assert.assertEquals(list1.size(), list2.size());
+            for (int i = 0; i!=list1.size(); i++) {
+                byte[] bytes1 = ((ByteContent)list1.get(i).getContent()).getBytes();
+                byte[] bytes2 = ((ByteContent)list2.get(i).getContent()).getBytes();
+                Assert.assertTrue(Arrays.equals(bytes1, bytes2));
+            }
         }
     }
 
-    private void testIntegrity(MessageEnvelope envelope) throws Exception {
+    private Message testIntegrity(MessageEnvelope envelope) throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             downloader.downloadSignedMessage(envelope, os);
@@ -143,6 +120,8 @@ public class BasicTest {
             os.close();
         }
         MessageValidator validator = new MessageValidator();
-        Message mess = validator.validateAndBuildMessage(os.toByteArray(), new ByteArrayAttachmentStorer());
+        ByteContent content = new ByteContent(os.toByteArray());
+        Message mess = validator.validateAndCreateMessage(content, new ByteArrayAttachmentStorer());
+        return mess;
     }
 }

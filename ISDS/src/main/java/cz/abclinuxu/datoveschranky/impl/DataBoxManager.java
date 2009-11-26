@@ -6,13 +6,13 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
+import cz.abclinuxu.datoveschranky.ws.ServiceBuilder;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulation;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoWebService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsWebService;
-
 
 /**
  *
@@ -38,7 +38,8 @@ public class DataBoxManager implements DataBoxServices {
 
     public DataBoxDownloadService getDataBoxDownloadService() {
         if (dataBoxDownloadService == null) {
-            DmOperationsPortType dataMessageOperationsService = auth.createService(new DmOperationsWebService(),
+            DmOperationsPortType dataMessageOperationsService = auth.createService(
+                    ServiceBuilder.createDmOperationsWebService(),
                     DmOperationsPortType.class, "dz");
             dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService);
         }
@@ -47,7 +48,8 @@ public class DataBoxManager implements DataBoxServices {
 
     public DataBoxMessagesService getDataBoxMessagesService() {
         if (dataBoxMessagesService == null) {
-            DmInfoPortType dataMessageInfo = auth.createService(new DmInfoWebService(),
+            DmInfoPortType dataMessageInfo = auth.createService(
+                    ServiceBuilder.createDmInfoWebService(),
                     DmInfoPortType.class, "dx");
             dataBoxMessagesService = new DataBoxMessagesServiceImpl(dataMessageInfo);
         }
@@ -56,7 +58,8 @@ public class DataBoxManager implements DataBoxServices {
 
     public DataBoxUploadService getDataBoxUploadService() {
         if (dataBoxUploadService == null) {
-            DmOperationsPortType dataMessageOperationsService = auth.createService(new DmOperationsWebService(),
+            DmOperationsPortType dataMessageOperationsService = auth.createService(
+                    ServiceBuilder.createDmOperationsWebService(),
                     DmOperationsPortType.class, "dz");
             dataBoxUploadService = new DataBoxUploadServiceImpl(dataMessageOperationsService);
         }
@@ -65,7 +68,8 @@ public class DataBoxManager implements DataBoxServices {
 
     public DataBoxSearchService getDataBoxSearchService() {
         if (dataBoxFindingService == null) {
-            DataBoxManipulationPortType service = auth.createService(new DataBoxManipulation(),
+            DataBoxManipulationPortType service = auth.createService(
+                    ServiceBuilder.createDataBoxManipulation(),
                     DataBoxManipulationPortType.class, "df");
             dataBoxFindingService = new DataBoxSearchServiceImpl(service);
         }

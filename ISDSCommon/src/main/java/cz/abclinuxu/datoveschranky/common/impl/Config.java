@@ -1,9 +1,7 @@
 package cz.abclinuxu.datoveschranky.common.impl;
 
 import java.io.Serializable;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.security.KeyStore;;
 
 /**
  *
@@ -23,30 +21,31 @@ public class Config implements Serializable {
     public static final String DEFAULT = TEST_URL;
     
     private final String url;
-    private final Collection<X509Certificate> certificates;
+    private final KeyStore keyStore;
     
     public Config(String servURL) {
         this.url = servURL;
-        this.certificates = new ArrayList<X509Certificate>();
+        this.keyStore = Utils.createTrustStore();
     }
 
-    public Config(String url, Collection<X509Certificate> certificates) {
+    public Config(String url, KeyStore keys) {
         this.url = url;
-        this.certificates = certificates;
+        this.keyStore = keys;
     }
     
     
     public String getServiceURL() {
         return "https://www."+url+"/DS/";
-        // return serviceURL;
     }
     
     public String getLoginScope() {
         return "login." + url;
     }
 
-    public Collection<X509Certificate> getCertificates() {
-        return certificates;
+    public KeyStore getKeyStore() {
+        return keyStore;
     }
+
+    
     
 }

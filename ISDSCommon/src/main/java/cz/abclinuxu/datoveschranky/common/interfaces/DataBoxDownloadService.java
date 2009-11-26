@@ -13,7 +13,7 @@ import java.io.OutputStream;
 public interface DataBoxDownloadService {
 
     /*
-     * Stáhne celou zprávu (i s přílohami) k dané obálce
+     * Stáhne celou přijatou zprávu (i s přílohami) k dané obálce.
      * 
      * @param envelope  obálka zprávy, ke které má stáhnout přílohy
      * @param storer    určuje, jak se mají zprávy ukládat

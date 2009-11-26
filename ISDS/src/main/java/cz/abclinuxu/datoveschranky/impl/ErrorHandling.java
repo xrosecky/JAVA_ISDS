@@ -12,7 +12,6 @@ import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 public class ErrorHandling {
 
     private final static String OK = "0000";
-    private final static String SEARCH_LIMIT_REACHED = "0003";
     
     public static void throwIfError(String message, TStatus tstatus) {
         if (!OK.equals(tstatus.getDmStatusCode())) {
@@ -22,8 +21,7 @@ public class ErrorHandling {
     }
     
     public static void throwIfError(String message, TDbReqStatus reqStatus) {
-        if (!(OK.equals(reqStatus.getDbStatusCode()) ||
-                SEARCH_LIMIT_REACHED.equals(reqStatus.getDbStatusCode()))) {
+        if (!(OK.equals(reqStatus.getDbStatusCode()))) {
             Status status = new Status(reqStatus.getDbStatusCode(), reqStatus.getDbStatusMessage());
             throw new DataBoxException(message, status);
         }

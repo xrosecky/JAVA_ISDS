@@ -180,7 +180,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         Base64 base64 = new Base64(0, null, false);
         // základní HTTP autorizace
         authorization = "Basic " + new String(base64.encode(userPassword.getBytes()), "UTF-8");
-        this.socketFactory = Utils.createSSLSocketFactory();
+        this.socketFactory = Utils.createSSLSocketFactory(config.getKeyStore());
         List<String> allCookies = new ArrayList<String>();
         HashSet<String> allUrls = new HashSet<String>();
         HttpsURLConnection con = null;

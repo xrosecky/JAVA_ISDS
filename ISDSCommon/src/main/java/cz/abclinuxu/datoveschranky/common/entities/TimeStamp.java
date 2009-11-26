@@ -5,6 +5,8 @@ import java.util.Date;
 
 /**
  *
+ * Časové razítko zprávy
+ * 
  * @author xrosecky
  */
 public class TimeStamp {
