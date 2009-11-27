@@ -119,7 +119,7 @@ public class MessageDownloadTest {
         } finally {
             os.close();
         }
-        MessageValidator validator = new MessageValidator();
+        MessageValidator validator = new MessageValidator(TestHelper.config);
         ByteContent content = new ByteContent(os.toByteArray());
         Message mess = validator.validateAndCreateMessage(content, new ByteArrayAttachmentStorer());
         return mess;

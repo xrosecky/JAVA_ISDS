@@ -18,6 +18,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSSignedData;
@@ -50,6 +52,7 @@ public class Validator {
     }
     private Collection<X509Certificate> certs = null;
     private boolean isValidating = false;
+    private Logger logger = Logger.getLogger(Validator.class.getCanonicalName());
 
     public Validator(Collection<X509Certificate> certs, boolean validating) {
         this.certs = certs;
@@ -160,6 +163,8 @@ public class Validator {
                 return cert;
             }
         }
+        logger.log(Level.INFO, String.format("Nemohu najit certifikat, vydavatel je %s "
+                +", seriove cislo je %d.", issuer.getName(), serNumber));
         return null;
     }
 }

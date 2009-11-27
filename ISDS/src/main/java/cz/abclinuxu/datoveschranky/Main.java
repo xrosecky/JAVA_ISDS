@@ -17,14 +17,9 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.impl.DataBoxManager;
 import cz.abclinuxu.datoveschranky.impl.MessageValidator;
-import cz.abclinuxu.datoveschranky.impl.Validator;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -35,9 +30,6 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        InputStream is = new FileInputStream("/home/user/DataBox/certificates/tsa_certs");
-        Collection<X509Certificate> certs = Validator.readX509Certificates(is);
-        // Authentication manager = Authentication.login("5s59sd", "Ab123456");
         String loginName = "5s59sd";
         String password = "Ab123456";
         Config config = new Config(Config.TEST_URL);

@@ -26,6 +26,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -53,6 +55,8 @@ public class MessageValidator {
     private static final String encoding = "UTF-8";
     private static final String startTag = "<p:dmDm";
     private static final String endTag = "</p:dmDm>";
+    
+    private Logger logger= Logger.getLogger(MessageValidator.class.getCanonicalName());
     private Validator validator;
 
     public MessageValidator() {
@@ -107,7 +111,8 @@ public class MessageValidator {
         } else if (result.rootUri.endsWith("/v20/message")) {
             envelope = this.buildMessageEnvelope(tMessage, MessageType.RECEIVED);
         } else {
-            System.err.println("error");
+            logger.log(Level.SEVERE, String.format("Neplatny namespace '%s' u zpravy.",
+                    result.rootUri));
             envelope = this.buildMessageEnvelope(tMessage, MessageType.CREATED);
         }
         Message message = buildMessage(envelope, tMessage, storer);

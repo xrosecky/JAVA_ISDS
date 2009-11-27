@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLSocketFactory;
 import javax.xml.ws.BindingProvider;
@@ -94,8 +95,6 @@ public class Authentication {
 
     protected void loginImpl(String userName, String password) {
         try {
-            // KeyStore keyStore = Utils.createTrustStore();
-            // Collection<X509Certificate> certs = Utils.readX509Certificates();
             KeyStore keyStore = config.getKeyStore();
             this.socketFactory = Utils.createSSLSocketFactory(keyStore);
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -130,6 +129,7 @@ public class Authentication {
             }
         }
         if (cookieHeader != null) {
+            logger.log(Level.INFO, "Autorizacni cookie byla nalezena.");
             httpHeaders = Collections.singletonMap("Cookie", Collections.singletonList(cookieHeader));
         } else {
             throw new DataBoxException("Nebyla nalezena autentizacni cookie.");
