@@ -1,5 +1,6 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,8 +9,10 @@ import java.util.List;
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com> 
  */
-public class Message {
+public class Message implements Serializable {
 
+    private static final long serialVersionUID = 5L;
+    
     protected MessageEnvelope envelope = null;
     protected TimeStamp timeStamp = null;
     protected Hash hash = null;
@@ -30,7 +33,7 @@ public class Message {
         this.attachments = attachments;
     }
 
-    /*
+    /**
      * Vrátí seznam příloh.
      */
     public List<Attachment> getAttachments() {
@@ -41,7 +44,7 @@ public class Message {
         this.attachments = attachments;
     }
 
-    /*
+    /**
      * Vrátí obálku zprávy.
      */
     public MessageEnvelope getEnvelope() {
@@ -52,14 +55,9 @@ public class Message {
         this.envelope = envelope;
     }
 
-    public TimeStamp getTimestamp() {
-        return timeStamp;
-    }
-
-    public void setTimestamp(TimeStamp timestamp) {
-        this.timeStamp = timestamp;
-    }
-
+    /**
+     * Vrátí časové razítko, je-li obsaženo ve zprávě.
+     */
     public TimeStamp getTimeStamp() {
         return timeStamp;
     }

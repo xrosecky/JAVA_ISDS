@@ -13,7 +13,7 @@ import java.io.OutputStream;
 public interface AttachmentStorer {
 
     
-    /*
+    /**
      * Vráti výstupní proud, do kterého bude uložen obsah přílohy a u třídy
      * attachment příslušně nastaví obsah zprávy metodou setContent. O uzavření
      * výstupního proudu se postará volající třída.

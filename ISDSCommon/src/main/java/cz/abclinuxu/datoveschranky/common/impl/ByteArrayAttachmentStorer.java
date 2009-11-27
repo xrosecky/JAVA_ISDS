@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Ukládá přílohy do pole bytů.
+ * Ukládá přílohy do pole bytů v paměti.
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
@@ -45,6 +45,13 @@ public class ByteArrayAttachmentStorer implements AttachmentStorer {
         public void write(byte[] bytes, int offset, int length) throws IOException {
             super.write(bytes, offset, length);
         }
+    }
+    
+    /**
+     *  Bezparametrický konstruktor
+     */ 
+    public ByteArrayAttachmentStorer() {
+        
     }
 
     public OutputStream store(MessageEnvelope envelope, Attachment attachment) throws IOException {

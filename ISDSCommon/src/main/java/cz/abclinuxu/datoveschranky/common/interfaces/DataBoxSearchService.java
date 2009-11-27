@@ -11,14 +11,14 @@ import java.util.List;
  */
 public interface DataBoxSearchService {
 
-    /*
+    /**
      * Vráti stav schránky.
      * 
      * @param db  datová schránka
      */
     public DataBoxState checkDataBox(DataBox db);
 
-    /*
+    /**
      * Vrátí datovou schránku s daným id pokud existuje, v opačném případě 
      * vrátí null
      * 
@@ -26,7 +26,7 @@ public interface DataBoxSearchService {
      */
     public DataBox findDataBoxByID(String id);
 
-    /*
+    /**
      * Vrátí seznam datových schránek OVM, jejichž jméno začína na prefix.
      * 
      * @param prefix  prefix jména OVM

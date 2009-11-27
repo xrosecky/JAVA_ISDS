@@ -75,7 +75,7 @@ public class Authentication {
         this.config = config;
     }
 
-    /*
+    /**
      * Realizuje přihlášení do datové schránky pod daným uživatelským jménem
      * a heslem a při úspěšném přihlášení vrátí příslušnou instanci ISDSManageru
      * poskytující služby k této schránce.

@@ -2,6 +2,9 @@ package cz.abclinuxu.datoveschranky.common.entities;
 
 /**
  *
+ * Reprezentuje stav datové schránky, jen do schránke typu IS_ACCESSIBLE lze
+ * zasílát zprávy. Pokud o zaslání zprávy do schránky jiného stavu selže chybou.
+ * 
  * @author xrosecky
  */
 public enum DataBoxState {

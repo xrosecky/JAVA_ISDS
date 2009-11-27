@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface DataBoxMessagesService {
 
-    /*
+    /**
      * Stáhne seznam přijatých zpráv ve formě obálky (identifikace odesílatele,
      * příjemce, předmět zprávy, bez příloh) v daném časovém rozmezí.
      * 
@@ -33,7 +33,7 @@ public interface DataBoxMessagesService {
     public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from,
             GregorianCalendar to, EnumSet<MessageState> state, int offset, int limit);
     
-    /*
+    /**
      * Stáhne seznam odeslaných zpráv ve formě obálky (identifikace odesílatele,
      * příjemce, předmět zprávy, bez příloh) v daném časovém rozmezí.
      * 
@@ -50,7 +50,7 @@ public interface DataBoxMessagesService {
     public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
             GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit);
     
-    /*
+    /**
      * Vrátí hodnotu haše dané zprávy, který je uložený v datové schránce. Tento
      * haš lze pak použít pro porovnání s hašem zprávy, která je uložená na
      * disku.
@@ -60,13 +60,13 @@ public interface DataBoxMessagesService {
      */
     public Hash verifyMessage(MessageEnvelope envelope);
     
-    /*
+    /**
      * Vrátí doručenku pro danou obálku zprávy.
      * 
      */
     public DeliveryInfo getDeliveryInfo(MessageEnvelope env);
     
-    /*
+    /**
      * Označí danou zprávu jako přečtenou.
      * 
      */

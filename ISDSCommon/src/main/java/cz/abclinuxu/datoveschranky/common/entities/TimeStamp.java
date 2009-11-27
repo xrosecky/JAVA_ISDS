@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  *
- * Časové razítko zprávy
+ * Časové razítko zprávy, třída je neměnná.
  * 
  * @author xrosecky
  */
@@ -20,14 +20,23 @@ public class TimeStamp {
         this.generatedTime = generatedTime;
     }
 
+    /**
+     * Certifikát časového razítka
+     */
     public X509Certificate getCertificate() {
         return certificate;
     }
 
+    /**
+     * Čas podepsání
+     */
     public Date getGeneratedTime() {
         return generatedTime;
     }
 
+    /**
+     * Haš zprávy uvedený v časovém razítku
+     */
     public Hash getHash() {
         return hash;
     }

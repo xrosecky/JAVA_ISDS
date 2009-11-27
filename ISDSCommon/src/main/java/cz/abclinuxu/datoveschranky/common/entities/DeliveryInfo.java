@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  *
+ * Doručenka datové zprávy, viz dokumentace k ISDS. 
+ * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
 public class DeliveryInfo implements Serializable  {
@@ -20,6 +22,12 @@ public class DeliveryInfo implements Serializable  {
     public DeliveryInfo() {
     }
 
+    /**
+     *  Čas doručení, je-li zpráva doručena.
+     * 
+     *  @return čas doručení nebo null, není-li zpráva doručena.
+     * 
+     */ 
     public GregorianCalendar getAccepted() {
         return accepted;
     }
@@ -28,6 +36,11 @@ public class DeliveryInfo implements Serializable  {
         this.accepted = accepted;
     }
 
+    /**
+     *  Čas dodání
+     * 
+     * @return čas dodání
+     */
     public GregorianCalendar getDelivered() {
         return delivered;
     }
@@ -40,10 +53,16 @@ public class DeliveryInfo implements Serializable  {
         return hash;
     }
 
+    /**
+     * Haš této zprávy.
+     */
     public void setHash(Hash hash) {
         this.hash = hash;
     }
 
+    /**
+     * Časové razítko
+     */
     public byte[] getTimestamp() {
         return timestamp;
     }
@@ -60,6 +79,9 @@ public class DeliveryInfo implements Serializable  {
         this.envelope = envelope;
     }
 
+    /**
+     * Vrátí seznam událostí
+     */
     public List<DeliveryEvent> getEvents() {
         return events;
     }

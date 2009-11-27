@@ -18,8 +18,10 @@ public class FileAttachmentStorer implements AttachmentStorer {
 
     protected File directory = null;
 
-    /*
+    /**
      * Soubory se budou ukládat do adresáře dir.
+     * 
+     * @param dir adresář, do kterého se mají ukládat soubory
      */ 
     public FileAttachmentStorer(File dir) {
         if (!dir.isDirectory()) {

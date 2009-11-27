@@ -31,7 +31,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 public class Utils {
 
-    public static final int BUFFER_SIZE = 4 * 4096;
+    private static final int BUFFER_SIZE = 4 * 4096;
 
     public static String readResourceAsString(Class<?> clazz, String resourceFile) {
         try {

@@ -3,7 +3,8 @@ package cz.abclinuxu.datoveschranky.common.entities;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-/*
+/**
+ * 
  * Výsledek hašovací funkce (haš + algoritmus). Tato třída je neměnná.
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com> 
@@ -27,14 +28,14 @@ public class Hash implements Serializable {
         this.hash = hash;
     }
 
-    /*
+    /**
      * Vrátí jméno hašovací funkce, v případě ISDS to jsou SHA-1 či SHA-2.
      */
     public String getAlgorithm() {
         return algorithm;
     }
 
-    /*
+    /**
      * Výsledek hašovací funkce.
      */
     public byte[] getHash() {

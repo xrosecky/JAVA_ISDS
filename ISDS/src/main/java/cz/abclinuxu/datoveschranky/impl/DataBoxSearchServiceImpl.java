@@ -31,9 +31,6 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         this.service = serv;
     }
     
-    /*
-     * Zjistí stav dané schránky, pri nenalezení schránky vyhodí vyjímku.
-     */ 
     public DataBoxState checkDataBox(DataBox db) {
         String id = db.getdataBoxID();
         Holder<Integer> dbState = new Holder<Integer>();
@@ -44,10 +41,6 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         return DataBoxState.create(dbState.value);
     }
     
-    /*
-     * Vrátí seznam OVM (orgánů veřejné moci) se jménem začínajícím na prefix.
-     * 
-     */ 
     public List<DataBox> findOVMsByName(String prefix) {
         if (prefix.length() < MIN_PREFIX_LENGHT) {
             throw new IllegalArgumentException(String.format("Prefix musi obsahovat " +
@@ -69,10 +62,6 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         return result;
     }
 
-    /*
-     * Vrátí datovou schránku s daným id, nebo null, neexistuje-li.
-     * 
-     */ 
     public DataBox findDataBoxByID(String id) {
         if (id == null) {
             throw new NullPointerException(id);

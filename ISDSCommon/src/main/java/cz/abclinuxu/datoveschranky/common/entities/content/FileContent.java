@@ -22,6 +22,12 @@ public class FileContent implements Content {
         return new FileInputStream(file);
     }
 
+    public long estimatedSize() {
+        return file.length();
+    }
+
+    
+    
     @Override
     public String toString() {
         return file.getAbsolutePath();

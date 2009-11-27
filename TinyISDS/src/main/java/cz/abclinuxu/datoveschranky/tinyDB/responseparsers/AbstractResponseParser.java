@@ -43,7 +43,7 @@ public abstract class AbstractResponseParser implements ResponseParser {
 
     }
 
-    /*
+    /**
      * Začátek elementu, vrátí OutputHandler, do kterého se načte obsah elementu
      */
     public OutputHolder startElement(String elName, Attributes attributes) {
@@ -60,7 +60,7 @@ public abstract class AbstractResponseParser implements ResponseParser {
         }
     }
     
-    /*
+    /**
      * Konec elementu, handle obsahuje OutputHandler s obsaheme elementu.
      */ 
     public void endElement(String elName, OutputHolder handle) {
@@ -74,7 +74,7 @@ public abstract class AbstractResponseParser implements ResponseParser {
         pathIndex--;
     }
     
-    /*
+    /**
      *  Navigace x XML dokumentu, ověří shodu args proti vrcholu zásobníků.
      *  TODO rozepsat.
      */ 

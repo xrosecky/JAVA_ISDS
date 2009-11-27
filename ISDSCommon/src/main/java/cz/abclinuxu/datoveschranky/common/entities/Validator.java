@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Validace
+ * Pomocná třída pro validaci
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
@@ -33,7 +33,7 @@ public class Validator {
         }
     }
     
-    /*
+    /**
      * Zvaliduje odesílanou zprávu proti pravidlům definovaným v dokumentaci k
      * ISDS. Jelikož přijaté zprávy mohou tato pravidla porušovat, o validaci
      * se stará tento kód při odesílání zprávy a ne jednotlivé gettery a 

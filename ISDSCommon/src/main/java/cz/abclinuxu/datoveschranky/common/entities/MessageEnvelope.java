@@ -13,9 +13,9 @@ public class MessageEnvelope implements Serializable {
 
     private static final long serialVersionUID = 4L;
     private DataBox sender = null;
-    private String senderRefNumber = null;
+    private DocumentIdent senderIdent;
     private DataBox recipient = null;
-    private String recipientRefNumber = null;
+    private DocumentIdent recipientIdent;
     private MessageType type = null;
     private MessageState state = null;
     private String id = null;
@@ -41,7 +41,7 @@ public class MessageEnvelope implements Serializable {
         this.annotation = annotation;
     }
 
-    /*
+    /**
      * Vrátí předmět zprávy. 
      */
     public String getAnnotation() {
@@ -53,7 +53,7 @@ public class MessageEnvelope implements Serializable {
         this.annotation = annotation;
     }
     
-    /*
+    /**
      * Vrátí příjemce zprávy. 
      */
     public DataBox getRecipient() {
@@ -65,7 +65,7 @@ public class MessageEnvelope implements Serializable {
         this.recipient = recipient;
     }
 
-    /*
+    /**
      * Vrátí odesílatele zprávy.
      */
     public DataBox getSender() {
@@ -77,7 +77,7 @@ public class MessageEnvelope implements Serializable {
         this.sender = sender;
     }
 
-    /*
+    /**
      * Vrátí jednoznačný identifikátor této zprávy.
      */
     public String getMessageID() {
@@ -89,7 +89,7 @@ public class MessageEnvelope implements Serializable {
         this.id = newID;
     }    
 
-    /*
+    /**
      * Vrátí typ zprávy (zpráva přijatá, odeslaná, vytvořená za účelem odesláni)
      */
     public MessageType getType() {
@@ -109,25 +109,23 @@ public class MessageEnvelope implements Serializable {
         this.state = state;
     }
 
-    public String getRecipientRefNumber() {
-        return recipientRefNumber;
+    public DocumentIdent getRecipientIdent() {
+        return recipientIdent;
     }
 
-    public void setRecipientRefNumber(String recipientRefNumber) {
-        this.recipientRefNumber = recipientRefNumber;
+    public void setRecipientIdent(DocumentIdent recipientIdent) {
+        this.recipientIdent = recipientIdent;
     }
 
-    public String getSenderRefNumber() {
-        return senderRefNumber;
+    public DocumentIdent getSenderIdent() {
+        return senderIdent;
     }
 
-    public void setSenderRefNumber(String senderRefNumber) {
-        this.senderRefNumber = senderRefNumber;
+    public void setSenderIdent(DocumentIdent senderIdent) {
+        this.senderIdent = senderIdent;
     }
     
-    
-    
-    /*
+    /**
      * Čas, kdy byla zpráva akceptována nebo null, nebyla-li ještě akceptována
      */
     public GregorianCalendar getAcceptanceTime() {
@@ -138,7 +136,7 @@ public class MessageEnvelope implements Serializable {
         this.acceptanceTime = acceptanceTime;
     }
 
-    /*
+    /**
      * Čas, kdy byla zpráva přijata nebo null, nebyla-li ještě přijata.
      */
     public GregorianCalendar getDeliveryTime() {

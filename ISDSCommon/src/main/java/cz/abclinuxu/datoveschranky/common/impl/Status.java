@@ -20,7 +20,7 @@ public class Status implements Serializable {
         this.statusMesssage = statusMesssage;
     }
 
-    /*
+    /**
      * Kód chyby, viz oficiální dokumentace k DS.
      * 
      */
@@ -28,7 +28,7 @@ public class Status implements Serializable {
         return statusCode;
     }
 
-    /*
+    /**
      * Stavová hláška, viz oficiální dokumentace k DS.
      * 
      */

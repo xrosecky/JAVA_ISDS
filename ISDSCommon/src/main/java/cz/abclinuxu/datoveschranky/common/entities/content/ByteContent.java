@@ -15,13 +15,16 @@ public class ByteContent implements Content {
     public ByteContent(byte[] cont) {
         this.content = cont;
     }
-    
+
     public InputStream getInputStream() {
         return new ByteArrayInputStream(content);
     }
-    
+
     public byte[] getBytes() {
         return content;
     }
-    
+
+    public long estimatedSize() {
+        return content.length;
+    }
 }

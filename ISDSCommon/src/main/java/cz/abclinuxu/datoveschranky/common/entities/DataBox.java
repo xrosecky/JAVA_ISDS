@@ -28,8 +28,8 @@ public class DataBox implements Serializable {
         this.address = adress;
     }
 
-    /*
-     * Vrátí jednoznačné ID zprávy.
+    /**
+     * Vrátí jednoznačné ID schránky.
      */
     public String getdataBoxID() {
         return dataBoxID;
@@ -41,7 +41,9 @@ public class DataBox implements Serializable {
         this.dataBoxID = newID;
     }
 
-    // jméno subjektu
+    /**
+     * Jméno majitele datové schránky.
+     */
     public String getIdentity() {
         return identity;
     }
@@ -50,7 +52,9 @@ public class DataBox implements Serializable {
         this.identity = identity;
     }
 
-    // adresa subjektu
+    /**
+     * Adresa majitele datové schránky
+     */
     public String getAddress() {
         return address;
     }

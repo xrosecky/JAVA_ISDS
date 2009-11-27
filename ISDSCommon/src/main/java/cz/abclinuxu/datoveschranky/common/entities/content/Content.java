@@ -12,7 +12,7 @@ import java.io.InputStream;
  */
 public interface Content {
     
-    /*
+    /**
      * Vráti vstupní proud, ze kterého lze číst obsah zprávy. Za uzavření tohoto
      * proudu je zodpovědná volající třída. Každé volání musí vrátit nový
      * vstupní proud.
@@ -20,4 +20,8 @@ public interface Content {
      */
     public InputStream getInputStream() throws IOException;
     
+    /**
+     * Vrátí odhad na velikost obsahu v bytech.
+     */
+    public long estimatedSize();
 }

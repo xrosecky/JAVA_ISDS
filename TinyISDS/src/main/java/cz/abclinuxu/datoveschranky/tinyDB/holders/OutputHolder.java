@@ -10,7 +10,7 @@ public interface OutputHolder<T> {
 
     public void write(char[] array, int start, int length);
     
-    /*
+    /**
      * Vrátí výsledek čtení.
      */ 
     public T getResult();

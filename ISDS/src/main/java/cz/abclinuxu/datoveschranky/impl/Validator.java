@@ -93,7 +93,7 @@ public class Validator {
         }
     }
 
-    /*
+    /**
      * Vrátí obsah po odstranění PKCS7 obálky.
      */
     public byte[] readPKCS7(byte[] signedBytes) throws DataBoxException {
@@ -107,7 +107,7 @@ public class Validator {
         }
     }
 
-    /*
+    /**
      * Vrátí obsah po odstranění PKCS7 obálky.
      */
     public InputStream readPKCS7(InputStream is) throws DataBoxException {

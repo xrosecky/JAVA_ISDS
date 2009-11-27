@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
+import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
@@ -105,16 +106,19 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
     protected List<MessageEnvelope> createMessages(TRecordsArray records, MessageType type) {
         List<MessageEnvelope> result = new ArrayList<MessageEnvelope>();
         for (TRecord record : records.getDmRecord()) {
+            // odesílatel
             String senderID = record.getDbIDSender().getValue();
             String senderIdentity = record.getDmSender().getValue();
             String senderAddress = record.getDmSenderAddress().getValue();
             DataBox sender = new DataBox(senderID, senderIdentity, senderAddress);
+            // příjemce
             String recipientID = record.getDbIDRecipient().getValue();
             String recipientIdentity = record.getDmRecipient().getValue();
             String recipientAddress = record.getDmRecipientAddress().getValue();
             DataBox recipient = new DataBox(recipientID, recipientIdentity, recipientAddress);
+            // anotace
             String annotation = record.getDmAnnotation().getValue();
-            if (annotation == null) {
+            if (annotation == null) { // může se stát, že anotace je null...
                 annotation = "";
             }
             String messageID = record.getDmID();
@@ -126,8 +130,15 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
                 env.setDeliveryTime(record.getDmDeliveryTime().getValue().toGregorianCalendar());
             }
             env.setState(MessageState.valueOf(record.getDmMessageStatus().intValue()));
-            env.setSenderRefNumber(record.getDmSenderRefNumber().getValue());
-            env.setRecipientRefNumber(record.getDmRecipientRefNumber().getValue());
+            // identifikace zprávy odesílatelem
+            String senderIdent = record.getDmSenderIdent().getValue();
+            String senderRefNumber = record.getDmSenderRefNumber().getValue();
+            env.setSenderIdent(new DocumentIdent(senderIdent, senderRefNumber));
+            // identifikace zprávy příjemcem
+            String recipientIdent = record.getDmRecipientIdent().getValue();
+            String recipientRefNumber = record.getDmRecipientRefNumber().getValue();
+            env.setSenderIdent(new DocumentIdent(recipientIdent, recipientRefNumber));
+            // a máme hotovo :-)
             result.add(env);
         }
         return result;

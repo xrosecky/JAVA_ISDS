@@ -70,7 +70,7 @@ public class Main {
             Content content = new ByteContent(out.toByteArray());
             Message mess = helper.validateAndCreateMessage(content, new ByteArrayAttachmentStorer());
             out.close();
-            TimeStamp stamp = mess.getTimestamp();
+            TimeStamp stamp = mess.getTimeStamp();
             System.err.println("Message id:" + envelope.getMessageID());
             System.err.println("        time:" + stamp.getGeneratedTime());
             System.err.println("        hash:" + stamp.getHash());

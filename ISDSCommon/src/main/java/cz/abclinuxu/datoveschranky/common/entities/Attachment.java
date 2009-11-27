@@ -28,7 +28,7 @@ public class Attachment implements Serializable {
         this.content = cont;
     }
 
-    /*
+    /**
      * Vrátí obsah přílohy.
      */
     public Content getContent() {
@@ -39,14 +39,14 @@ public class Attachment implements Serializable {
         this.content = cont;
     }
 
-    /*
+    /**
      * Vrátí popis přílohy.
      */
     public String getDescription() {
         return description;
     }
 
-    /*
+    /**
      * Nastaví popis zprávy
      * 
      * @param newDescr popis zprávy, povinný, maximální délka 256 znaků.
@@ -57,7 +57,7 @@ public class Attachment implements Serializable {
         this.description = newDescr;
     }
 
-    /*
+    /**
      * Vrátí druh písemnosti (meta type), v ISDS jsou povolené main, enclosure,
      * signature a meta.
      */
@@ -65,7 +65,7 @@ public class Attachment implements Serializable {
         return metaType;
     }
 
-    /*
+    /**
      * Nastaví druh písemnosti (meta type), v ISDS jsou povolené main, enclosure,
      * signature a meta.
      */
@@ -73,7 +73,7 @@ public class Attachment implements Serializable {
         this.metaType = metaType;
     }
 
-    /*
+    /**
      * Vrátí MIME typ zprávy.
      */
     public String getMimeType() {

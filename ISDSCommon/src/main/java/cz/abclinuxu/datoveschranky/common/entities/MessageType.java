@@ -2,7 +2,7 @@ package cz.abclinuxu.datoveschranky.common.entities;
 
 /**
  *
- * Typy zpráv
+ * Typy zpráv (přijatá, odeslaná, zpráva k odeslání)
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */

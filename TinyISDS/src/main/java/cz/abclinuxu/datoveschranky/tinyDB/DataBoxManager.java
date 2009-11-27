@@ -63,7 +63,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         this.config = configuration;
     }
 
-    /*
+    /**
      * Realizuje přihlášení do datové schránky pod daným uživatelským jménem
      * a heslem a při úspěšném přihlášení vrátí příslušnou instanci ISDSManageru
      * poskytující služby k této schránce.
@@ -162,7 +162,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
                 "touto knihovnou podporovana.");
     }
 
-    /*
+    /**
      * Stáhne přijatou zprávu včetně SOAP obálky a příloh jako XML soubor. Vhodné pouze
      * pro debugovací účely, ne pro záholování.
      * 

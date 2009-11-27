@@ -8,22 +8,26 @@ package cz.abclinuxu.datoveschranky.common.interfaces;
  */
 public interface DataBoxServices {
 
-    /*
-     * Vrátí službu zodpovědnou za stahování celých zpráv, tzn. včetně příloh.
+    /**
+     * Vrátí službu zodpovědnou za stahování celých zpráv včetně příloh.
      */
     public DataBoxDownloadService getDataBoxDownloadService();
     
-    /*
-     * Vrátí službu zodpovědnou za stahování zpráv.
+    /**
+     * Vrátí službu zodpovědnou za odesílání zpráv.
      */
     public DataBoxUploadService getDataBoxUploadService();
     
-    /*
-     * Vrátí službu zodpovědnou za práci se zpráv mimo stahování, např.
-     * získání seznamu přijatých zpráv.
+    /**
+     * Vrátí službu zodpovědnou za práci se zprávami mimo stahování zpráv včetně
+     * příloh a jejich odesílání.
+     * 
      */
     public DataBoxMessagesService getDataBoxMessagesService();
     
+    /**
+     *  Vrátí služby pro hledávání v datových schránkách.
+     */
     public DataBoxSearchService getDataBoxSearchService();
     
 }

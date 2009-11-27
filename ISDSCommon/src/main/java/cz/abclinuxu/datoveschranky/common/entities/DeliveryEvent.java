@@ -4,6 +4,8 @@ import java.util.GregorianCalendar;
 
 /**
  *
+ * Reprezentuje jednu událost doručenky.
+ * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
 public class DeliveryEvent {
@@ -16,6 +18,9 @@ public class DeliveryEvent {
         this.description = description;
     }
 
+    /**
+     * Popis události
+     */ 
     public String getDescription() {
         return description;
     }
@@ -24,6 +29,10 @@ public class DeliveryEvent {
         this.description = description;
     }
 
+    /**
+     * Čas, kdy tato událost nastala.
+     * 
+     */
     public GregorianCalendar getTime() {
         return time;
     }

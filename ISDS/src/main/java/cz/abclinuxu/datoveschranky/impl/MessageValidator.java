@@ -2,6 +2,7 @@ package cz.abclinuxu.datoveschranky.impl;
 
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
+import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
@@ -67,7 +68,7 @@ public class MessageValidator {
         this.validator = new Validator(Utils.getX509Certificates(config.getKeyStore()), false);
     }
 
-    /*
+    /**
      * Na vstup dostane podepsanou zprávu v binárním formátu PKCS#7 (žádné XML),
      * a vrátí zprávu včetně příloh při splnění následujících podmínek:
      * 
@@ -117,8 +118,8 @@ public class MessageValidator {
         }
         Message message = buildMessage(envelope, tMessage, storer);
         Hash messageHash = new Hash(tMessage.getDmHash().getAlgorithm(), tMessage.getDmHash().getValue());
-        Hash rightHash = computeMessageHash(asXML, message.getTimestamp().getHash().getAlgorithm());
-        if (!rightHash.equals(message.getTimestamp().getHash())) {
+        Hash rightHash = computeMessageHash(asXML, message.getTimeStamp().getHash().getAlgorithm());
+        if (!rightHash.equals(message.getTimeStamp().getHash())) {
             throw new DataBoxException("Poruseni integrity zpravy, spocitany has zpravy " +
                     "nen roven hasi uvedenemu v casovem razitku.");
         }
@@ -129,7 +130,7 @@ public class MessageValidator {
         return message;
     }
 
-    /*
+    /**
      * Spočítá haš zprávy jak je definován v ISDS u zprávy v XMLku, tzn.
      * od elementu <p:dmDm> až po </p:dmDm> včetně (od zobáčku po zobáček).
      * 
@@ -180,20 +181,30 @@ public class MessageValidator {
     }
     
     MessageEnvelope buildMessage(DmDm mess, MessageEnvelope result) {
+        // id zprávy a předmět
         result.setMessageID(mess.getDmID());
         result.setAnnotation(mess.getDmAnnotation());
+        // odesílatel
         String senderID = mess.getDbIDSender();
         String senderIdentity = mess.getDmSender();
         String senderAddress = mess.getDmSenderAddress();
         DataBox sender = new DataBox(senderID, senderIdentity, senderAddress);
+        result.setSender(sender);
+        // příjemce
         String recipientID = mess.getDbIDRecipient();
         String recipientIdentity = mess.getDmRecipient();
         String recipientAddress = mess.getDmRecipientAddress();
         DataBox recipient = new DataBox(recipientID, recipientIdentity, recipientAddress);
-        result.setSender(sender);
         result.setRecipient(recipient);
-        result.setSenderRefNumber(mess.getDmSenderRefNumber());
-        result.setRecipientRefNumber(mess.getDmRecipientRefNumber());
+        // identifikace zprávy odesílatelem
+        String senderIdent = mess.getDmSenderIdent();
+        String senderRefNumber = mess.getDmSenderRefNumber();
+        result.setSenderIdent(new DocumentIdent(senderIdent, senderRefNumber));
+        // identifikace zprávy příjemcem
+        String recipientIdent = mess.getDmRecipientIdent();
+        String recipientRefNumber = mess.getDmRecipientRefNumber();
+        result.setSenderIdent(new DocumentIdent(recipientIdent, recipientRefNumber));
+        // a máme hotovo :-)
         return result;
     }
 

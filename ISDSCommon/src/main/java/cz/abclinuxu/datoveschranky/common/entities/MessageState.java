@@ -1,10 +1,11 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 
 /**
  *
+ * Reprezentuje stav zprávy.
+ * 
  * @author xrosecky
  */
 public enum MessageState {
