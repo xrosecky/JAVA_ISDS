@@ -7,6 +7,7 @@ import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
+import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
@@ -26,6 +27,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
@@ -93,7 +95,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
 
     // metody z DataBoxMessages
     public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from, GregorianCalendar to,
-            int offset, int limit) {
+            EnumSet<MessageState> state, int offset, int limit) {
         // tohle hrani se stringy je neefektivní, ale pro nase 
         // demonstracni ucely to vyhovuje.
         String resource = "/resources/GetListOfReceivedMessages.xml";
@@ -108,7 +110,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
     }
 
     public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
-            GregorianCalendar to, int offset, int limit) {
+            GregorianCalendar to, EnumSet<MessageState> state,  int offset, int limit) {
         throw new UnsupportedOperationException();
     }
 
@@ -153,6 +155,11 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
 
     public DataBoxSearchService getDataBoxSearchService() {
         throw new UnsupportedOperationException("Sluzba DataBoxSearchService neni pristupna.");
+    }
+
+    public void markMessageAsDownloaded(MessageEnvelope env) {
+        throw new UnsupportedOperationException("Operace markMessageAsDownloaded neni " +
+                "touto knihovnou podporovana.");
     }
 
     /*

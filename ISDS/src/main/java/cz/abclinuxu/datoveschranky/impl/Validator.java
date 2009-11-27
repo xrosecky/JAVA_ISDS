@@ -51,9 +51,9 @@ public class Validator {
     private Collection<X509Certificate> certs = null;
     private boolean isValidating = false;
 
-    public Validator(Collection<X509Certificate> certs) {
+    public Validator(Collection<X509Certificate> certs, boolean validating) {
         this.certs = certs;
-        isValidating = true; 
+        isValidating = validating; 
     }
 
     public Validator() {

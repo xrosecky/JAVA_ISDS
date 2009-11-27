@@ -9,11 +9,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.net.ssl.SSLContext;
@@ -58,6 +60,25 @@ public class Utils {
     public static Collection<X509Certificate> readX509Certificates() {
         InputStream instream = Utils.class.getResourceAsStream("/keys/certificates");
         return readX509Certificates(instream);
+    }
+
+    public static Collection<X509Certificate> getX509Certificates(KeyStore store) {
+        List<X509Certificate> certs = new ArrayList<X509Certificate>();
+        try {
+            for (Enumeration<String> e = store.aliases(); e.hasMoreElements();) {
+                String alias = e.nextElement();
+                Certificate cert = store.getCertificate(alias);
+                if (cert instanceof X509Certificate) {
+                    certs.add((X509Certificate) cert);
+                }
+            }
+        } catch (Exception ex) {
+            if (ex instanceof RuntimeException) {
+                throw (RuntimeException) ex;
+            }
+            throw new DataBoxException("Nemohu ziskat seznam X.509 certifikatu z KeyStore.", ex);
+        }
+        return certs;
     }
 
     public static Collection<X509Certificate> readX509Certificates(InputStream is) {

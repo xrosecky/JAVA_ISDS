@@ -1,23 +1,20 @@
 package cz.abclinuxu.datoveschranky;
 
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
-import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
+import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.content.ByteContent;
 import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
-import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
-import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
-import cz.abclinuxu.datoveschranky.impl.DataBoxManager;
 import cz.abclinuxu.datoveschranky.impl.MessageValidator;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
 import junit.framework.Assert;
@@ -67,21 +64,24 @@ public class MessageDownloadTest {
 
     @Test
     public void testGetListOfSentMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, 0, 0);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null,  0, 0);
         Assert.assertTrue(messages.size() == 0);
-        messages = messagesService.getListOfSentMessages(begin, end, 0, 5);
+        messages = messagesService.getListOfSentMessages(begin, end, null, 0, 5);
         Assert.assertTrue(messages.size() == 5);
         for (MessageEnvelope mess : messages) {
             Assert.assertTrue(mess.getType().equals(MessageType.SENT));
         }
+        messages = messagesService.getListOfSentMessages(begin, end,
+                EnumSet.of(MessageState.VIRUS_FOUND), 0, 5);
+        Assert.assertEquals(0, messages.size());
     }
 
     @Test
     public void testGetListOfReceivedMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, 0, 0);
-        Assert.assertTrue(messages.size() == 0);
-        messages = messagesService.getListOfReceivedMessages(begin, end, 0, 5);
-        Assert.assertTrue(messages.size() == 5);
+        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 0);
+        Assert.assertEquals(0, messages.size());
+        messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 5);
+        Assert.assertEquals(5, messages.size());
         for (MessageEnvelope mess : messages) {
             Assert.assertTrue(mess.getType().equals(MessageType.RECEIVED));
         }
@@ -89,7 +89,7 @@ public class MessageDownloadTest {
 
     @Test
     public void testIntegrityOfSentMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, 0, 15);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null, 0, 15);
         for (MessageEnvelope mess : messages) {
             testIntegrity(mess);
         }
@@ -97,7 +97,7 @@ public class MessageDownloadTest {
 
     @Test
     public void testIntegrityOfReceivedMessages() throws Exception {
-        List<MessageEnvelope> envelopes = messagesService.getListOfReceivedMessages(begin, end, 0, 15);
+        List<MessageEnvelope> envelopes = messagesService.getListOfReceivedMessages(begin, end, null, 0, 15);
         for (MessageEnvelope env : envelopes) {
             Message mess1 = testIntegrity(env);
             Message mess2 = downloader.downloadMessage(env, new ByteArrayAttachmentStorer());

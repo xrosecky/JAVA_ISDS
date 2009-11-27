@@ -3,6 +3,7 @@ package cz.abclinuxu.datoveschranky.impl;
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
+import cz.abclinuxu.datoveschranky.common.entities.Validator;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
@@ -28,7 +29,7 @@ public class DataBoxUploadServiceImpl implements DataBoxUploadService {
     }
 
     public void sendMessage(Message message) {
-        // Validator.assertValidMessageForSending(message);
+        Validator.assertValidMessageForSending(message);
         TMessageEnvelopeSub envelope = new TMessageEnvelopeSub();
         envelope.setDbIDRecipient(message.getEnvelope().getRecipient().getdataBoxID());
         envelope.setDmAnnotation(message.getEnvelope().getAnnotation());

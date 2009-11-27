@@ -11,12 +11,15 @@ import java.util.GregorianCalendar;
  */
 public class MessageEnvelope implements Serializable {
 
-    private static final long serialVersionUID = 3L;
-    private DataBox sender;
-    private DataBox recipient;
-    private MessageType type;
-    private String id;
-    private String annotation;
+    private static final long serialVersionUID = 4L;
+    private DataBox sender = null;
+    private String senderRefNumber = null;
+    private DataBox recipient = null;
+    private String recipientRefNumber = null;
+    private MessageType type = null;
+    private MessageState state = null;
+    private String id = null;
+    private String annotation = null;
     private GregorianCalendar deliveryTime = null;
     private GregorianCalendar acceptanceTime = null;
 
@@ -98,6 +101,32 @@ public class MessageEnvelope implements Serializable {
         this.type = type;
     }
 
+    public MessageState getState() {
+        return state;
+    }
+
+    public void setState(MessageState state) {
+        this.state = state;
+    }
+
+    public String getRecipientRefNumber() {
+        return recipientRefNumber;
+    }
+
+    public void setRecipientRefNumber(String recipientRefNumber) {
+        this.recipientRefNumber = recipientRefNumber;
+    }
+
+    public String getSenderRefNumber() {
+        return senderRefNumber;
+    }
+
+    public void setSenderRefNumber(String senderRefNumber) {
+        this.senderRefNumber = senderRefNumber;
+    }
+    
+    
+    
     /*
      * Čas, kdy byla zpráva akceptována nebo null, nebyla-li ještě akceptována
      */

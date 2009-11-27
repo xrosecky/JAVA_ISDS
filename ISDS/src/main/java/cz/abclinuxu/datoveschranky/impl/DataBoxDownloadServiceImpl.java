@@ -1,6 +1,5 @@
 package cz.abclinuxu.datoveschranky.impl;
 
-import cz.abclinuxu.datoveschranky.common.entities.Attachment;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
@@ -8,14 +7,11 @@ import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
-import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput.DmReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.ws.Holder;
 
 /**
@@ -25,9 +21,11 @@ import javax.xml.ws.Holder;
 public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
 
     private DmOperationsPortType dmOp = null;
+    private MessageValidator validator = null;
 
-    public DataBoxDownloadServiceImpl(DmOperationsPortType dmOpService) {
+    public DataBoxDownloadServiceImpl(DmOperationsPortType dmOpService, MessageValidator validate) {
         this.dmOp = dmOpService;
+        this.validator = validate;
     }
 
     public Message downloadMessage(MessageEnvelope envelope, AttachmentStorer storer) {
@@ -39,30 +37,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
         dmOp.messageDownload(envelope.getMessageID(), hMessage, status);
         ErrorHandling.throwIfError("Nemohu stahnout prijatou zpravu.", status.value);
         TReturnedMessage message = hMessage.value;
-        List<Attachment> attachments = new ArrayList<Attachment>();
-        for (DmFile file : message.getDmDm().getDmFiles().getDmFile()) {
-            Attachment attachment = new Attachment();
-            attachment.setDescription(file.getDmFileDescr());
-            attachment.setMetaType(file.getDmFileMetaType());
-            attachment.setMimeType(file.getDmMimeType());
-            try {
-                OutputStream os = null;
-                try {
-                    os = storer.store(envelope, attachment);
-                    os.write(file.getDmEncodedContent());
-                } finally {
-                    if (os != null) {
-                        os.close();
-                    }
-                }
-            } catch (IOException ioe) {
-                throw new DataBoxException("Nelze zapisovat do vystupniho proudu", ioe);
-            }
-            attachments.add(attachment);
-        }
-        Message result = new Message(envelope, null, null, attachments);
-        result.setTimestamp(null/*message.getDmQTimestamp()*/);
-        return result;
+        return validator.buildMessage(envelope, message, storer);
     }
 
     public void downloadSignedMessage(MessageEnvelope env, OutputStream os) {

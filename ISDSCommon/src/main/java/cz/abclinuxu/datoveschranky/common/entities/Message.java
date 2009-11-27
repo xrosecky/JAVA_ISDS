@@ -1,6 +1,5 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

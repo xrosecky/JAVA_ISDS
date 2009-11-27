@@ -7,12 +7,9 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.ws.ServiceBuilder;
-import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulation;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
-import cz.abclinuxu.datoveschranky.ws.dm.DmInfoWebService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
-import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsWebService;
 
 /**
  *
@@ -21,18 +18,22 @@ import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsWebService;
 public class DataBoxManager implements DataBoxServices {
 
     protected Authentication auth = null;
+    protected Config config = null;
     protected DataBoxMessagesService dataBoxMessagesService = null;
     protected DataBoxDownloadService dataBoxDownloadService = null;
     protected DataBoxUploadService dataBoxUploadService = null;
     protected DataBoxSearchServiceImpl dataBoxFindingService = null;
+    protected MessageValidator messageValidator = null;
 
-    private DataBoxManager(Authentication auth) {
+    private DataBoxManager(Config conf, Authentication auth) {
         this.auth = auth;
+        this.config = conf;
+        this.messageValidator = new MessageValidator(config);
     }
 
     public static DataBoxManager login(Config config, String userName, String password) throws Exception {
         Authentication auth = Authentication.login(config, userName, password);
-        DataBoxManager manager = new DataBoxManager(auth);
+        DataBoxManager manager = new DataBoxManager(config, auth);
         return manager;
     }
 
@@ -41,7 +42,7 @@ public class DataBoxManager implements DataBoxServices {
             DmOperationsPortType dataMessageOperationsService = auth.createService(
                     ServiceBuilder.createDmOperationsWebService(),
                     DmOperationsPortType.class, "dz");
-            dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService);
+            dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService, messageValidator);
         }
         return dataBoxDownloadService;
     }

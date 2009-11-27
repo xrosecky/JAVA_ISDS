@@ -42,7 +42,7 @@ public class Main {
         begin.roll(Calendar.DAY_OF_YEAR, -28);
         GregorianCalendar end = new GregorianCalendar();
         end.roll(Calendar.DAY_OF_YEAR, 1);
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, 0, 15);
+        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 15);
         FileAttachmentStorer storer = new FileAttachmentStorer(whereToPutFiles);
         for (MessageEnvelope envelope : messages) {
             // uložíme celou podepsanou zprávu

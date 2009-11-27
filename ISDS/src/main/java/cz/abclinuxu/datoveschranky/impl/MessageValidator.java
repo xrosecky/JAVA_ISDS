@@ -5,9 +5,11 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
+import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.TimeStamp;
 import cz.abclinuxu.datoveschranky.common.entities.content.Content;
+import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
@@ -22,9 +24,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -59,8 +59,8 @@ public class MessageValidator {
         this.validator = new Validator();
     }
 
-    public MessageValidator(Collection<X509Certificate> certs) {
-        this.validator = new Validator(certs);
+    public MessageValidator(Config config) {
+        this.validator = new Validator(Utils.getX509Certificates(config.getKeyStore()), false);
     }
 
     /*
@@ -160,9 +160,7 @@ public class MessageValidator {
 
     MessageEnvelope buildMessageEnvelope(TReturnedMessage message, MessageType type) {
         MessageEnvelope result = new MessageEnvelope();
-        DmDm mess = message.getDmDm();
-        result.setMessageID(mess.getDmID());
-        result.setAnnotation(mess.getDmAnnotation());
+        result.setState(MessageState.valueOf(message.getDmMessageStatus().intValue()));
         XMLGregorianCalendar accepted = message.getDmAcceptanceTime();
         if (accepted != null) {
             result.setAcceptanceTime(accepted.toGregorianCalendar());
@@ -171,7 +169,14 @@ public class MessageValidator {
         if (delivered != null) {
             result.setDeliveryTime(delivered.toGregorianCalendar());
         }
-        result.setType(MessageType.CREATED);
+        result.setType(type);
+        DmDm mess = message.getDmDm();
+        return buildMessage(mess, result);
+    }
+    
+    MessageEnvelope buildMessage(DmDm mess, MessageEnvelope result) {
+        result.setMessageID(mess.getDmID());
+        result.setAnnotation(mess.getDmAnnotation());
         String senderID = mess.getDbIDSender();
         String senderIdentity = mess.getDmSender();
         String senderAddress = mess.getDmSenderAddress();
@@ -182,7 +187,8 @@ public class MessageValidator {
         DataBox recipient = new DataBox(recipientID, recipientIdentity, recipientAddress);
         result.setSender(sender);
         result.setRecipient(recipient);
-        result.setType(type);
+        result.setSenderRefNumber(mess.getDmSenderRefNumber());
+        result.setRecipientRefNumber(mess.getDmRecipientRefNumber());
         return result;
     }
 

@@ -48,17 +48,13 @@ public class Main {
             System.out.println(entity + " " + dbs);
         }
         
-        DataBox db = services.getDataBoxSearchService().findDataBoxByID("n75aau3");
-        System.out.println(db);
-        db = services.getDataBoxSearchService().findDataBoxByID("n75aau3faf");
-        System.out.println(db);
-        
         DataBoxMessagesService messagesService = services.getDataBoxMessagesService();
         DataBoxDownloadService downloadService = services.getDataBoxDownloadService();
         DataBoxUploadService uploadService = services.getDataBoxUploadService();
         
         MessageEnvelope env = new MessageEnvelope();
         env.setRecipient(new DataBox("vqbab52"));
+        env.setAnnotation("predmet zpravy");
         List<Attachment> attachments = new ArrayList<Attachment>();
         Attachment attach1 = new Attachment();
         attach1.setDescription("StandardText.txt");
@@ -73,8 +69,9 @@ public class Main {
         begin.roll(Calendar.DAY_OF_YEAR, -28);
         GregorianCalendar end = new GregorianCalendar();
         end.roll(Calendar.DAY_OF_YEAR, 1);
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, 0, 5);
-        MessageValidator helper = new MessageValidator();
+        // List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 5);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null, 0, 5);
+        MessageValidator helper = new MessageValidator(config);
         for (MessageEnvelope envelope : messages) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             downloadService.downloadSignedMessage(envelope, out);
@@ -87,6 +84,7 @@ public class Main {
             System.err.println("        hash:" + stamp.getHash());
             System.err.println("        signed by:" + stamp.getCertificate().getIssuerDN().getName());
             System.err.println("        cert id:" + stamp.getCertificate().getSerialNumber());
+            System.err.println("        status:"+mess.getEnvelope().getState().toString());
         }
     }
 

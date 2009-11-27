@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
+import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
@@ -17,6 +18,7 @@ import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -35,27 +37,29 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
     }
 
     public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from,
-            GregorianCalendar to, int offset, int limit) {
+            GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlFrom = Utils.toXmlDate(from);
         XMLGregorianCalendar xmlTo = Utils.toXmlDate(to);
         BigInteger bOffset = BigInteger.valueOf(offset);
         BigInteger bLimit = BigInteger.valueOf(limit);
-        dataMessageInfo.getListOfReceivedMessages(xmlFrom, xmlTo, null, "-1", bOffset, bLimit, records, status);
+        String value = String.valueOf(MessageState.toInt(filter));
+        dataMessageInfo.getListOfReceivedMessages(xmlFrom, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam prijatych zprav", status.value);
         return createMessages(records.value, MessageType.RECEIVED);
     }
 
     public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
-            GregorianCalendar to, int offset, int limit) {
+            GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlSince = Utils.toXmlDate(from);
         XMLGregorianCalendar xmlTo = Utils.toXmlDate(to);
         BigInteger bOffset = BigInteger.valueOf(offset);
         BigInteger bLimit = BigInteger.valueOf(limit);
-        dataMessageInfo.getListOfSentMessages(xmlSince, xmlTo, null, "-1", bOffset, bLimit, records, status);
+        String value = String.valueOf(MessageState.toInt(filter));
+        dataMessageInfo.getListOfSentMessages(xmlSince, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam odeslanych zprav", status.value);
         return createMessages(records.value, MessageType.SENT);
     }
@@ -67,32 +71,12 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         ErrorHandling.throwIfError("Nemohu overit hash zpravy.", status.value);
         return new Hash(hash.value.getAlgorithm(), hash.value.getValue());
     }
-
-    protected List<MessageEnvelope> createMessages(TRecordsArray records, MessageType type) {
-        List<MessageEnvelope> result = new ArrayList<MessageEnvelope>();
-        for (TRecord record : records.getDmRecord()) {
-            String senderID = record.getDbIDSender().getValue();
-            String senderIdentity = record.getDmSender().getValue();
-            String senderAddress = record.getDmSenderAddress().getValue();
-            DataBox sender = new DataBox(senderID, senderIdentity, senderAddress);
-            String recipientID = record.getDbIDRecipient().getValue();
-            String recipientIdentity = record.getDmRecipient().getValue();
-            String recipientAddress = record.getDmRecipientAddress().getValue();
-            DataBox recipient = new DataBox(recipientID, recipientIdentity, recipientAddress);
-            String annotation = record.getDmAnnotation().getValue();
-            String messageID = record.getDmID();
-            MessageEnvelope env = new MessageEnvelope(type, sender, recipient, messageID, annotation);
-            if (record.getDmAcceptanceTime().getValue() != null) {
-                env.setAcceptanceTime(record.getDmAcceptanceTime().getValue().toGregorianCalendar());
-            }
-            if (record.getDmDeliveryTime().getValue() != null) {
-                env.setDeliveryTime(record.getDmDeliveryTime().getValue().toGregorianCalendar());
-            }
-            result.add(env);
-        }
-        return result;
-    }
     
+    public void markMessageAsDownloaded(MessageEnvelope env) {
+        TStatus status = dataMessageInfo.markMessageAsDownloaded(env.getMessageID());
+        ErrorHandling.throwIfError("Nemohu oznacit zpravu jako prectenou.", status);
+    }
+
     public DeliveryInfo getDeliveryInfo(MessageEnvelope env) {
         Holder<TStatus> status = new Holder<TStatus>();
         Holder<TDelivery> delivery = new Holder<TDelivery>();
@@ -115,6 +99,37 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             events.add(event);
         }
         result.setEvents(events);
+        return result;
+    }
+    
+    protected List<MessageEnvelope> createMessages(TRecordsArray records, MessageType type) {
+        List<MessageEnvelope> result = new ArrayList<MessageEnvelope>();
+        for (TRecord record : records.getDmRecord()) {
+            String senderID = record.getDbIDSender().getValue();
+            String senderIdentity = record.getDmSender().getValue();
+            String senderAddress = record.getDmSenderAddress().getValue();
+            DataBox sender = new DataBox(senderID, senderIdentity, senderAddress);
+            String recipientID = record.getDbIDRecipient().getValue();
+            String recipientIdentity = record.getDmRecipient().getValue();
+            String recipientAddress = record.getDmRecipientAddress().getValue();
+            DataBox recipient = new DataBox(recipientID, recipientIdentity, recipientAddress);
+            String annotation = record.getDmAnnotation().getValue();
+            if (annotation == null) {
+                annotation = "";
+            }
+            String messageID = record.getDmID();
+            MessageEnvelope env = new MessageEnvelope(type, sender, recipient, messageID, annotation);
+            if (record.getDmAcceptanceTime().getValue() != null) {
+                env.setAcceptanceTime(record.getDmAcceptanceTime().getValue().toGregorianCalendar());
+            }
+            if (record.getDmDeliveryTime().getValue() != null) {
+                env.setDeliveryTime(record.getDmDeliveryTime().getValue().toGregorianCalendar());
+            }
+            env.setState(MessageState.valueOf(record.getDmMessageStatus().intValue()));
+            env.setSenderRefNumber(record.getDmSenderRefNumber().getValue());
+            env.setRecipientRefNumber(record.getDmRecipientRefNumber().getValue());
+            result.add(env);
+        }
         return result;
     }
     
