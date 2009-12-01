@@ -21,7 +21,7 @@ public class DocumentIdent implements Serializable {
     }
 
     /**
-     * Číslo jednací
+     * Spisová značka
      */
     public String getIdent() {
         return ident;
@@ -32,7 +32,7 @@ public class DocumentIdent implements Serializable {
     }
 
     /**
-     * Spisová značka
+     * Číslo jednací
      */
     public String getRefNumber() {
         return refNumber;

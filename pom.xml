@@ -34,6 +34,7 @@
     <module>TinyISDS</module>
     <module>ISDSWebServices</module>
     <module>ISDS</module>
+    <module>MessageViewer</module>
   </modules>
   
   <build>
@@ -73,4 +74,3 @@
   </build>
   
 </project>
-

@@ -56,8 +56,7 @@ public class MessageValidator {
     private static final String encoding = "UTF-8";
     private static final String startTag = "<p:dmDm";
     private static final String endTag = "</p:dmDm>";
-    
-    private Logger logger= Logger.getLogger(MessageValidator.class.getCanonicalName());
+    private Logger logger = Logger.getLogger(MessageValidator.class.getCanonicalName());
     private Validator validator;
 
     public MessageValidator() {
@@ -93,10 +92,16 @@ public class MessageValidator {
     public Message validateAndCreateMessage(Content content, AttachmentStorer storer) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Utils.copy(content.getInputStream(), bos);
-        return this.validateAndCreateMessage(bos.toByteArray(), storer);
+        return this.validateAndCreateMessage(bos.toByteArray(), storer, true);
     }
     
-    Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer) throws DataBoxException {
+    public Message createMessage(Content content, AttachmentStorer storer) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        Utils.copy(content.getInputStream(), bos);
+        return this.validateAndCreateMessage(bos.toByteArray(), storer, false);
+    }
+
+    Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer, boolean checkHash) throws DataBoxException {
         byte[] asXML = validator.readPKCS7(asPCKS7);
         MarshallerResult result = null;
         try {
@@ -118,14 +123,16 @@ public class MessageValidator {
         }
         Message message = buildMessage(envelope, tMessage, storer);
         Hash messageHash = new Hash(tMessage.getDmHash().getAlgorithm(), tMessage.getDmHash().getValue());
-        Hash rightHash = computeMessageHash(asXML, message.getTimeStamp().getHash().getAlgorithm());
-        if (!rightHash.equals(message.getTimeStamp().getHash())) {
-            throw new DataBoxException("Poruseni integrity zpravy, spocitany has zpravy " +
-                    "nen roven hasi uvedenemu v casovem razitku.");
-        }
-        if (!rightHash.equals(messageHash)) {
-            throw new DataBoxException("Poruseni integrity zpravy, spocitany hash zpravy " +
-                    "nen roven hasi uvedenemu ve zprave.");
+        if (checkHash) {
+            Hash rightHash = computeMessageHash(asXML, message.getTimeStamp().getHash().getAlgorithm());
+            if (!rightHash.equals(message.getTimeStamp().getHash())) {
+                throw new DataBoxException("Poruseni integrity zpravy, spocitany has zpravy " +
+                        "nen roven hasi uvedenemu v casovem razitku.");
+            }
+            if (!rightHash.equals(messageHash)) {
+                throw new DataBoxException("Poruseni integrity zpravy, spocitany hash zpravy " +
+                        "nen roven hasi uvedenemu ve zprave.");
+            }
         }
         return message;
     }
@@ -179,7 +186,7 @@ public class MessageValidator {
         DmDm mess = message.getDmDm();
         return buildMessage(mess, result);
     }
-    
+
     MessageEnvelope buildMessage(DmDm mess, MessageEnvelope result) {
         // id zprávy a předmět
         result.setMessageID(mess.getDmID());
