@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby manipulujícími s datovými schránkami 
      
-                          verze 2.5  
+                          verze 2.7  
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -25,6 +25,8 @@ Seznam služeb:
   ClearEffectiveOVM
   Activate
   CreateDataBoxPFOInfo
+  GetDataBoxUsers
+  
                           
  změny:
    3.2.2009  verze 0.1
@@ -39,7 +41,8 @@ Seznam služeb:
                          - přidána WS CreateDataBoxPFOInfo
   23.6.2009  verze 2.2   - přidána dvojice služeb [Set|Clear]Vault
   1.10.2009  verze 2.5   - zrušena dvojice služeb [Set|Clear]Vault
-                       
+  1.11.2009  verze 2.6   - 
+  1.1.2010   verze 2.7   - přesunuta WS GetDataBoxUsers ze zrušeného db_supplementary.wsdl                     
  ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -181,6 +184,12 @@ Seznam služeb:
     <part name="parameter" element="tns:CreateDataBoxPFOInfoResponse" />        
   </message>
 
+  <message name="GetDataBoxUsersRequest">
+    <part name="parameter" element="tns:GetDataBoxUsers" />        
+  </message>
+  <message name="GetDataBoxUsersResponse">
+    <part name="parameter" element="tns:GetDataBoxUsersResponse" />        
+  </message>
 
   <!-- ******************************************************************* -->
   <portType name="DataBoxManipulationPortType">
@@ -272,6 +281,11 @@ Seznam služeb:
     <operation name="CreateDataBoxPFOInfo">
       <input  message="tns:CreateDataBoxPFOInfoRequest"/>
       <output message="tns:CreateDataBoxPFOInfoResponse"/>
+    </operation>
+
+    <operation name="GetDataBoxUsers">
+      <input  message="tns:GetDataBoxUsersRequest"/>
+      <output message="tns:GetDataBoxUsersResponse"/>
     </operation>
 
   </portType>
@@ -456,6 +470,16 @@ Seznam služeb:
       </input>
       <output>
         <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="GetDataBoxUsers">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
       </output>
     </operation>
 

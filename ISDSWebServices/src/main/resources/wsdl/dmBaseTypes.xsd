@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými zprávami
-                       verze 2.5      
+                       verze 2.6      
                        
  Změny:  
      5.2.2009  verze 0.1   základní verze
@@ -41,6 +41,8 @@
      9.6.2009 verze 2.1    - do obálky zprávy přibyl nepovinný element dmAmbiguousRecipient  
                            - změna namespace pro verzi ISDS 2                     
     1.10.2009 verze 2.5    - přidány typy pro WS CreateMultipleMessage (oběžník = DZ pro více adresátů)
+    1.11.2009 verze 2.6    - přidány nepovinné atributy dmType do obálky zprávy a seznamu zpráv (rozlišení komerční zprávy)
+                           - přidány typy pro WS ConfirmDelivery (potvrzení doručení komerční zprávy)
     ******************************************************************* -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="tIdDm">
@@ -724,7 +726,15 @@
       <xs:element name="dmRecord">
         <xs:complexType>
           <xs:complexContent mixed="false">
-            <xs:extension base="tns:tRecord" />
+            <xs:extension base="tns:tRecord">
+              <xs:attribute name="dmType" use="optional">
+                <xs:simpleType>
+                  <xs:restriction base="tns:tDmType">
+                    <xs:length value="1" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
@@ -822,7 +832,9 @@
       <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessage" nillable="true">
         <xs:complexType>
           <xs:complexContent mixed="false">
-            <xs:extension base="tns:tReturnedMessage" />
+            <xs:extension base="tns:tReturnedMessage">
+              <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
+            </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
@@ -836,7 +848,9 @@
       <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessageEnvelope" nillable="true">
         <xs:complexType>
           <xs:complexContent mixed="false">
-            <xs:extension base="tns:tReturnedMessageEnvelope" />
+            <xs:extension base="tns:tReturnedMessageEnvelope">
+              <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
+            </xs:extension>
           </xs:complexContent>
         </xs:complexType>
       </xs:element>
@@ -862,5 +876,20 @@
   <xs:element name="MarkMessageAsDownloadedResponse" type="tns:tMarkMessOutput" />
   <xs:element name="SignedSentMessageDownload" type="tns:tIDMessInput" />
   <xs:element name="SignedSentMessageDownloadResponse" type="tns:tSignedMessDownOutput" />
+  <xs:simpleType name="tDmType">
+    <xs:annotation>
+      <xs:documentation>typ DZ: K = komerční DZ, V = veřejná DZ; nepoužitý atribut = veřejná DZ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:length value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tConfirmDeliveryOutput">
+    <xs:sequence>
+      <xs:element name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConfirmDelivery" type="tns:tIDMessInput" />
+  <xs:element name="ConfirmDeliveryResponse" type="tns:tConfirmDeliveryOutput" />
   <xs:element name="DummyOperation" nillable="true" type="xs:string" />
 </xs:schema>

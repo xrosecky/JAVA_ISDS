@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 public class TestHelper {
 
-    public static final String login = "5s59sd";
+    public static final String login = "5e7mvf";
     public static final String passwd = "Ab123456";
     public static final Config config = new Config(Config.TEST_URL);
     

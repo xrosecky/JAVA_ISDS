@@ -15,11 +15,11 @@ public class Config implements Serializable {
     /**
      *  URL testovacího provozu
      */
-    public static final String TEST_URL = "czebox.cz";
+    public static final String TEST_URL = "ws1.czebox.cz";
     /**
      *  URL produkčního prostředí
      */
-    public static final String PRODUCTION_URL = "mojedatovaschranka.cz";
+    public static final String PRODUCTION_URL = "ws1.mojedatovaschranka.cz";
 
     private final String url;
     private final KeyStore keyStore;
@@ -54,7 +54,7 @@ public class Config implements Serializable {
     }
 
     public String getServiceURL() {
-        return "https://www." + url + "/DS/";
+        return "https://" + url + "/DS/";
     }
 
     public String getLoginScope() {

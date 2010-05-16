@@ -7,7 +7,7 @@
         4. stažení podepsané odeslané zprávy - SignedSentMessageDownload
         5. vytvoření hromadné zprávy (oběžníku) - CreateMultipleMessage
      
-                         verze 2.5  
+                         verze 2.6  
 
    Změny:  
      4.2.2009 verze 0.1
@@ -16,7 +16,7 @@
     16.4.2009 verze 1.3 - přidána DummyOperation pro navazování a udržování spojení
      3.6.2009 verze 2.0 - novela
     1.10.2009 verze 2.5 - přidána WS CreateMultipleMessage
-                              
+    1.11.2009 verze 2.6 - komerční provoz                              
 ************************************************************************ -->
 
 <definitions name="ISDS_dmOperations" targetNamespace="http://isds.czechpoint.cz/v20" 
