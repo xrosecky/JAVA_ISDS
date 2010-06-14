@@ -16,14 +16,11 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.GregorianCalendar;
 import java.util.List;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
@@ -131,6 +128,7 @@ public class Utils {
         }
     }
 
+    /*TODO: Not implemented on android
     public static XMLGregorianCalendar toXmlDate(GregorianCalendar date) {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(date);
@@ -149,6 +147,7 @@ public class Utils {
                     "GregorianCalendar na XMLGregorianCalendar", dtce);
         }
     }
+    */
 
     public static void close(Closeable... closeUs) {
         IOException lastException = null;

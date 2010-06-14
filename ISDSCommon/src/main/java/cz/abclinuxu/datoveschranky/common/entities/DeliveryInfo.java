@@ -12,7 +12,11 @@ import java.util.List;
  */
 public class DeliveryInfo implements Serializable  {
 
-    protected MessageEnvelope envelope = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 827309450119226032L;
+	protected MessageEnvelope envelope = null;
     protected GregorianCalendar accepted = null;
     protected GregorianCalendar delivered = null;
     protected Hash hash = null;

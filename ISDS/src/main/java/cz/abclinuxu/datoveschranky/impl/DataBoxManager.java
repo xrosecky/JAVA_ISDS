@@ -1,6 +1,7 @@
 package cz.abclinuxu.datoveschranky.impl;
 
 import cz.abclinuxu.datoveschranky.common.impl.Config;
+import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxAccessService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
@@ -76,4 +77,10 @@ public class DataBoxManager implements DataBoxServices {
         }
         return dataBoxFindingService;
     }
+    
+    public DataBoxAccessService getDataBoxAccessService() {
+        throw new UnsupportedOperationException("Operace getDataBoxAccessService neni " +
+        "touto knihovnou podporovana.");
+    }
+
 }

@@ -22,6 +22,10 @@ public class MessageEnvelope implements Serializable {
     private String annotation = null;
     private GregorianCalendar deliveryTime = null;
     private GregorianCalendar acceptanceTime = null;
+    private String toHands;
+    private LegalTitle legalTitle;
+    private boolean personalDelivery;
+    private boolean allowSubstDelivery;
 
     public MessageEnvelope() {
         this.type = MessageType.CREATED;
@@ -39,6 +43,13 @@ public class MessageEnvelope implements Serializable {
         this.recipient = recipient;
         this.id = id;
         this.annotation = annotation;
+    }
+    public MessageEnvelope(MessageType type, DataBox sender, DataBox recipient, String id, String annotation, LegalTitle legalTitle, String toHands, boolean personalDelivery, boolean allowSubstDelivery) {
+    	this(type, sender, recipient, id, annotation);
+    	this.legalTitle = legalTitle;
+    	this.toHands = toHands;
+    	this.allowSubstDelivery = allowSubstDelivery;
+    	this.personalDelivery = personalDelivery;
     }
 
     /**
@@ -152,4 +163,21 @@ public class MessageEnvelope implements Serializable {
         return String.format("odesilatel:%s prijemce:%s id zpravy:%s predmet zpravy:%s",
                 sender.getIdentity(), recipient.getIdentity(), id, annotation);
     }
+
+	public String getToHands() {
+		return toHands;
+	}
+
+	public LegalTitle getLegalTitle() {
+		return legalTitle;
+	}
+
+	public boolean getPersonalDelivery() {
+		return personalDelivery;
+	}
+
+	public boolean getAllowSubstDelivery() {
+		return allowSubstDelivery;
+	}
+	
 }

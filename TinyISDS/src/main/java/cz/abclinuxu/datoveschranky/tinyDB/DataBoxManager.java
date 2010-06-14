@@ -10,6 +10,7 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.impl.Config;
+import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxAccessService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
@@ -100,8 +101,8 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         // demonstracni ucely to vyhovuje.
         String resource = "/resources/GetListOfReceivedMessages.xml";
         String post = Utils.readResourceAsString(this.getClass(), resource);
-        post = post.replace("${DATE_FROM}", Utils.toXmlDate(from).toString());
-        post = post.replace("${DATE_TO}", Utils.toXmlDate(to).toString());
+        post = post.replace("${DATE_FROM}", XMLUtils.toXmlDate(from).toString());
+        post = post.replace("${DATE_TO}", XMLUtils.toXmlDate(to).toString());
         post = post.replace("${OFFSET}", String.valueOf(offset));
         post = post.replace("${LIMIT}", String.valueOf(limit));
         GetListOfReceivedMessages result = new GetListOfReceivedMessages();
@@ -160,6 +161,11 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
     public void markMessageAsDownloaded(MessageEnvelope env) {
         throw new UnsupportedOperationException("Operace markMessageAsDownloaded neni " +
                 "touto knihovnou podporovana.");
+    }
+    
+    public DataBoxAccessService getDataBoxAccessService() {
+        throw new UnsupportedOperationException("Operace getDataBoxAccessService neni " +
+        "touto knihovnou podporovana.");
     }
 
     /**
@@ -326,4 +332,6 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
             con.disconnect();
         }
     }
+    
+    
 }

@@ -30,4 +30,6 @@ public interface DataBoxServices {
      */
     public DataBoxSearchService getDataBoxSearchService();
     
+    public DataBoxAccessService getDataBoxAccessService();
+    
 }

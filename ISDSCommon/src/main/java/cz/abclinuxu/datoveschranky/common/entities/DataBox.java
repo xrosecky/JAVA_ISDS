@@ -14,6 +14,7 @@ public class DataBox implements Serializable {
     private String dataBoxID = null;
     private String identity = null;
     private String address = null;
+    private DataBoxType dataBoxType = null; 
     
     public DataBox(String id) {
         this.dataBoxID = id;
@@ -26,6 +27,16 @@ public class DataBox implements Serializable {
         this.dataBoxID = id;
         this.identity = name;
         this.address = adress;
+    }
+
+    public DataBox(String id, DataBoxType dataBoxType, String name, String adress) {
+        if (id == null) {
+            throw new NullPointerException("id");
+        }
+        this.dataBoxID = id;
+        this.identity = name;
+        this.address = adress;
+        this.dataBoxType = dataBoxType;
     }
 
     /**
@@ -67,5 +78,11 @@ public class DataBox implements Serializable {
     public String toString() {
         return String.format("Uzivatel:%s, id schranky:%s adresa:%s", identity, dataBoxID, address);
     }
+
+	public DataBoxType getDataBoxType() {
+		return dataBoxType;
+	}
+    
+    
     
 }

@@ -10,6 +10,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
+import cz.abclinuxu.datoveschranky.ws.XMLUtils;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TDelivery;
 import cz.abclinuxu.datoveschranky.ws.dm.TEvent;
@@ -41,8 +42,8 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
-        XMLGregorianCalendar xmlFrom = Utils.toXmlDate(from);
-        XMLGregorianCalendar xmlTo = Utils.toXmlDate(to);
+        XMLGregorianCalendar xmlFrom = XMLUtils.toXmlDate(from);
+        XMLGregorianCalendar xmlTo = XMLUtils.toXmlDate(to);
         BigInteger bOffset = BigInteger.valueOf(offset);
         BigInteger bLimit = BigInteger.valueOf(limit);
         String value = String.valueOf(MessageState.toInt(filter));
@@ -55,8 +56,8 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
-        XMLGregorianCalendar xmlSince = Utils.toXmlDate(from);
-        XMLGregorianCalendar xmlTo = Utils.toXmlDate(to);
+        XMLGregorianCalendar xmlSince = XMLUtils.toXmlDate(from);
+        XMLGregorianCalendar xmlTo = XMLUtils.toXmlDate(to);
         BigInteger bOffset = BigInteger.valueOf(offset);
         BigInteger bLimit = BigInteger.valueOf(limit);
         String value = String.valueOf(MessageState.toInt(filter));

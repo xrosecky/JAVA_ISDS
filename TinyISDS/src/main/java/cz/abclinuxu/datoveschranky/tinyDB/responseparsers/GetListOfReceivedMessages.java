@@ -2,6 +2,7 @@ package cz.abclinuxu.datoveschranky.tinyDB.responseparsers;
 
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
+import cz.abclinuxu.datoveschranky.tinyDB.XMLUtils;
 import cz.abclinuxu.datoveschranky.tinyDB.holders.OutputHolder;
 import cz.abclinuxu.datoveschranky.tinyDB.holders.StringHolder;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
@@ -54,11 +55,11 @@ public class GetListOfReceivedMessages extends AbstractResponseParser {
             MessageEnvelope env = new MessageEnvelope(MessageType.RECEIVED, sender, recipient, messageID, dmAnnotation);
             String accepted = map.get("dmAcceptanceTime").toString();
             if (accepted != null && !accepted.equals("")) {
-                env.setAcceptanceTime(Utils.toGregorianCalendar(accepted));
+                env.setAcceptanceTime(XMLUtils.toGregorianCalendar(accepted));
             }
             String delivered = map.get("dmDeliveryTime").toString();
             if (delivered != null && !delivered.equals("")) {
-                env.setDeliveryTime(Utils.toGregorianCalendar(delivered));
+                env.setDeliveryTime(XMLUtils.toGregorianCalendar(delivered));
             }
             messages.add(env);
             this.fillMap(); // a jedeme dál
