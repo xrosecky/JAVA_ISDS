@@ -3,6 +3,7 @@ package cz.abclinuxu.datoveschranky.common.entities;
 import java.util.EnumSet;
 
 public enum DataBoxType {
+	 SYSTEM  ("SYSTEM", 0), //System datovych zprav - např. uvítací zpráva do systému
 	 OVM  ("OVM", 10), //DS orgánu veřejné moci
 	 OVM_NOTAR  ("OVM_NOTAR", 11), //DS notáře
 	 OVM_EXEKUT  ("OVM_EXEKUT", 12), //DS soudního exekutora
