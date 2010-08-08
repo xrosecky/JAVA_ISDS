@@ -8,7 +8,6 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
-import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.ws.XMLUtils;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
@@ -20,8 +19,8 @@ import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
@@ -38,8 +37,8 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         this.dataMessageInfo = dmInfo;
     }
 
-    public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from,
-            GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
+    public List<MessageEnvelope> getListOfReceivedMessages(Date from,
+            Date to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlFrom = XMLUtils.toXmlDate(from);
@@ -52,8 +51,8 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         return createMessages(records.value, MessageType.RECEIVED);
     }
 
-    public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
-            GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit) {
+    public List<MessageEnvelope> getListOfSentMessages(Date from,
+            Date to, EnumSet<MessageState> filter, int offset, int limit) {
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlSince = XMLUtils.toXmlDate(from);

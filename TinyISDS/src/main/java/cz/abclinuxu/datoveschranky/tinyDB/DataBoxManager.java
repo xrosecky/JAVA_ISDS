@@ -26,11 +26,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,11 +93,11 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
     }
 
     // metody z DataBoxMessages
-    public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from, GregorianCalendar to,
+    public List<MessageEnvelope> getListOfReceivedMessages(Date from, Date to,
             EnumSet<MessageState> state, int offset, int limit) {
         // tohle hrani se stringy je neefektivní, ale pro nase 
         // demonstracni ucely to vyhovuje.
-        String resource = "/resources/GetListOfReceivedMessages.xml";
+        String resource = "/GetListOfReceivedMessages.xml";
         String post = Utils.readResourceAsString(this.getClass(), resource);
         post = post.replace("${DATE_FROM}", XMLUtils.toXmlDate(from).toString());
         post = post.replace("${DATE_TO}", XMLUtils.toXmlDate(to).toString());
@@ -110,13 +108,13 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         return result.getMessages();
     }
 
-    public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
-            GregorianCalendar to, EnumSet<MessageState> state,  int offset, int limit) {
+    public List<MessageEnvelope> getListOfSentMessages(Date from,
+            Date to, EnumSet<MessageState> state,  int offset, int limit) {
         throw new UnsupportedOperationException();
     }
 
     public Hash verifyMessage(MessageEnvelope envelope) {
-        String resource = "/resources/VerifyMessage.xml";
+        String resource = "/VerifyMessage.xml";
         String post = Utils.readResourceAsString(this.getClass(), resource);
         post = post.replace("${ID}", envelope.getMessageID());
         VerifyMessage parser = new VerifyMessage();
@@ -130,7 +128,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         if (envelope.getType() != MessageType.RECEIVED) {
             throw new UnsupportedOperationException("Stahnout lze pouze prijatou zpravu");
         }
-        String resource = "/resources/DownloadReceivedMessage.xml";
+        String resource = "/DownloadReceivedMessage.xml";
         String post = Utils.readResourceAsString(this.getClass(), resource);
         post = post.replace("${ID}", envelope.getMessageID());
         DownloadReceivedMessage parser = new DownloadReceivedMessage(envelope, storer);
@@ -142,7 +140,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         if (envelope.getType() != MessageType.RECEIVED) {
             throw new UnsupportedOperationException("Stahnout lze pouze prijatou zpravu");
         }
-        String resource = "/resources/DownloadSignedReceivedMessage.xml";
+        String resource = "/DownloadSignedReceivedMessage.xml";
         String post = Utils.readResourceAsString(this.getClass(), resource);
         post = post.replace("${ID}", envelope.getMessageID());
         DownloadSignedReceivedMessage parser = new DownloadSignedReceivedMessage(os);
@@ -188,74 +186,11 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
     }
 
     private void loginImpl(String username, String password) throws Exception {
-        URL url = new URL(config.getServiceURL() + "df");
         String userPassword = username + ":" + password;
         Base64 base64 = new Base64(0, null, false);
         // základní HTTP autorizace
         authorization = "Basic " + new String(base64.encode(userPassword.getBytes()), "UTF-8");
         this.socketFactory = Utils.createSSLSocketFactory(config.getKeyStore());
-        List<String> allCookies = new ArrayList<String>();
-        HashSet<String> allUrls = new HashSet<String>();
-        HttpsURLConnection con = null;
-        for (int redirectCount = 0; redirectCount != MAX_REDIRECT_COUNT; redirectCount++) {
-            con = (HttpsURLConnection) url.openConnection();
-            con.setInstanceFollowRedirects(false);
-            con.setSSLSocketFactory(socketFactory);
-            con.setRequestProperty("Authorization", authorization);
-            // práce s cookie...
-            StringBuffer cookiesBuffer = new StringBuffer();
-            for (String cookie : allCookies) {
-                String[] splitted = cookie.split(";");
-                String urlPath = url.getPath();
-                String cookiePath = splitted[1].split("=")[1];
-                if (cookiePath.equals("/") || urlPath.startsWith(cookiePath)) {
-                    cookiesBuffer.append(cookie).append(";");
-                }
-            }
-            String cookies = cookiesBuffer.toString();
-            con.setRequestProperty("Cookie", cookies);
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            List<String> cookieList = con.getHeaderFields().get("Set-Cookie");
-            if (cookieList != null) {
-                for (String cookie : cookieList) {
-                    if (cookie != null) {
-                        allCookies.add(cookie);
-                    }
-                }
-            }
-            // přesměrování
-            String redirectTo = con.getHeaderField("Location");
-            int responseCode = con.getResponseCode();
-            logger.log(Level.INFO, String.format("Responce code je %d:%s.",
-                    responseCode, con.getResponseMessage())); 
-            if (redirectionCodes.contains(responseCode) && redirectTo != null) {
-                // detekce zacyklení
-                if (!allUrls.add(redirectTo.toLowerCase())) {
-                    throw new DataBoxException("Pri prihlasovani do DS doslo ke cyklickemu presmerovani.");
-                }
-                logger.log(Level.INFO, String.format("Presmerovano na %s", redirectTo));
-                url = new URL(redirectTo);
-            } else {
-                break;
-            }
-        }
-        if (!OKCodes.contains(con.getResponseCode())) {
-            String message = String.format("Prihlaseni do DS se nezdarilo. %d:%s",
-                    con.getResponseCode(), con.getResponseMessage());
-            throw new DataBoxException(message);
-        }
-        // najdeme autorizační cookie. V dokumentaci je uveden prefix IPC, v ukázce
-        // přihlášení k DS zase IPCZ.
-        for (String cookie : allCookies) {
-            if (cookie.startsWith("IPC")) {
-                authCookie = cookie; // cookie.split(";")[0];
-                logger.log(Level.INFO, String.format("Cookie je %s.", authCookie));
-            }
-        }
-        if (authCookie == null) {
-            throw new DataBoxException("Autorizacni cookie nebyla nalezena.");
-        }
     }
 
     private void postAndParseResponse(String post, String prefix,
@@ -320,7 +255,8 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
     private void configure(HttpsURLConnection connect) throws ProtocolException {
         connect.setSSLSocketFactory(socketFactory);
         // connect.setRequestProperty("Authorization", authorization);
-        connect.setRequestProperty("Cookie", authCookie);
+        connect.setRequestProperty("Authorization", authorization);
+        // connect.setRequestProperty("Cookie", authCookie);
         connect.setRequestMethod("POST");
         connect.setDoOutput(true);
         connect.setRequestProperty("Content-Type", "text/xml; charset=utf-8");

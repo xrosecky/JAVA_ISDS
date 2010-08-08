@@ -1,5 +1,6 @@
 package cz.abclinuxu.datoveschranky.ws;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -13,12 +14,24 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *
  */
 public class XMLUtils {
+
     public static XMLGregorianCalendar toXmlDate(GregorianCalendar date) {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(date);
         } catch (DatatypeConfigurationException dtce) {
-            throw new UnsupportedOperationException("Nemohu prevest " +
-                    "GregorianCalendar na XMLGregorianCalendar", dtce);
+            throw new UnsupportedOperationException("Nemohu prevest "
+                    + "GregorianCalendar na XMLGregorianCalendar", dtce);
+        }
+    }
+
+    public static XMLGregorianCalendar toXmlDate(Date date) {
+        try {
+            GregorianCalendar c = new GregorianCalendar();
+            c.setTime(date);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+        } catch (DatatypeConfigurationException dtce) {
+            throw new UnsupportedOperationException("Nemohu prevest "
+                    + "GregorianCalendar na XMLGregorianCalendar", dtce);
         }
     }
 
@@ -27,9 +40,8 @@ public class XMLUtils {
             XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date);
             return xmlDate.toGregorianCalendar();
         } catch (DatatypeConfigurationException dtce) {
-            throw new UnsupportedOperationException("Nemohu prevest " +
-                    "GregorianCalendar na XMLGregorianCalendar", dtce);
+            throw new UnsupportedOperationException("Nemohu prevest "
+                    + "GregorianCalendar na XMLGregorianCalendar", dtce);
         }
     }
-
 }

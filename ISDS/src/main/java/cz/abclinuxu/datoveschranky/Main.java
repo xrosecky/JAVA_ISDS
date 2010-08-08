@@ -30,8 +30,8 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        String loginName = "5s59sd";
-        String password = "Ab123456";
+        String loginName = "5e7mvf";
+        String password = "Ab123456a";
         Config config = new Config(Config.TEST_URL);
         DataBoxManager services = DataBoxManager.login(config, loginName, password);
         List<DataBox> found = services.getDataBoxSearchService().findOVMsByName("min");
@@ -62,7 +62,7 @@ public class Main {
         GregorianCalendar end = new GregorianCalendar();
         end.roll(Calendar.DAY_OF_YEAR, 1);
         // List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 5);
-        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null, 0, 5);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null, 0, 5);
         MessageValidator helper = new MessageValidator(config);
         for (MessageEnvelope envelope : messages) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

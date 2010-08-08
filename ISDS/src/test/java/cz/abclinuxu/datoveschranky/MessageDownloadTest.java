@@ -64,23 +64,23 @@ public class MessageDownloadTest {
 
     @Test
     public void testGetListOfSentMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null,  0, 0);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null,  0, 0);
         Assert.assertTrue(messages.size() == 0);
-        messages = messagesService.getListOfSentMessages(begin, end, null, 0, 5);
+        messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null, 0, 5);
         Assert.assertTrue(messages.size() == 5);
         for (MessageEnvelope mess : messages) {
             Assert.assertTrue(mess.getType().equals(MessageType.SENT));
         }
-        messages = messagesService.getListOfSentMessages(begin, end,
+        messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(),
                 EnumSet.of(MessageState.VIRUS_FOUND), 0, 5);
         Assert.assertEquals(0, messages.size());
     }
 
     @Test
     public void testGetListOfReceivedMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 0);
+        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, 0);
         Assert.assertEquals(0, messages.size());
-        messages = messagesService.getListOfReceivedMessages(begin, end, null, 0, 5);
+        messages = messagesService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, 5);
         Assert.assertEquals(5, messages.size());
         for (MessageEnvelope mess : messages) {
             Assert.assertTrue(mess.getType().equals(MessageType.RECEIVED));
@@ -89,7 +89,7 @@ public class MessageDownloadTest {
 
     @Test
     public void testIntegrityOfSentMessages() throws Exception {
-        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin, end, null, 0, 15);
+        List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null, 0, 15);
         for (MessageEnvelope mess : messages) {
             testIntegrity(mess);
         }
@@ -97,7 +97,7 @@ public class MessageDownloadTest {
 
     @Test
     public void testIntegrityOfReceivedMessages() throws Exception {
-        List<MessageEnvelope> envelopes = messagesService.getListOfReceivedMessages(begin, end, null, 0, 15);
+        List<MessageEnvelope> envelopes = messagesService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, 15);
         for (MessageEnvelope env : envelopes) {
             Message mess1 = testIntegrity(env);
             Message mess2 = downloader.downloadMessage(env, new ByteArrayAttachmentStorer());

@@ -4,8 +4,9 @@ import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
+import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
+import java.util.Date;
 import java.util.EnumSet;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -30,8 +31,8 @@ public interface DataBoxMessagesService {
      * @throws DataBoxException při vracení seznamu nastala chyba
      * 
      */    
-    public List<MessageEnvelope> getListOfReceivedMessages(GregorianCalendar from,
-            GregorianCalendar to, EnumSet<MessageState> state, int offset, int limit);
+    public List<MessageEnvelope> getListOfReceivedMessages(Date from,
+            Date to, EnumSet<MessageState> state, int offset, int limit);
     
     /**
      * Stáhne seznam odeslaných zpráv ve formě obálky (identifikace odesílatele,
@@ -47,8 +48,8 @@ public interface DataBoxMessagesService {
      * @throws DataBoxException při vracení seznamu nastala chyba
      * 
      */    
-    public List<MessageEnvelope> getListOfSentMessages(GregorianCalendar from,
-            GregorianCalendar to, EnumSet<MessageState> filter, int offset, int limit);
+    public List<MessageEnvelope> getListOfSentMessages(Date from,
+            Date to, EnumSet<MessageState> filter, int offset, int limit);
     
     /**
      * Vrátí hodnotu haše dané zprávy, který je uložený v datové schránce. Tento
