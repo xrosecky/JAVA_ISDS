@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TestHelper {
 
     public static final String login = "5e7mvf";
-    public static final String passwd = "Ab123456a";
+    public static final String passwd = "Ab123456b";
     public static final Config config = new Config(Config.TEST_URL);
     
     public static DataBoxServices connect() throws Exception {
