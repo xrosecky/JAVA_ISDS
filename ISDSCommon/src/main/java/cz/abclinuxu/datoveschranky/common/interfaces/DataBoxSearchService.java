@@ -2,6 +2,7 @@ package cz.abclinuxu.datoveschranky.common.interfaces;
 
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import java.util.List;
 
 /**
@@ -24,13 +25,13 @@ public interface DataBoxSearchService {
      * 
      * @param id  ID datové schránky
      */
-    public DataBox findDataBoxByID(String id);
+    public DataBoxWithDetails findDataBoxByID(String id);
 
     /**
      * Vrátí seznam datových schránek OVM, jejichž jméno začína na prefix.
      * 
      * @param prefix  prefix jména OVM
      */
-    public List<DataBox> findOVMsByName(String prefix);
+    public List<DataBoxWithDetails> findOVMsByName(String prefix);
 
 }

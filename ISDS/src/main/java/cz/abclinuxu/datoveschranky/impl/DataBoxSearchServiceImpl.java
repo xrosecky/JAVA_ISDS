@@ -1,7 +1,9 @@
 package cz.abclinuxu.datoveschranky.impl;
 
+import cz.abclinuxu.datoveschranky.common.entities.Address;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
@@ -24,27 +26,26 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
     protected final static String SEARCH_LIMIT_REACHED = "0003";
     protected final static String NOTHING_FOUND = "0002";
     List<String> searchOKCodes = Arrays.asList(OK, SEARCH_LIMIT_REACHED, NOTHING_FOUND);
-    
     protected DataBoxManipulationPortType service;
 
     public DataBoxSearchServiceImpl(DataBoxManipulationPortType serv) {
         this.service = serv;
     }
-    
+
     public DataBoxState checkDataBox(DataBox db) {
         String id = db.getdataBoxID();
         Holder<Integer> dbState = new Holder<Integer>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
         service.checkDataBox(id, true, "", dbState, status);
-        ErrorHandling.throwIfError(String.format("Chyba pri zjistovani stavu schranky " +
-                "s id=%s.", db.getdataBoxID()), status.value);
+        ErrorHandling.throwIfError(String.format("Chyba pri zjistovani stavu schranky "
+                + "s id=%s.", db.getdataBoxID()), status.value);
         return DataBoxState.create(dbState.value);
     }
-    
-    public List<DataBox> findOVMsByName(String prefix) {
+
+    public List<DataBoxWithDetails> findOVMsByName(String prefix) {
         if (prefix.length() < MIN_PREFIX_LENGHT) {
-            throw new IllegalArgumentException(String.format("Prefix musi obsahovat " +
-                    "alespon %d znaky.", MIN_PREFIX_LENGHT));
+            throw new IllegalArgumentException(String.format("Prefix musi obsahovat "
+                    + "alespon %d znaky.", MIN_PREFIX_LENGHT));
         }
         TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
         ownerInfo.setFirmName(prefix);
@@ -55,14 +56,14 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
             ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
         }
-        List<DataBox> result = new ArrayList<DataBox>();
+        List<DataBoxWithDetails> result = new ArrayList<DataBoxWithDetails>();
         for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
             result.add(create(owner));
         }
         return result;
     }
 
-    public DataBox findDataBoxByID(String id) {
+    public DataBoxWithDetails findDataBoxByID(String id) {
         if (id == null) {
             throw new NullPointerException(id);
         }
@@ -71,12 +72,12 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
         ownerInfo.setDbID(id);
         service.findDataBox(ownerInfo, owners, status);
-        ErrorHandling.throwIfError(String.format("Chyba při hledaní datové "+
-                "schránky s id=%s.", id), status.value);
+        ErrorHandling.throwIfError(String.format("Chyba při hledaní datové "
+                + "schránky s id=%s.", id), status.value);
         List<TDbOwnerInfo> found = owners.value.getDbOwnerInfo();
         if (found.size() > 1) {
-            throw new AssertionError(String.format("Metoda findDataBoxByID pri hledani datove " +
-                    "schranky s id=%s vratila vice nez jednu schranku.", id));
+            throw new AssertionError(String.format("Metoda findDataBoxByID pri hledani datove "
+                    + "schranky s id=%s vratila vice nez jednu schranku.", id));
         }
         if (found.size() == 1) {
             return create(found.get(0));
@@ -84,9 +85,10 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
             return null;
         }
     }
-    
-    static DataBox create(TDbOwnerInfo owner) {
-        DataBox result = new DataBox(owner.getDbID());
+
+    static DataBoxWithDetails create(TDbOwnerInfo owner) {
+        DataBoxWithDetails result = new DataBoxWithDetails(owner.getDbID());
+        // owner.
         result.setIdentity(owner.getFirmName());
         String street = null;
         if (owner.getAdNumberInMunicipality().trim().equals("")) {
@@ -98,6 +100,15 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         String address = String.format("%s, %s %s, %s", street,
                 owner.getAdZipCode(), owner.getAdCity(), owner.getAdState());
         result.setAddress(address);
+        result.setIC(owner.getIc());
+        Address addressDetail = new Address();
+        addressDetail.setCity(owner.getAdCity());
+        addressDetail.setNumberInMunicipality(owner.getAdNumberInMunicipality());
+        addressDetail.setNumberInStreet(owner.getAdNumberInMunicipality());
+        addressDetail.setState(owner.getAdState());
+        addressDetail.setStreet(owner.getAdStreet());
+        addressDetail.setZipCode(owner.getAdZipCode());
+        result.setAddressDetails(addressDetail);
         return result;
     }
 }

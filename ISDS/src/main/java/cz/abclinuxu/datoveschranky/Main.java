@@ -3,6 +3,7 @@ package cz.abclinuxu.datoveschranky;
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryEvent;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
@@ -34,7 +35,7 @@ public class Main {
         String password = "Ab123456a";
         Config config = new Config(Config.TEST_URL);
         DataBoxManager services = DataBoxManager.login(config, loginName, password);
-        List<DataBox> found = services.getDataBoxSearchService().findOVMsByName("min");
+        List<DataBoxWithDetails> found = services.getDataBoxSearchService().findOVMsByName("min");
         for (DataBox entity : found) {
             DataBoxState dbs = services.getDataBoxSearchService().checkDataBox(entity);
             System.out.println(entity + " " + dbs);
