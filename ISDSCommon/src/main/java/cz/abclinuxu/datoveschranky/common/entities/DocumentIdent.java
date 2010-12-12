@@ -15,6 +15,10 @@ public class DocumentIdent implements Serializable {
     private String refNumber;
     private String ident;
 
+    public DocumentIdent(String refNumber) {
+        this.refNumber = refNumber;
+    }
+
     public DocumentIdent(String refNumber, String ident) {
         this.refNumber = refNumber;
         this.ident = ident;
