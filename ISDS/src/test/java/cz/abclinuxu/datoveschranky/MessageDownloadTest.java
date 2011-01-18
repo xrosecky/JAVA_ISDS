@@ -45,7 +45,7 @@ public class MessageDownloadTest {
         messagesService = services.getDataBoxMessagesService();
         downloader = services.getDataBoxDownloadService();
         begin = new GregorianCalendar();
-        begin.roll(Calendar.DAY_OF_YEAR, -28);
+        begin.roll(Calendar.DAY_OF_YEAR, -10);
         end = new GregorianCalendar();
         end.roll(Calendar.DAY_OF_YEAR, 1);
     }
@@ -65,7 +65,7 @@ public class MessageDownloadTest {
     @Test
     public void testGetListOfSentMessages() throws Exception {
         List<MessageEnvelope> messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null,  0, 0);
-        Assert.assertTrue(messages.size() == 0);
+        Assert.assertTrue(messages.isEmpty());
         messages = messagesService.getListOfSentMessages(begin.getTime(), end.getTime(), null, 0, 5);
         Assert.assertTrue(messages.size() == 5);
         for (MessageEnvelope mess : messages) {

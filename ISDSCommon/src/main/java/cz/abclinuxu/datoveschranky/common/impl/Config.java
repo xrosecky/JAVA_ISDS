@@ -1,5 +1,6 @@
 package cz.abclinuxu.datoveschranky.common.impl;
 
+import cz.abclinuxu.datoveschranky.impl.DataBoxEnvironment;
 import java.io.Serializable;
 import java.security.KeyStore;
 
@@ -15,13 +16,15 @@ public class Config implements Serializable {
     /**
      *  URL testovacího provozu
      */
-    public static final String TEST_URL = "ws1.czebox.cz";
+    @Deprecated
+    public static final String TEST_URL = "ws1.czebox.cz"; // was ws1.czebox.cz
     /**
      *  URL produkčního prostředí
      */
-    public static final String PRODUCTION_URL = "ws1.mojedatovaschranka.cz";
-
-    private final String url;
+    @Deprecated
+    public static final String PRODUCTION_URL = "ws1.mojedatovaschranka.cz"; // was ws1.mojedatovaschranka.cz
+    private final DataBoxEnvironment dataBoxEnvironment;
+    // private final String url;
     private final KeyStore keyStore;
 
     /**
@@ -33,9 +36,21 @@ public class Config implements Serializable {
      * 
      * @param servURL   URL služby (TEST_URL či PRODUCTION_URL)
      * 
-     */ 
+     */
+    @Deprecated
     public Config(String servURL) {
-        this.url = servURL;
+        if (servURL.equals(TEST_URL)) {
+            this.dataBoxEnvironment = DataBoxEnvironment.TEST;
+        } else if (servURL.equals(PRODUCTION_URL)) {
+            this.dataBoxEnvironment = DataBoxEnvironment.PRODUCTION;
+        } else {
+            throw new IllegalArgumentException("servURL");
+        }
+        this.keyStore = Utils.createTrustStore();
+    }
+
+    public Config(DataBoxEnvironment dbe) {
+        this.dataBoxEnvironment = dbe;
         this.keyStore = Utils.createTrustStore();
     }
 
@@ -47,18 +62,31 @@ public class Config implements Serializable {
      *    nutné pro přihlášení do ISDS, certifikáty, kterými je podepsána obálka
      *    zprávy a certifikáty časových razítek.
      * 
-     */ 
-    public Config(String url, KeyStore keys) {
-        this.url = url;
+     */
+    @Deprecated
+    public Config(String servURL, KeyStore keys) {
+        if (servURL.equals(TEST_URL)) {
+            this.dataBoxEnvironment = DataBoxEnvironment.TEST;
+        } else if (servURL.equals(PRODUCTION_URL)) {
+            this.dataBoxEnvironment = DataBoxEnvironment.PRODUCTION;
+        } else {
+            throw new IllegalArgumentException("servURL");
+        }
         this.keyStore = keys;
     }
 
     public String getServiceURL() {
-        return "https://" + url + "/DS/";
+        // return "https://" + url + "/cert/DS/"; // was "/DS/"
+        return "https://" + dataBoxEnvironment.basicURL() + "/DS/";
     }
 
+    public String getServiceURLClientCert() {
+        return "https://" + dataBoxEnvironment.clientCertURL() + "/cert/DS/";
+    }
+
+    @Deprecated
     public String getLoginScope() {
-        return "login." + url;
+        return "login." + dataBoxEnvironment.basicURL();
     }
 
     public KeyStore getKeyStore() {

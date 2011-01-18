@@ -11,6 +11,7 @@ import cz.abclinuxu.datoveschranky.ws.ServiceBuilder;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
+import java.io.File;
 
 /**
  *
@@ -26,16 +27,20 @@ public class DataBoxManager implements DataBoxServices {
     protected DataBoxSearchServiceImpl dataBoxFindingService = null;
     protected MessageValidator messageValidator = null;
 
-    private DataBoxManager(Config conf, Authentication auth) {
+    public DataBoxManager(Config conf, Authentication auth) {
         this.auth = auth;
         this.config = conf;
         this.messageValidator = new MessageValidator(config);
     }
 
     public static DataBoxManager login(Config config, String userName, String password) throws Exception {
-        Authentication auth = Authentication.login(config, userName, password);
+        Authentication auth = BasicAuthentication.login(config, userName, password);
         DataBoxManager manager = new DataBoxManager(config, auth);
         return manager;
+    }
+
+    public static DataBoxManager login(Config config, File clientCert, String password) throws Exception {
+        return null;
     }
 
     public DataBoxDownloadService getDataBoxDownloadService() {
