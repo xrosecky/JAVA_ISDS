@@ -101,7 +101,7 @@ public class MessageValidator {
         return this.validateAndCreateMessage(bos.toByteArray(), storer, false);
     }
 
-    Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer, boolean checkHash) throws DataBoxException {
+    public Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer, boolean checkHash) throws DataBoxException {
         byte[] asXML = validator.readPKCS7(asPCKS7);
         MarshallerResult result = null;
         try {
@@ -178,7 +178,7 @@ public class MessageValidator {
         if (accepted != null) {
             result.setAcceptanceTime(accepted.toGregorianCalendar());
         }
-        XMLGregorianCalendar delivered = message.getDmAcceptanceTime();
+        XMLGregorianCalendar delivered = message.getDmDeliveryTime();
         if (delivered != null) {
             result.setDeliveryTime(delivered.toGregorianCalendar());
         }
@@ -239,6 +239,27 @@ public class MessageValidator {
         }
         TimeStamp ts = validator.readTimeStamp(message.getDmQTimestamp());
         return new Message(envelope, ts, null, attachments);
+    }
+
+    public Message readZFO(byte[] input, AttachmentStorer storer) {
+	MarshallerResult result = null;
+        try {
+            result = load(TMessDownOutput.class, input);
+        } catch (Exception ex) {
+            throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
+        }
+	TMessDownOutput out = (TMessDownOutput) ((JAXBElement) result.value).getValue();
+        TReturnedMessage tMessage = out.getDmReturnedMessage().getValue();
+	MessageEnvelope envelope = null;
+        if (result.rootUri.endsWith("/v20/SentMessage")) {
+            envelope = this.buildMessageEnvelope(tMessage, MessageType.SENT);
+        } else if (result.rootUri.endsWith("/v20/message")) {
+            envelope = this.buildMessageEnvelope(tMessage, MessageType.RECEIVED);
+        } else {
+            envelope = this.buildMessageEnvelope(tMessage, MessageType.CREATED);
+        }
+	Message message = this.buildMessage(envelope, tMessage, storer);
+	return message;
     }
 
     private static class MarshallerResult {
