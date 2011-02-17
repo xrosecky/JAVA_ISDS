@@ -101,6 +101,10 @@ public class MessageValidator {
         return this.validateAndCreateMessage(bos.toByteArray(), storer, false);
     }
 
+    public Message createMessage(byte[] content, AttachmentStorer storer) throws IOException {
+        return this.validateAndCreateMessage(content, storer, false);
+    }
+
     public Message validateAndCreateMessage(byte[] asPCKS7, AttachmentStorer storer, boolean checkHash) throws DataBoxException {
         byte[] asXML = validator.readPKCS7(asPCKS7);
         MarshallerResult result = null;
