@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package cz.abclinuxu.datoveschranky.impl;
+package cz.abclinuxu.datoveschranky.common.impl;
 
 /**
  *

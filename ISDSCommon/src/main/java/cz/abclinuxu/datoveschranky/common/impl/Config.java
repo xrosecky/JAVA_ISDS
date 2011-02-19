@@ -1,6 +1,5 @@
 package cz.abclinuxu.datoveschranky.common.impl;
 
-import cz.abclinuxu.datoveschranky.impl.DataBoxEnvironment;
 import java.io.Serializable;
 import java.security.KeyStore;
 

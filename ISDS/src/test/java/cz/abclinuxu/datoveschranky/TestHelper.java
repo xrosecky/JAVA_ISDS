@@ -5,7 +5,7 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.impl.Authentication;
 import cz.abclinuxu.datoveschranky.impl.BasicAuthentication;
 import cz.abclinuxu.datoveschranky.impl.ClientCertAuthentication;
-import cz.abclinuxu.datoveschranky.impl.DataBoxEnvironment;
+import cz.abclinuxu.datoveschranky.common.impl.DataBoxEnvironment;
 import cz.abclinuxu.datoveschranky.impl.DataBoxManager;
 import java.io.File;
 import org.junit.Test;
