@@ -88,10 +88,9 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 
     static DataBoxWithDetails create(TDbOwnerInfo owner) {
         DataBoxWithDetails result = new DataBoxWithDetails(owner.getDbID());
-        // owner.
         result.setIdentity(owner.getFirmName());
         String street = null;
-        if (owner.getAdNumberInMunicipality().trim().equals("")) {
+        if (owner.getAdNumberInMunicipality() != null && owner.getAdNumberInMunicipality().trim().equals("")) {
             street = String.format("%s %s", owner.getAdStreet(), owner.getAdNumberInStreet());
         } else {
             street = String.format("%s %s/%s", owner.getAdStreet(),
