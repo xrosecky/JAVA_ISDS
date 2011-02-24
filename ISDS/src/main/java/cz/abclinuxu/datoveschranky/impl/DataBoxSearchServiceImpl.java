@@ -103,7 +103,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         Address addressDetail = new Address();
         addressDetail.setCity(owner.getAdCity());
         addressDetail.setNumberInMunicipality(owner.getAdNumberInMunicipality());
-        addressDetail.setNumberInStreet(owner.getAdNumberInMunicipality());
+        addressDetail.setNumberInStreet(owner.getAdNumberInStreet());
         addressDetail.setState(owner.getAdState());
         addressDetail.setStreet(owner.getAdStreet());
         addressDetail.setZipCode(owner.getAdZipCode());
