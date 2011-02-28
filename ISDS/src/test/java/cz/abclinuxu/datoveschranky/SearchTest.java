@@ -17,10 +17,12 @@ import org.junit.Test;
 public class SearchTest {
 
     private static DataBoxServices services = null;
+
+    private static TestHelper helper = new TestHelper();
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-        services = TestHelper.connect();
+        services = helper.connectAsOVM();
     }
 
     @AfterClass
