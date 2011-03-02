@@ -26,7 +26,7 @@ public interface DataBoxMessagesService {
      * @param filter  filter na stav zpráv, null nebo prázdná množina vybere
      *     všechny zprávy, v opačném případě se vyberou zprávy se stavem,
      *     který je obsažen v množině filter. 
-     * @param offset  číslo první požadavané obálky
+     * @param offset  číslo první požadavané obálky (indexuje se od jedne!!!)
      * @param limit   počet vrácených obálek
      * @throws DataBoxException při vracení seznamu nastala chyba
      * 
@@ -43,7 +43,7 @@ public interface DataBoxMessagesService {
      * @param filter  filter na stav zpráv, null nebo prázdná množina vybere
      *     všechny zprávy, v opačném případě se vyberou zprávy se stavem,
      *     který je obsažen v množině filter. 
-     * @param offset  číslo první požadavané obálky
+     * @param offset  číslo první požadavané obálky (indexuje se od jedne!!!)
      * @param limit   počet vrácených obálek
      * @throws DataBoxException při vracení seznamu nastala chyba
      * 
