@@ -8,7 +8,6 @@ import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
-import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
 import java.io.OutputStream;
