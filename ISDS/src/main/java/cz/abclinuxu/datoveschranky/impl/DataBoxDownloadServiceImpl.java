@@ -7,7 +7,7 @@ import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
-import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput.DmReturnedMessage;
+import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
             throw new DataBoxException("Mohu stahnout pouze prijatou zpravu.");
         }
         Holder<TStatus> status = new Holder<TStatus>();
-        Holder<DmReturnedMessage> hMessage = new Holder<DmReturnedMessage>();
+        Holder<TReturnedMessage> hMessage = new Holder<TReturnedMessage>();
         dmOp.messageDownload(envelope.getMessageID(), hMessage, status);
         ErrorHandling.throwIfError("Nemohu stahnout prijatou zpravu.", status.value);
         TReturnedMessage message = hMessage.value;

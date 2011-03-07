@@ -2,19 +2,21 @@
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
      
-                          verze 2.6 
+                          verze 2.11 
       *********************************************************************                    
 Seznam služeb: 
 ==============
   FindDataBox                         
   CheckDataBox
+  GetDataBoxList
                           
  změny:
-  25.4.2009  verze 0.9
-  28.4.2009  verze 1.0    
-   3.6.2009  verze 2.0 - novela   
-  1.11.2009  verze 2.6 - komerční provoz                     
- ************************************************************************ -->
+  28.4.2009 verze 1.0    
+   3.6.2009 verze 2.0  - novela   
+  1.11.2009 verze 2.6  - komerční provoz                     
+  18.9.2010 verze 2.10 - změna URL v důsledku přechodu na Basic autentizaci
+                       - přidána WS GetDataBoxList      
+************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
                                   xmlns="http://schemas.xmlsoap.org/wsdl/" 
@@ -43,6 +45,12 @@ Seznam služeb:
     <part name="parameter" element="tns:CheckDataBoxResponse" />        
   </message>
 
+  <message name="GetDataBoxListRequest">
+    <part name="parameter" element="tns:GetDataBoxList" />        
+  </message>
+  <message name="GetDataBoxListResponse">
+    <part name="parameter" element="tns:GetDataBoxListResponse" />        
+  </message>
 
   <!-- ******************************************************************* -->
   <portType name="DataBoxSearchPortType">
@@ -56,6 +64,10 @@ Seznam služeb:
       <output message="tns:CheckDataBoxResponse"/>
     </operation>
   
+    <operation name="GetDataBoxList">
+      <input  message="tns:GetDataBoxListRequest"/>
+      <output message="tns:GetDataBoxListResponse"/>
+    </operation>
 
   </portType>
 
@@ -82,13 +94,22 @@ Seznam služeb:
       </output>
     </operation>
 
+    <operation name="GetDataBoxList">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
 
   </binding>
 
   <!-- ******************************************************************* -->
   <service name="DataBoxSearch">
     <port name="DataBoxSearchPortType" binding="tns:DataBoxSearchBinding">
-      <soap:address location="https://www.mojedatovaschranka.cz/DS/df"/>
+      <soap:address location="https://ws1.mojedatovaschranka.cz/DS/df"/>
     </port>
   </service>
 

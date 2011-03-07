@@ -49,5 +49,6 @@ public class DownloadAllMessagesTest {
 	}
 	List<MessageEnvelope> messages = messageService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, MAX);
 	Assert.assertEquals(seen.size(), messages.size());
+        System.out.println(seen.size());
     }
 }

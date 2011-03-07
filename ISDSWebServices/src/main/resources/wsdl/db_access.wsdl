@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro doplňkové služby související s přihlašováním 
      
-                       verze 2.7
+                       verze 2.11
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -12,7 +12,8 @@ Seznam služeb:
   GetPasswordInfo
 
   Změny:  
-     9.12.2009  verze 2.7
+    9.12.2009  verze 2.7
+    18.9.2010  verze 2.10  - změna URL v důsledku přechodu na Basic autentizaci
 ************************************************************************ -->
 
 <definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -130,7 +131,7 @@ Seznam služeb:
   <!-- ******************************************************************* -->
   <service name="DataBoxAccess">
     <port name="DataBoxAccessPortType" binding="tns:DataBoxAccessBinding">
-      <soap:address location="https://www.mojedatovaschranka.cz/DS/DsManage"/>
+      <soap:address location="https://ws1.mojedatovaschranka.cz/DS/DsManage"/>
     </port>
   </service>
 

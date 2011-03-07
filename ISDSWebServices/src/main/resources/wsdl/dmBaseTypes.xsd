@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými zprávami
-                       verze 2.6      
+                       verze 2.11      
                        
  Změny:  
      5.2.2009  verze 0.1   základní verze
@@ -43,6 +43,13 @@
     1.10.2009 verze 2.5    - přidány typy pro WS CreateMultipleMessage (oběžník = DZ pro více adresátů)
     1.11.2009 verze 2.6    - přidány nepovinné atributy dmType do obálky zprávy a seznamu zpráv (rozlišení komerční zprávy)
                            - přidány typy pro WS ConfirmDelivery (potvrzení doručení komerční zprávy)
+    2.3.2010 verze 2.9     - u elementu dmQTimestamp povolena nil hodnota 
+                           - přidán nepovinný atribut dmType k elementu dmEnvelope u CreateMessage
+                           - nová WS AuthenticateMessage
+                           - formální změny v umistění nepovinných atributů dmType u obálky a seznamu; beze změny v XML
+    11.10.2010 verze 2.10  - přidání typů pro WS GetMessageStateChanges
+    10.11.2010 verze 2.11  - přidání typů pro WS GetMessageAuthor
+                           - přidání nepovinného elementu dmPublishOwnID do  CreateMessage a CreateMultipleMessage                        
     ******************************************************************* -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="tIdDm">
@@ -305,6 +312,7 @@
     <xs:sequence>
       <xs:group ref="tns:gMultipleMessageEnvelopeSub" />
       <xs:element minOccurs="0" maxOccurs="1" name="dmOVM" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" maxOccurs="1" name="dmPublishOwnID" nillable="true" type="xs:boolean" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="tMultipleMessageRecipients">
@@ -553,7 +561,7 @@
           <xs:documentation>Hash kompletní DZ (z elementu dmDm)</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="dmQTimestamp" type="xs:base64Binary">
+      <xs:element name="dmQTimestamp" nillable="true" type="xs:base64Binary">
         <xs:annotation>
           <xs:documentation>Kvalifikované časové razítko</xs:documentation>
         </xs:annotation>
@@ -579,6 +587,7 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+    <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
   </xs:complexType>
   <xs:complexType name="tReturnedMessageEnvelope">
     <xs:annotation>
@@ -609,6 +618,7 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+    <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
   </xs:complexType>
   <xs:complexType name="tMessageEnvelopeSub">
     <xs:annotation>
@@ -617,7 +627,9 @@
     <xs:sequence>
       <xs:group ref="tns:gMessageEnvelopeSub" />
       <xs:element minOccurs="0" maxOccurs="1" name="dmOVM" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" maxOccurs="1" name="dmPublishOwnID" nillable="true" type="xs:boolean" />
     </xs:sequence>
+    <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
   </xs:complexType>
   <xs:complexType name="tMessageCreateInput">
     <xs:sequence>
@@ -717,27 +729,18 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+    <xs:attribute name="dmType" use="optional">
+      <xs:simpleType>
+        <xs:restriction base="tns:tDmType" />
+      </xs:simpleType>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="tRecordsArray">
     <xs:annotation>
       <xs:documentation>typ pro vrácený seznam DZ</xs:documentation>
     </xs:annotation>
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="dmRecord">
-        <xs:complexType>
-          <xs:complexContent mixed="false">
-            <xs:extension base="tns:tRecord">
-              <xs:attribute name="dmType" use="optional">
-                <xs:simpleType>
-                  <xs:restriction base="tns:tDmType">
-                    <xs:length value="1" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="dmRecord" type="tns:tRecord" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="tListOfSentInput">
@@ -829,15 +832,7 @@
   </xs:complexType>
   <xs:complexType name="tMessDownOutput">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessage" nillable="true">
-        <xs:complexType>
-          <xs:complexContent mixed="false">
-            <xs:extension base="tns:tReturnedMessage">
-              <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessage" nillable="true" type="tns:tReturnedMessage" />
       <xs:element minOccurs="0" maxOccurs="1" name="dmStatus" type="tns:tStatus" />
     </xs:sequence>
   </xs:complexType>
@@ -845,15 +840,7 @@
   <xs:element name="MessageDownloadResponse" type="tns:tMessDownOutput" />
   <xs:complexType name="tMessEnvelDownOutput">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessageEnvelope" nillable="true">
-        <xs:complexType>
-          <xs:complexContent mixed="false">
-            <xs:extension base="tns:tReturnedMessageEnvelope">
-              <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="dmReturnedMessageEnvelope" nillable="true" type="tns:tReturnedMessageEnvelope" />
       <xs:element name="dmStatus" type="tns:tStatus" />
     </xs:sequence>
   </xs:complexType>
@@ -891,5 +878,81 @@
   </xs:complexType>
   <xs:element name="ConfirmDelivery" type="tns:tIDMessInput" />
   <xs:element name="ConfirmDeliveryResponse" type="tns:tConfirmDeliveryOutput" />
+  <xs:complexType name="tAuthenticateMessageInput">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="dmMessage" type="xs:base64Binary">
+        <xs:annotation>
+          <xs:documentation>Podepsaná datová zpráva b base64 kódování</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AuthenticateMessage" type="tns:tAuthenticateMessageInput" />
+  <xs:complexType name="tAuthenticateMessageOutput">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="dmAuthResult" nillable="true" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Výsledek ověření zprávy</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AuthenticateMessageResponse" type="tns:tAuthenticateMessageOutput" />
+  <xs:complexType name="tGetStateChangesInput">
+    <xs:sequence>
+      <xs:element name="dmFromTime" nillable="true" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>čas dodání od</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dmToTime" nillable="true" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>čas dodání do</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetMessageStateChanges" type="tns:tGetStateChangesInput" />
+  <xs:complexType name="tStateChangesRecord">
+    <xs:sequence>
+      <xs:element name="dmID" type="tns:tIdDm" />
+      <xs:element name="dmEventTime" type="xs:dateTime" />
+      <xs:element name="dmMessageStatus" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tStateChangesArray">
+    <xs:annotation>
+      <xs:documentation>typ pro vrácený seznam DZ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="dmRecord" type="tns:tStateChangesRecord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tGetStateChangesOutput">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="dmRecords" nillable="true" type="tns:tStateChangesArray">
+        <xs:annotation>
+          <xs:documentation>pole výsledků</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetMessageStateChangesResponse" type="tns:tGetStateChangesOutput" />
   <xs:element name="DummyOperation" nillable="true" type="xs:string" />
+  <xs:complexType name="tGetAuthorInput">
+    <xs:sequence>
+      <xs:element name="dmID" type="tns:tIdDm" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetMessageAuthor" type="tns:tGetAuthorInput" />
+  <xs:complexType name="tGetAuthorOutput">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="userType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="authorName" nillable="true" type="xs:string" />
+      <xs:element name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetMessageAuthorResponse" type="tns:tGetAuthorOutput" />
 </xs:schema>

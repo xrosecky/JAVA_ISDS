@@ -9,9 +9,10 @@
         6. Stažení seznamů odeslaných datových zpráv - GetListOfSentMessages
         7. Stažení seznamů přijatých datových zpráv - GetListOfReceivedMessages
         8. Doručení komerční datové zprávy - ConfirmDelivery
+        9. Seznam změněných zpráv - GetMessageStateChanges
         
               
-                          verze 2.6  
+                          verze 2.11  
 
    Změny:  
      4.2.2009 verze 0.1
@@ -19,6 +20,9 @@
      8.4.2009 verze 1.2   - změna názvů WSDL, rozložení operací mezi WSDL
      3.6.2009 verze 2.0   - novela                               
     1.11.2009 verze 2.6   - přidána WS ConfirmDelivery 
+   11.10.2010 verze 2.10  - změna URL v důsledku přechodu na Basic autentizaci
+                          - přidání WS GetMessageStateChanges
+   10.11.2010 verze 2.11  - přidání WS GetMessageAuthor                     
 ************************************************************************ -->
 
 <definitions name="ISDS_dmMessCreate" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -91,6 +95,20 @@
     <part name="parameter" element="tns:ConfirmDeliveryResponse" />        
   </message>
   
+  <message name="GetMessageStateChangesRequest">
+    <part name="parameter" element="tns:GetMessageStateChanges" />        
+  </message>
+  <message name="GetMessageStateChangesResponse">
+    <part name="parameter" element="tns:GetMessageStateChangesResponse" />        
+  </message>
+
+  <message name="GetMessageAuthorRequest">
+    <part name="parameter" element="tns:GetMessageAuthor" />        
+  </message>
+  <message name="GetMessageAuthorResponse">
+    <part name="parameter" element="tns:GetMessageAuthorResponse" />        
+  </message>
+
 <!-- ******************************************************************* -->
   <portType name="dmInfoPortType">
 
@@ -132,6 +150,16 @@
      <operation name="ConfirmDelivery">
       <input  message="tns:ConfirmDeliveryRequest"/>
       <output message="tns:ConfirmDeliveryResponse"/>
+    </operation>
+
+     <operation name="GetMessageStateChanges">
+      <input  message="tns:GetMessageStateChangesRequest"/>
+      <output message="tns:GetMessageStateChangesResponse"/>
+    </operation>
+
+     <operation name="GetMessageAuthor">
+      <input  message="tns:GetMessageAuthorRequest"/>
+      <output message="tns:GetMessageAuthorResponse"/>
     </operation>
 
  </portType>
@@ -220,12 +248,32 @@
       </output>
     </operation>
     
+     <operation name="GetMessageStateChanges">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    
+     <operation name="GetMessageAuthor">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    
   </binding>
 
   <!-- ******************************************************************* -->
   <service name="dmInfoWebService">
     <port name="dmInfoPortType" binding="tns:dmInfoBinding">
-      <soap:address location="https://www.mojedatovaschranka.cz/DS/dx"/>
+      <soap:address location="https://ws1.mojedatovaschranka.cz/DS/dx"/>
     </port>
   </service>
 

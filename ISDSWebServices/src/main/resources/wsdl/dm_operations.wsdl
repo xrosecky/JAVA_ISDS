@@ -5,18 +5,21 @@
         2. stažení kompletní přijaté zprávy v čitelné podobě - MessageDownload
         3. stažení podepsané přijaté zprávy - SignedMessageDownload
         4. stažení podepsané odeslané zprávy - SignedSentMessageDownload
-        5. vytvoření hromadné zprávy (oběžníku) - CreateMultipleMessage
+        5. vytvoření hromadné zprávy (oběžníku) - CreateMultipleMessage   
+        6. ověření zprávy - AuthenticateMessage 
      
-                         verze 2.6  
+                         verze 2.11  
 
    Změny:  
      4.2.2009 verze 0.1
-    20.3.2009 verze 1.0 - formální úpravy vyhovující WS-I Basic Profile
-     8.4.2009 verze 1.2 - změna názvů WSDL, rozložení operací mezi WSDL
-    16.4.2009 verze 1.3 - přidána DummyOperation pro navazování a udržování spojení
-     3.6.2009 verze 2.0 - novela
-    1.10.2009 verze 2.5 - přidána WS CreateMultipleMessage
-    1.11.2009 verze 2.6 - komerční provoz                              
+    20.3.2009 verze 1.0  - formální úpravy vyhovující WS-I Basic Profile
+     8.4.2009 verze 1.2  - změna názvů WSDL, rozložení operací mezi WSDL
+    16.4.2009 verze 1.3  - přidána DummyOperation pro navazování a udržování spojení
+     3.6.2009 verze 2.0  - novela
+    1.10.2009 verze 2.5  - přidána WS CreateMultipleMessage
+    1.11.2009 verze 2.6  - komerční provoz
+    14.4.2010 verze 2.9  - přidána WS AuthenticateMessage                              
+    18.9.2010 verze 2.10 - změna URL v důsledku přechodu na Basic autentizaci
 ************************************************************************ -->
 
 <definitions name="ISDS_dmOperations" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -71,6 +74,13 @@
     <part name="parameter" element="tns:CreateMultipleMessageResponse" />        
   </message>
 
+  <message name="AuthenticateMessageRequest">
+    <part name="parameter" element="tns:AuthenticateMessage" />        
+  </message>
+  <message name="AuthenticateMessageResponse">
+    <part name="parameter" element="tns:AuthenticateMessageResponse" />        
+  </message>
+
   <!-- ******************************************************************* -->
   <portType name="dmOperationsPortType">
 
@@ -101,6 +111,11 @@
     <operation name="CreateMultipleMessage">
       <input message="tns:MultipleMessageCreateRequest"/>
       <output message="tns:MultipleMessageCreateResponse"/>
+    </operation>
+
+    <operation name="AuthenticateMessage">
+      <input message="tns:AuthenticateMessageRequest"/>
+      <output message="tns:AuthenticateMessageResponse"/>
     </operation>
 
   </portType>
@@ -166,12 +181,22 @@
       </output>
     </operation>
 
+    <operation name="AuthenticateMessage">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output >
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
   </binding>
 
   <!-- ******************************************************************* -->
   <service name="dmOperationsWebService">
     <port name="dmOperationsPortType" binding="tns:dmOperationsBinding">
-      <soap:address location="https://www.mojedatovaschranka.cz/DS/dz"/>
+      <soap:address location="https://ws1.mojedatovaschranka.cz/DS/dz"/>
     </port>
   </service>
 
