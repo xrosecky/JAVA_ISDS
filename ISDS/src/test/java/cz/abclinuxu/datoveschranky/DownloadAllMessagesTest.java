@@ -18,10 +18,12 @@ public class DownloadAllMessagesTest {
 
     private static TestHelper helper = new TestHelper();
     private static int MAX = 10000;
+    private static int BELOW_LIMIT = 2;
+    private static int BELOW_LIMIT_COUNT = 3;
 
     @Test
     public void downloadAllMessages() throws Exception {
-	int limits[] = new int[]{1, 2, 3, 5, MAX};
+	int limits[] = new int[]{ 3, 4, 5, MAX};
 	for (int limit : limits) {
 	    downloadAllMessages(limit);
 	}
@@ -35,10 +37,14 @@ public class DownloadAllMessagesTest {
 	end.roll(Calendar.DAY_OF_YEAR, 1);
 	DataBoxMessagesService messageService = helper.connectAsFO().getDataBoxMessagesService();
 	int offset = 1;
+	int count = 0;
 	while (true) {
 	    List<MessageEnvelope> messages = messageService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, offset, limit);
-	    if (messages.isEmpty()) {
+	    if (messages.isEmpty() || count > BELOW_LIMIT_COUNT) {
 		break;
+	    }
+	    if (messages.size() < BELOW_LIMIT) {
+		count++;
 	    }
 	    offset += messages.size();
 	    for (MessageEnvelope envelope : messages) {
