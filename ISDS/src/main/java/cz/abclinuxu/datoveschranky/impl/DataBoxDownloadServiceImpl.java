@@ -12,6 +12,7 @@ import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.xml.ws.Holder;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,6 +22,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
 
     private DmOperationsPortType dmOp = null;
     private MessageValidator validator = null;
+    static Logger logger = Logger.getLogger(DataBoxDownloadServiceImpl.class);
 
     public DataBoxDownloadServiceImpl(DmOperationsPortType dmOpService, MessageValidator validate) {
         this.dmOp = dmOpService;
@@ -28,6 +30,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
     }
 
     public Message downloadMessage(MessageEnvelope envelope, AttachmentStorer storer) {
+	logger.info(String.format("downloadMessage: id:%s", envelope.getMessageID()));
         if (envelope.getType() != MessageType.RECEIVED) {
             throw new DataBoxException("Mohu stahnout pouze prijatou zpravu.");
         }
@@ -35,11 +38,13 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
         Holder<TReturnedMessage> hMessage = new Holder<TReturnedMessage>();
         dmOp.messageDownload(envelope.getMessageID(), hMessage, status);
         ErrorHandling.throwIfError("Nemohu stahnout prijatou zpravu.", status.value);
+	logger.info(String.format("downloadMessage successfull"));
         TReturnedMessage message = hMessage.value;
         return validator.buildMessage(envelope, message, storer);
     }
 
     public void downloadSignedMessage(MessageEnvelope env, OutputStream os) {
+	logger.info(String.format("downloadSignedMessage: id:%s", env.getMessageID()));
         String id = env.getMessageID();
         Holder<byte[]> messageAsPKCS7 = new Holder<byte[]>();
         Holder<TStatus> status = new Holder<TStatus>();
@@ -57,6 +62,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
         try {
             os.write(messageAsPKCS7.value);
             os.flush();
+	    logger.info(String.format("downloadSignedMessage successfull"));
         } catch (IOException ioe) {
             throw new DataBoxException("Chyba pri zapisu do vystupniho proudu.", ioe);
         }

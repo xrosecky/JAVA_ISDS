@@ -24,6 +24,7 @@ import java.util.EnumSet;
 import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -32,6 +33,7 @@ import javax.xml.ws.Holder;
 public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 
     protected DmInfoPortType dataMessageInfo;
+    static Logger logger = Logger.getLogger(DataBoxMessagesServiceImpl.class);
 
     public DataBoxMessagesServiceImpl(DmInfoPortType dmInfo) {
         this.dataMessageInfo = dmInfo;
@@ -39,6 +41,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 
     public List<MessageEnvelope> getListOfReceivedMessages(Date from,
             Date to, EnumSet<MessageState> filter, int offset, int limit) {
+	logger.info(String.format("getListOfReceivedMessages: offset:%s limit:%s", offset, limit));
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlFrom = XMLUtils.toXmlDate(from);
@@ -48,11 +51,13 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         String value = String.valueOf(MessageState.toInt(filter));
         dataMessageInfo.getListOfReceivedMessages(xmlFrom, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam prijatych zprav", status.value);
+	logger.info(String.format("getListOfReceivedMessages finished"));
         return createMessages(records.value, MessageType.RECEIVED);
     }
 
     public List<MessageEnvelope> getListOfSentMessages(Date from,
             Date to, EnumSet<MessageState> filter, int offset, int limit) {
+	logger.info(String.format("getListOfSentMessages: offset:%s limit:%s", offset, limit));
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlSince = XMLUtils.toXmlDate(from);
@@ -62,6 +67,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         String value = String.valueOf(MessageState.toInt(filter));
         dataMessageInfo.getListOfSentMessages(xmlSince, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam odeslanych zprav", status.value);
+	logger.info(String.format("getListOfSentMessages finished"));
         return createMessages(records.value, MessageType.SENT);
     }
 
