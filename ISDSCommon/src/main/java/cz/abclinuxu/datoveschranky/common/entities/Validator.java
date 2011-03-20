@@ -28,7 +28,7 @@ public class Validator {
     }
     
     static public void assertValidMessageAnnotation(String annotation) {
-        if (annotation.length() > 255) {
+        if (annotation!= null && annotation.length() > 255) {
             throw new IllegalArgumentException("Předmět zprávy smí obsahovat nejvýše 255 znaků.");
         }
     }

@@ -37,7 +37,7 @@ public class MessageEnvelope implements Serializable {
         Validator.assertNotNull(recipient);
         Validator.assertNotNull(id);
         Validator.assertValidMessageID(id);
-        Validator.assertNotNull(annotation);
+        // Validator.assertNotNull(annotation); // annotation is optional
         this.type = type;
         this.sender = sender;
         this.recipient = recipient;
@@ -60,7 +60,7 @@ public class MessageEnvelope implements Serializable {
     }
 
     public void setAnnotation(String annotation) {
-        Validator.assertNotNull(annotation);
+        // Validator.assertNotNull(annotation); // annotation is optional
         this.annotation = annotation;
     }
     
