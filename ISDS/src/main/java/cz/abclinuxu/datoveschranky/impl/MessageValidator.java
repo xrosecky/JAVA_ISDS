@@ -210,11 +210,11 @@ public class MessageValidator {
         // identifikace zprávy odesílatelem
         String senderIdent = mess.getDmSenderIdent();
         String senderRefNumber = mess.getDmSenderRefNumber();
-        result.setSenderIdent(new DocumentIdent(senderIdent, senderRefNumber));
+        result.setSenderIdent(new DocumentIdent(senderRefNumber, senderIdent));
         // identifikace zprávy příjemcem
         String recipientIdent = mess.getDmRecipientIdent();
         String recipientRefNumber = mess.getDmRecipientRefNumber();
-        result.setSenderIdent(new DocumentIdent(recipientIdent, recipientRefNumber));
+        result.setRecipientIdent(new DocumentIdent(recipientRefNumber, recipientIdent));
         // a máme hotovo :-)
         return result;
     }

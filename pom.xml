@@ -35,6 +35,7 @@
     <module>ISDSWebServices</module>
     <module>ISDS</module>
     <module>MessageViewer</module>
+    <module>Examples</module>
   </modules>
   
   <build>
