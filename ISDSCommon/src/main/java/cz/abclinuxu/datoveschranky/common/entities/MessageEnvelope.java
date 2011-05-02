@@ -60,7 +60,6 @@ public class MessageEnvelope implements Serializable {
     }
 
     public void setAnnotation(String annotation) {
-        // Validator.assertNotNull(annotation); // annotation is optional
         this.annotation = annotation;
     }
     

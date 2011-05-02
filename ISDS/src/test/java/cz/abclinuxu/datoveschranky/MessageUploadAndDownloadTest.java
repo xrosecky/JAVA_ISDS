@@ -102,18 +102,19 @@ public class MessageUploadAndDownloadTest {
 	env.setAnnotation("Óda_na_příliš_žluťoučkého_koně");
 	List<Attachment> attachments = new ArrayList<Attachment>();
 	// prvni priloha
+	String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	Attachment attach1 = new Attachment();
-	attach1.setDescription("ahoj.txt");
+	attach1.setDescription("ahoj.xml");
 	attach1.setMetaType("main");
-	attach1.setMimeType("txt");
-	attach1.setContents(new ByteContent("Vanoce jsou svatky klidu".getBytes("UTF-8")));
+	attach1.setMimeType("text/xml");
+	attach1.setContents(new ByteContent((prolog+"<text>Vanoce jsou svatky klidu</text>").getBytes("UTF-8")));
 	attachments.add(attach1);
 	// druha priloha
 	Attachment attach2 = new Attachment();
-	attach2.setDescription("Óda_na_příliš_žluťoučkého_koně.txt");
+	attach2.setDescription("Óda_na_příliš_žluťoučkého_koně.xml");
 	attach2.setMetaType("enclosure");
-	attach2.setMimeType("txt");
-	attach2.setContents(new ByteContent("Příliš žluťoučký kůň úpěl ďábelské ódy.".getBytes("UTF-8")));
+	attach2.setMimeType("text/xml");
+	attach2.setContents(new ByteContent((prolog+"<text>Příliš žluťoučký kůň úpěl ďábelské ódy.</text>").getBytes("UTF-8")));
 	attachments.add(attach2);
 	// a ted ji poslem
 	Message message = new Message(env, null, null, attachments);
