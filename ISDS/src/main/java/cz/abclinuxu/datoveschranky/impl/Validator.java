@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSSignedData;
@@ -163,7 +163,7 @@ public class Validator {
                 return cert;
             }
         }
-        logger.log(Level.INFO, String.format("Nemohu najit certifikat, vydavatel je %s "
+        logger.info(String.format("Nemohu najit certifikat, vydavatel je %s "
                 +", seriove cislo je %d.", issuer.getName(), serNumber));
         return null;
     }
