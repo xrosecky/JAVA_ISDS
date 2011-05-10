@@ -1,6 +1,7 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
 import cz.abclinuxu.datoveschranky.common.entities.content.Content;
+import cz.abclinuxu.datoveschranky.common.impl.MimeTypes;
 import java.io.Serializable;
 
 /**
@@ -24,8 +25,9 @@ public class Attachment implements Serializable {
         if (descr == null) {
             throw new NullPointerException(descr);
         }
-        this.description = descr;
-        this.content = cont;
+	this.description = descr;
+	this.content = cont;
+	setAutoMimeType(descr);
     }
 
     /**
@@ -54,7 +56,8 @@ public class Attachment implements Serializable {
      */
     public void setDescription(String newDescr) {
         Validator.assertNotNull(newDescr);
-        this.description = newDescr;
+	this.description = newDescr;
+	setAutoMimeType(newDescr);
     }
 
     /**
@@ -89,4 +92,12 @@ public class Attachment implements Serializable {
         return String.format("Popis:%s MimeType:%s MetaType:%s", this.description,
                 this.mimeType, this.metaType);
     }
+
+    private void setAutoMimeType(String desc) {
+	String newMimeType = MimeTypes.fileNameToMimeType(desc);
+	if (newMimeType != null) {
+	    this.setMimeType(newMimeType);
+	}
+    }
+    
 }

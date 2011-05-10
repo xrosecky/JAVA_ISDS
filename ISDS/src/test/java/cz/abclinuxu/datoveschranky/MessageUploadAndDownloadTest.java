@@ -106,14 +106,14 @@ public class MessageUploadAndDownloadTest {
 	Attachment attach1 = new Attachment();
 	attach1.setDescription("ahoj.xml");
 	attach1.setMetaType("main");
-	attach1.setMimeType("text/xml");
+	// attach1.setMimeType("text/xml");
 	attach1.setContents(new ByteContent((prolog+"<text>Vanoce jsou svatky klidu</text>").getBytes("UTF-8")));
 	attachments.add(attach1);
 	// druha priloha
 	Attachment attach2 = new Attachment();
 	attach2.setDescription("Óda_na_příliš_žluťoučkého_koně.xml");
 	attach2.setMetaType("enclosure");
-	attach2.setMimeType("text/xml");
+	// attach2.setMimeType("text/xml");
 	attach2.setContents(new ByteContent((prolog+"<text>Příliš žluťoučký kůň úpěl ďábelské ódy.</text>").getBytes("UTF-8")));
 	attachments.add(attach2);
 	// a ted ji poslem
