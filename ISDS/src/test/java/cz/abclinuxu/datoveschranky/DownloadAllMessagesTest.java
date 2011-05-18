@@ -1,6 +1,9 @@
 package cz.abclinuxu.datoveschranky;
 
+import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
+import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
+import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -36,6 +39,7 @@ public class DownloadAllMessagesTest {
 	GregorianCalendar end = new GregorianCalendar();
 	end.roll(Calendar.DAY_OF_YEAR, 1);
 	DataBoxMessagesService messageService = helper.connectAsFO().getDataBoxMessagesService();
+	DataBoxDownloadService downloadService = helper.connectAsFO().getDataBoxDownloadService();
 	int offset = 1;
 	int count = 0;
 	while (true) {
@@ -51,10 +55,16 @@ public class DownloadAllMessagesTest {
 		String id = envelope.getMessageID();
 		Assert.assertFalse(seen.contains(id));
 		seen.add(id);
+		if (envelope.getState().canBeDownloaded()) {
+		    Message mess = downloadService.downloadMessage(envelope, new ByteArrayAttachmentStorer());
+		} else {
+		    System.out.println("Skipping message with state:"+envelope.getState().toString());
+		}
 	    }
 	}
 	List<MessageEnvelope> messages = messageService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, MAX);
 	Assert.assertEquals(seen.size(), messages.size());
         System.out.println(seen.size());
     }
+
 }

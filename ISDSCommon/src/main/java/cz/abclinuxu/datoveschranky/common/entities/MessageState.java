@@ -1,5 +1,6 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
+import java.lang.String;
 import java.util.EnumSet;
 
 /**
@@ -10,23 +11,25 @@ import java.util.EnumSet;
  */
 public enum MessageState {
 
-    SUBMITTED  ("podána", 1),
-    TIMESTAMPED ("opatřena časovým razítkem", 2),
-    VIRUS_FOUND ("neprošla antivirovou kontrolou", 3),
-    DELIVERED ("dodána do ISDS", 4),
-    DELIVERED_BY_FICTION ("doručena fikcí", 5),
-    DELIVERED_BY_LOGIN ("doručena přihlášením", 6),
-    READ ("přečtena", 7),
-    UNDELIVERABLE ("nedoručitelná, DS byla zpětně znepřístupněna", 8),
-    DELETED ("smazána", 9),
-    IN_DEPOSITORY ("v datovém trezoru", 10);
+    SUBMITTED  ("podána", 1, false),
+    TIMESTAMPED ("opatřena časovým razítkem", 2, false),
+    VIRUS_FOUND ("neprošla antivirovou kontrolou", 3, false),
+    DELIVERED ("dodána do ISDS", 4, true),
+    DELIVERED_BY_FICTION ("doručena fikcí", 5, true),
+    DELIVERED_BY_LOGIN ("doručena přihlášením", 6, true),
+    READ ("přečtena", 7, true),
+    UNDELIVERABLE ("nedoručitelná, DS byla zpětně znepřístupněna", 8, false),
+    DELETED ("smazána", 9, false),
+    IN_DEPOSITORY ("v datovém trezoru", 10, true);
     
     private final String message;
     private final int value;
-    
-    MessageState(String mess, int val) {
+    private boolean download;
+
+    MessageState(String mess, int val, boolean download) {
         this.message = mess;
         this.value = val;
+	this.download = download;
     }
     
     public static MessageState valueOf(int val) {
@@ -48,6 +51,10 @@ public enum MessageState {
             result |= (1 << state.value);
         }
         return result;
+    }
+
+    public boolean canBeDownloaded() {
+	return download;
     }
     
     @Override
