@@ -37,7 +37,7 @@ public class MimeTypes {
 	int dotPosition = filename.lastIndexOf(".");
 	if (dotPosition != -1) {
 	    String suffix = filename.substring(dotPosition+1, filename.length());
-	    return mimeTypes.get(suffix);
+	    return mimeTypes.get(suffix.toLowerCase());
 	} else {
 	    return null;
 	}
