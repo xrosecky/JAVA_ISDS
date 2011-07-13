@@ -14,6 +14,9 @@ public class DataBoxWithDetails extends DataBox {
     private Address addressDetail;
     private String IC;
 
+    public DataBoxWithDetails() {
+    }
+
     public DataBoxWithDetails(String id) {
         super(id);
     }
@@ -32,6 +35,15 @@ public class DataBoxWithDetails extends DataBox {
 
     public void setIC(String ic) {
         this.IC = ic;
+    }
+
+    @Override
+    public String toString() {
+	if (this.getIC() != null) {
+	    return "IC:" + this.getIC() + " " + super.toString();
+	} else {
+	    return super.toString();
+	}
     }
 
 }

@@ -3,6 +3,7 @@ package cz.abclinuxu.datoveschranky.impl;
 import cz.abclinuxu.datoveschranky.common.entities.Address;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
@@ -12,7 +13,9 @@ import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 import cz.abclinuxu.datoveschranky.ws.db.TDbType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.ws.Holder;
 
 /**
@@ -27,6 +30,22 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
     protected final static String NOTHING_FOUND = "0002";
     List<String> searchOKCodes = Arrays.asList(OK, SEARCH_LIMIT_REACHED, NOTHING_FOUND);
     protected DataBoxManipulationPortType service;
+
+    static protected final Map<DataBoxType, TDbType> types = new HashMap<DataBoxType, TDbType>();
+    static {
+	types.put(DataBoxType.FO, TDbType.FO);
+	types.put(DataBoxType.OVM, TDbType.OVM);
+	types.put(DataBoxType.OVM_EXEKUT, TDbType.OVM_EXEKUT);
+	types.put(DataBoxType.OVM_NOTAR, TDbType.OVM_NOTAR);
+	types.put(DataBoxType.OVM_REQ, TDbType.OVM_REQ);
+	types.put(DataBoxType.PFO, TDbType.PFO);
+	types.put(DataBoxType.PFO_ADVOK, TDbType.PFO_ADVOK);
+	types.put(DataBoxType.PFO_DANPOR, TDbType.PFO_DANPOR);
+	types.put(DataBoxType.PFO_INSSPR, TDbType.PFO_INSSPR);
+	types.put(DataBoxType.PO, TDbType.PO);
+	types.put(DataBoxType.PO_REQ, TDbType.PO_REQ);
+	types.put(DataBoxType.PO_ZAK, TDbType.PO_ZAK);
+    }
 
     public DataBoxSearchServiceImpl(DataBoxManipulationPortType serv) {
         this.service = serv;
@@ -61,6 +80,48 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
             result.add(create(owner));
         }
         return result;
+    }
+
+    public List<DataBoxWithDetails> find(DataBoxType type, DataBoxWithDetails what) {
+	TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
+	if (type != null) {
+	    ownerInfo.setDbType(types.get(type));
+	} else {
+	    ownerInfo.setDbType(null);
+	}
+	if (what.getIC() != null) {
+	    ownerInfo.setIc(what.getIC());
+	}
+	if (what.getIdentity() != null) {
+	    ownerInfo.setFirmName(what.getIdentity());
+	}
+	if (what.getAddressDetails() != null) {
+	    Address address = what.getAddressDetails();
+	    if (address.getCity() != null) {
+		ownerInfo.setAdCity(address.getCity());
+	    }
+	    if (address.getStreet() != null) {
+		ownerInfo.setAdStreet(address.getStreet());
+	    }
+	    if (address.getNumberInMunicipality() != null) {
+		ownerInfo.setAdNumberInMunicipality(address.getNumberInMunicipality());
+	    }
+	    if (address.getNumberInStreet() != null) {
+		ownerInfo.setAdNumberInStreet(address.getNumberInStreet());
+	    }
+	}
+	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
+        Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
+        service.findDataBox(ownerInfo, owners, status);
+        if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
+            ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
+        }
+        List<DataBoxWithDetails> result = new ArrayList<DataBoxWithDetails>();
+        for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
+            result.add(create(owner));
+        }
+	return result;
+
     }
 
     public DataBoxWithDetails findDataBoxByID(String id) {
