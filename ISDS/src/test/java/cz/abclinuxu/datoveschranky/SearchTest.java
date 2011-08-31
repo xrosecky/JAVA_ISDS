@@ -24,7 +24,7 @@ public class SearchTest {
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-        services = helper.connectAsOVM();
+        services = helper.connectAsFO();
     }
 
     @AfterClass
