@@ -143,7 +143,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             // identifikace zprávy příjemcem
             String recipientIdent = record.getDmRecipientIdent().getValue();
             String recipientRefNumber = record.getDmRecipientRefNumber().getValue();
-            env.setSenderIdent(new DocumentIdent(recipientIdent, recipientRefNumber));
+            env.setRecipientIdent(new DocumentIdent(recipientIdent, recipientRefNumber));
             // a máme hotovo :-)
             result.add(env);
         }
