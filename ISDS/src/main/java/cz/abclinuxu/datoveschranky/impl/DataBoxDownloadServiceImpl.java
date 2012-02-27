@@ -29,6 +29,9 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
         this.validator = validate;
     }
 
+    /*
+     * Stahne prijatou zpravu. Pro odeslane zpravy se muzi pouzit downloadSignedMessage - omezeni na strane ISDS..
+    */
     public Message downloadMessage(MessageEnvelope envelope, AttachmentStorer storer) {
 	logger.info(String.format("downloadMessage: id:%s", envelope.getMessageID()));
         if (envelope.getType() != MessageType.RECEIVED) {
