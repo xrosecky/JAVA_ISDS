@@ -33,10 +33,14 @@ public class DataBoxUploadServiceImpl implements DataBoxUploadService {
         TMessageEnvelopeSub envelope = new TMessageEnvelopeSub();
         envelope.setDbIDRecipient(message.getEnvelope().getRecipient().getdataBoxID());
         envelope.setDmAnnotation(message.getEnvelope().getAnnotation());
-	envelope.setDmRecipientIdent(message.getEnvelope().getRecipientIdent().getIdent());
-	envelope.setDmRecipientRefNumber(message.getEnvelope().getRecipientIdent().getRefNumber());
-	envelope.setDmSenderIdent(message.getEnvelope().getSenderIdent().getIdent());
-	envelope.setDmSenderRefNumber(message.getEnvelope().getSenderIdent().getRefNumber());
+        if (message.getEnvelope().getRecipientIdent() != null) {
+	    envelope.setDmRecipientIdent(message.getEnvelope().getRecipientIdent().getIdent());
+	    envelope.setDmRecipientRefNumber(message.getEnvelope().getRecipientIdent().getRefNumber());
+	}
+        if (message.getEnvelope().getSenderIdent() != null) {
+	    envelope.setDmSenderIdent(message.getEnvelope().getSenderIdent().getIdent());
+	    envelope.setDmSenderRefNumber(message.getEnvelope().getSenderIdent().getRefNumber());
+        }
         TFilesArray files = new TFilesArray();
         for (Attachment attachment : message.getAttachments()) {
             DmFile file = new DmFile();
