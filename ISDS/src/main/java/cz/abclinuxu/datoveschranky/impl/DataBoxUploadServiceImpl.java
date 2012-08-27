@@ -58,6 +58,9 @@ public class DataBoxUploadServiceImpl implements DataBoxUploadService {
         }
         Holder<String> messageID = new Holder<String>();
         Holder<TStatus> status = new Holder<TStatus>();
+        if (message.getEnvelope().getDmType() != null) {
+            envelope.setDmType(message.getEnvelope().getDmType());
+        }
         dmOp.createMessage(envelope, files, messageID, status);
         ErrorHandling.throwIfError("Poslani zpravy se nezdarilo", status.value);
         message.getEnvelope().setType(MessageType.SENT);

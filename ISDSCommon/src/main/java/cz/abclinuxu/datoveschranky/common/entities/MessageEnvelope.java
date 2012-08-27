@@ -26,6 +26,7 @@ public class MessageEnvelope implements Serializable {
     private LegalTitle legalTitle;
     private boolean personalDelivery;
     private boolean allowSubstDelivery;
+    private String dmType = null;
 
     public MessageEnvelope() {
         this.type = MessageType.CREATED;
@@ -163,6 +164,14 @@ public class MessageEnvelope implements Serializable {
                 sender.getIdentity(), recipient.getIdentity(), id, annotation);
     }
 
+    public String getDmType() {
+	return dmType;
+    }
+
+    public void setDmType(String dmType) {
+	this.dmType = dmType;
+    }
+
 	public String getToHands() {
 		return toHands;
 	}
@@ -178,5 +187,6 @@ public class MessageEnvelope implements Serializable {
 	public boolean getAllowSubstDelivery() {
 		return allowSubstDelivery;
 	}
+
 	
 }
