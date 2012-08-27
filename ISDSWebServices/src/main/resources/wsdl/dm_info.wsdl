@@ -10,9 +10,12 @@
         7. Stažení seznamů přijatých datových zpráv - GetListOfReceivedMessages
         8. Doručení komerční datové zprávy - ConfirmDelivery
         9. Seznam změněných zpráv - GetMessageStateChanges
+        10. Informace o odesílateli zprávy - GetMessageAuthor
+        11. Informace o způsobu posílání PDZ - PDZInfo
+        12. smazání dlouhodbě uložené DZ (trezorové) - EraseMessage 
         
               
-                          verze 2.11  
+                          verze 2.17 
 
    Změny:  
      4.2.2009 verze 0.1
@@ -22,7 +25,9 @@
     1.11.2009 verze 2.6   - přidána WS ConfirmDelivery 
    11.10.2010 verze 2.10  - změna URL v důsledku přechodu na Basic autentizaci
                           - přidání WS GetMessageStateChanges
-   10.11.2010 verze 2.11  - přidání WS GetMessageAuthor                     
+   10.11.2010 verze 2.11  - přidání WS GetMessageAuthor     
+   25.8.2010  verze 2.14  - novela zákona 300   
+   12.4.2012  verze 2.16  - přidání WS EraseMessage            
 ************************************************************************ -->
 
 <definitions name="ISDS_dmMessCreate" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -109,6 +114,13 @@
     <part name="parameter" element="tns:GetMessageAuthorResponse" />        
   </message>
 
+  <message name="EraseMessageRequest">
+    <part name="parameter" element="tns:EraseMessage" />        
+  </message>
+  <message name="EraseMessageResponse">
+    <part name="parameter" element="tns:EraseMessageResponse" />        
+  </message>
+
 <!-- ******************************************************************* -->
   <portType name="dmInfoPortType">
 
@@ -160,6 +172,11 @@
      <operation name="GetMessageAuthor">
       <input  message="tns:GetMessageAuthorRequest"/>
       <output message="tns:GetMessageAuthorResponse"/>
+    </operation>
+
+     <operation name="EraseMessage">
+      <input  message="tns:EraseMessageRequest"/>
+      <output message="tns:EraseMessageResponse"/>
     </operation>
 
  </portType>
@@ -268,6 +285,16 @@
       </output>
     </operation>
     
+     <operation name="EraseMessage">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
   </binding>
 
   <!-- ******************************************************************* -->

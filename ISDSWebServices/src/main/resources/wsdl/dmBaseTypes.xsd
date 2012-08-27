@@ -1,39 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio 7.1.5.1419 (http://www.liquid-technologies.com)-->
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými zprávami
-                       verze 2.11      
+                       verze 2.16      
                        
  Změny:  
      5.2.2009  verze 0.1   základní verze
-    10.2.2009  verze 0.2   - v typu tDelivery místo ID zprávy je nyní kompletní obálka včetně časového razítka a hashe, které se ale asi nepoužije, protože bez písemností neplatí                         
-    18.2.2009  verze 0.3   - v typu tDelivery přibyl obalovací element dmDm pro obálku DZ (sjednocení s tReturnedMessage[Envelope])
-                           - v typu tReturnedMessageEnvelope vypuštěna nadbytečná sekvence
-                           - doplněna dokumentace k méně jasným elementům a atributům  
-    19.2.2009  verze 0.4   - upřesněn význam dmPurpose jako pole pro Zmocnění (zrušeno ve verzi 0.6)
-                           - k tFile přidán do obálky souboru další atribut dmUpFileGuid, který společně s dmFileGuid může uchovat vztahy závislosti mezi soubory
-                           - do atributu dmFileMetaType přidána další položka výčtu typu "signature"
-                           - do skupiny elementů gMesssageEnvelope přidány nové elementy upřesňující podrobnější organizační členění organizací (dmRecipientOrgUnit, dmRecipientOrgUnitNum, dmRecipientOrgUnit a dmRecipientOrgUnitNum).
     24.2.2009  verze 0.5   - změněn základní namespace na http://isds.czechpoint.cz
-    25.2.2009  verze 0.6   - změněno jméno elementu dmSubstDelivery na výstižnější dmAllowSubstDelivery	
-                           - změněna vnitřní struktura grupy gMessageEnvelope - skládá se nově z několika elementů a nové grupy gMessageEnvelopeSub obsahující všechny elementy potřebné pro vytvoření DZ (použití ve WSDL)                       
-                           - přidán nový typ tMessageEnvelopeSub (obsahující grupu gMessageEnvelopeSub): obsahuje jen ty elementy obálky, které se zadávají na vstupu WS CreateMessage; důsledkem je trochu zpřeházené pořadí v gMessageEnvelope a tedy i v odvozených typech
-                           - do grupy gMessageEnvelopeSub přidána pětice elementů (dmLegalTitle...) nahrazující původní jeden stringový element dmPurpose; pro zadání Právního titulu/Zmocnění písemnosti (zákon, rok, paragr., odst. a písmeno)
-                           - do grupy gMessageEnvelopeSub přidán element dmIdent pro Značku (spisovou)
-                           - do grupy gMessageEnvelope přidána dvojice elementů s adresou odesílatele a adresou příjemce (dmSenderAddress a dmRecipientAddress)
-    27.2.2009  verze 0.7   - element dmMessageStatus změněn na typ integer  
-                           - element dmMessageStatus se stavem DZ přidán i do stažené zprávy (tReturnedMessage), stažené obálky DZ (tReturnedMessageEnvelope) a Dodejky (tDelivery)
-                           - upraveno pořadí elementů v gMessageEnvelopSub (dmAllowSubstDelivery na konec)
     20.3.2009  verze 1.0   - přidány elementy (na první úrovni) k jednotlivým typům pro použití jako parametry ve WSDL (document/literal)+komplexní typy pro tyto elementy popisující jednotlivé parametry operací
                            - podle požadavku MV upraveny v grupě gMessageEnvelopeSub elementy pro Číslo jednací a Spisovou značku: zdvojeny (1x pro odesílatel, 1x pro příjemce), u původních změněno jméno, nově tedy jsou: dmRecipientRefNumber, dmSenderRefNumber, dmRecipientIdent, dmSenderIdent
-    31.3.2009  verze 1.1.  - opraven překlep v complex type tListOfMessOutput: z dmRecieverOrgUnit na dmRecipientOrgUnit
-                           - sjednoceno pojmenování elementů - u typu tStatus jsou elementy dmStatusCode a dmStatusMessage (místo StatusCode a StatusMessage)
-                           - upravena vlastnost atributu dmFileDescr u popisu přílohy - nově je Required, protože se objeví v seznamu příloh DZ na portále 
-    15.4.2009  verze 1.2   - přidán element DummyOperation pro WS stejného jména
-    13.5.2009  verze 1.5   - opraveno jméno elementu dmSenderOrgUnitNum a dmRecipientOrgUnitNum ve vstupních parametrech WS pro získání seznamu, aby bylo shodné se stejným elementem u zprávy
-                           - opraven typ u elementu MarkMessageAsDownloadedResponse - chyběl obalovací element dmStatus
-                           - opraveno omezení u typu tIdDm z length na maxLength
-                           - doplněna kardinalita některých elementů v odpovědích od serveru - při výskytu některých chyb se vrací pouze Status
-                           - doplněna vlastnosti nillable = TRUE u některých elementů vč. stringových
      3.6.2009  verze 2.0   - novela zákona 300/2008 Sb. a ChangeRequesty
                            - do obálky stažené zprávy (a tudíž do všech struktur pracujících se zprávou) přibyl element dmSenderType typu int pro typ DS odesílatele 
                            - do stažené zprávy (tReturnedMessage), stažené obálky zprávy (tReturnedMessageEnvelope) a do staženého seznamu zpráv (tRecord) přibyl element dmAttachmentSize typu int pro velikost přílohy v DS
@@ -50,6 +25,10 @@
     11.10.2010 verze 2.10  - přidání typů pro WS GetMessageStateChanges
     10.11.2010 verze 2.11  - přidání typů pro WS GetMessageAuthor
                            - přidání nepovinného elementu dmPublishOwnID do  CreateMessage a CreateMultipleMessage                        
+  	25.09.2011 verze 2.15  - novela zákona 300/2008 Sb.
+                           - přidání dalších typů zprávy (různé podtypy PDZ)
+                       	   - Create[Multiple]Message - nepovinný atribut dmType pro označení Iniciační poštovní zprávy pro Odpovědní DZ resp. Odpovědní DZ
+    12.04.2012  verze 2.16 - přidání typů pro EraseMessage                     
     ******************************************************************* -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="tIdDm">
@@ -81,7 +60,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
-            <xs:any />
+            <xs:any namespace="" processContents="skip" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -323,7 +302,15 @@
   <xs:complexType name="tMultipleMessageCreateInput">
     <xs:sequence>
       <xs:element name="dmRecipients" type="tns:tMultipleMessageRecipients" />
-      <xs:element name="dmEnvelope" type="tns:tMultipleMessageEnvelopeSub" />
+      <xs:element name="dmEnvelope">
+        <xs:complexType>
+          <xs:complexContent mixed="false">
+            <xs:extension base="tns:tMultipleMessageEnvelopeSub">
+              <xs:attribute name="dmType" type="tns:tDmType" />
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="dmFiles" type="tns:tFilesArray" />
     </xs:sequence>
   </xs:complexType>
@@ -530,7 +517,7 @@
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="dmAmbiguousRecipient" nillable="true" type="xs:boolean">
         <xs:annotation>
-          <xs:documentation>Příznak, že adresát je ne-OVM povášené na OVM (§5a)</xs:documentation>
+          <xs:documentation>Příznak, že adresát je ne-OVM povýšené na OVM (§5a)</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:group ref="tns:gMessageEnvelopeSub" />
@@ -633,7 +620,13 @@
   </xs:complexType>
   <xs:complexType name="tMessageCreateInput">
     <xs:sequence>
-      <xs:element name="dmEnvelope" type="tns:tMessageEnvelopeSub" />
+      <xs:element name="dmEnvelope">
+        <xs:complexType>
+          <xs:complexContent mixed="false">
+            <xs:extension base="tns:tMessageEnvelopeSub" />
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="dmFiles" type="tns:tFilesArray" />
     </xs:sequence>
   </xs:complexType>
@@ -865,7 +858,10 @@
   <xs:element name="SignedSentMessageDownloadResponse" type="tns:tSignedMessDownOutput" />
   <xs:simpleType name="tDmType">
     <xs:annotation>
-      <xs:documentation>typ DZ: K = komerční DZ, V = veřejná DZ; nepoužitý atribut = veřejná DZ</xs:documentation>
+      <xs:documentation>typ DZ: na vstupu CreateMessage:
+K = komerční DZ, O = vynucení odpovědní DZ, I = iniciační pro ODZ, V = veřejná DZ; nepoužitý atribut = veřejná DZ
+Na výstupu: 
+K - smluvní PDZ, O - odpovědní PDZ, G - globálně dotovaná, Z - omezeně dotovaná, D - externě dotovaná, E - EPZ, I - iniciační k ODZ, Y - iniciační k ODZ zkonzumovaná, X - iniciační k ODZ expirovaná, A - iniciační k ODZ dotovaná, B - dotovaná iniciační k ODZ zkonzumovaná, C - dotovaná iniciační k ODZ expirovaná, neuvedeno = veřejná DZ</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:length value="1" />
@@ -955,4 +951,17 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="GetMessageAuthorResponse" type="tns:tGetAuthorOutput" />
+  <xs:element name="EraseMessage" type="tns:tEraseMessageIntput" />
+  <xs:complexType name="tEraseMessageIntput">
+    <xs:sequence>
+      <xs:element name="dmID" type="tns:tIdDm" />
+      <xs:element minOccurs="1" maxOccurs="1" name="dmIncoming" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EraseMessageResponse" type="tns:tEraseMessageOutput" />
+  <xs:complexType name="tEraseMessageOutput">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>

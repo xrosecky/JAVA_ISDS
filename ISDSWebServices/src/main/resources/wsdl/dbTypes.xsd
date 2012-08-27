@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými schránkami a ve WSDL pro vyhledávání DS
-                       verze 2.11    
+                       verze 2.16    
 
  změny:
-  9.2.2009  verze 0.1
+  9.2.2009  verze 0.1  základní verze
  20.3.2009  verze 1.0  - přidány elementy (na první úrovni) k jednotlivým typům pro použití jako parametry ve WSDL (document/literal)+komplexní typy pro tyto elementy popisující jednotlivé parametry operací
- 25.3.2009  verze 1.1  - do výstupních parametrů CreateDataBox přidán element dbID pro číslo vytvářené DS, přidán complex type tCreateDBOutput jako typ pro CreateDataBoxResponse
- 21.4.2009  verze 1.2  - změněn typ elementu u adNumberInStreet a adNumberInMunicipality z int na string
- 28.4.2009  verze 1.3  - v dbOwnerInfo byla doplněna u elementu biDate a dbType vlastnosti nillable = TRUE (pro FindDataBox se nemusí vyplnit, pokud je zadáno ID DS)
-                       - přidány elementy a typy pro WS CheckDataBox   
- 11.5.2009  verze 1.4. - nový vstupní parametr u WS DisableDataBoxExternally - dbOwnerDisableDate typu xs:date pro datum znepřístupnění
  13.5 2009  verze 1.5  - odstraněn nepotřebný element GetOwnerInfoFromLogin  					
                        - doplněna kardinalita některých elementů v odpovědích od serveru - při výskytu některých chyb se vrací pouze dbStatus
                        - doplněna vlastnosti nillable = TRUE u některých elementů vč. stringových
- 27.5.2009  verze 1.6  - na vstupu CreateDataBox přidán element dbAccessDataId pro zadání čísla obálky s přístupovými údaji při podání na CzechPOINTu 
-                       - vráceny elementy pro pomocnou službu GetOwnerInfoFromLogin                  
   3.6.2009  verze 2.0  - novela zákona 300/2008 Sb.
                        - ve struktuře tdbOwnerInfo přibylo 5 elementů: 
                                 - identifier typu string:   externí identifkátor schránky pro poskytovatele dat OVM a PO, možná PFO
@@ -43,18 +36,17 @@
                         - přidány elementy pro WS CreateDataBoxPFOInfo
  1.10.2009 - verze 2.5  - změna délky typu tUserID z 6 na 6-12		
  1.11.2009 - verze 2.6  - komerční provoz
- 12.12.2009 - verze 2.7 - přidány elementy pro WS ChangePassword
-                        - přidány elementy pro WS GetPasswordInfo
-                        - přidány elementy pro WS GetUserInfoFromLogin  
- 25.02.2010 - verze 2.8 - do dbUserInfo přidán nepovinný element caState                        
- 01.04.2010 - verze 2.9 - u CreateDataBox přibyl na vstupu nepovinný boolean dbUseActPortal a na výstupu string dbAccessdataId (změněno verzi 2.10)
  11.10.2010 - verze 2.10 - u NewAccessData přibyl na vstupu nepovinný element email, na výstupu element dbUserID pro nové ID uživatele, vše pro použití s Aktivačním portálem CzechPointu 
                          - u AddDataBoxUser přibyly na vstupu nepovinné elementy dbVirtual a email, na výstupu elementy dbAccessDataId a dbUserID, vše pro použití s Aktivačním portálem CzechPointu
                          - u CreateDataBox přibyly na vstupu nepovinné elementy dbVirtual a email, na výstupu elementy dbAccessDataId a dbUserID, vše pro použití s Aktivačním portálem CzechPointu (zatím nepoužito)
                          - přidány typy pro WS GetDataBoxList
  23.11.2010 - verze 2.11 - u WS GetDataBoxUsers povolen nulový počet uživatelů
-                         - doplněn chybějící dbUserID u CreateDataBox pro CzP
-**************************************************************************** -->
+                         - doplněn chybějící dbUserID u CreateDataBox pro CzechPOINT     
+ 18.02.2011 - verze 2.12 - přidána definice pro neveřejnou WS DeleteDataBoxPromptly   
+                         - nové konstanty typu uživatele v tUserType: LIQUIDATOR a OFFICIAL_CERT   
+ 25.09.2011 - verze 2.15 - novela zákona 300/2008 Sb.
+                         - přidána definice pro novou WS PDZInfo
+ **************************************************************************** -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="tIdDb">
     <xs:annotation>
@@ -109,6 +101,8 @@
       <xs:enumeration value="ENTRUSTED_USER" />
       <xs:enumeration value="ADMINISTRATOR" />
       <xs:enumeration value="OFFICIAL" />
+      <xs:enumeration value="OFFICIAL_CERT" />
+      <xs:enumeration value="LIQUIDATOR" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="tUserID">
@@ -602,6 +596,86 @@
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="1" name="dblData" nillable="true" type="xs:base64Binary" />
       <xs:element name="dbStatus" type="tns:tDbReqStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DeleteDataBoxPromptly" type="tns:tDeleteDBPromptlyInput" />
+  <xs:complexType name="tDeleteDBPromptlyInput">
+    <xs:sequence>
+      <xs:element name="dbOwnerInfo" type="tns:tDbOwnerInfo" />
+      <xs:group ref="tns:gExtApproval" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DeleteDataBoxPromptlyResponse" type="tns:tReqStatusOutput" />
+  <xs:complexType name="tPDZInfoInput">
+    <xs:sequence>
+      <xs:element name="PDZSender" type="tns:tIdDb" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PDZInfo" type="tns:tPDZInfoInput" />
+  <xs:complexType name="tPDZRec">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="PDZType" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Typ PDZ: K - smluvní PDZ, O - odpovědní PDZ, G - globálně dotovaná, E - PDZ z kreditu</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="PDZRecip" nillable="true" type="tns:tIdDb">
+        <xs:annotation>
+          <xs:documentation>Komu je možno poslat PDZ, nil = všichni adresáti</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="PDZPayer" type="tns:tIdDb">
+        <xs:annotation>
+          <xs:documentation>Kdo platí za PDZ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="PDZExpire" nillable="true" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>Kdy vyprší platnost, nil = neomezené</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="PDZCnt" nillable="true" type="xs:nonNegativeInteger">
+        <xs:annotation>
+          <xs:documentation>Počet zpráv daného typu, nil = neomezené</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ODZIdent" nillable="true" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Pouze u ODZ - identifikátor zadaný iniciátorem ODZ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tPDZRecArray">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="dbPDZRecord" type="tns:tPDZRec" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tPDZInfoOutput">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="dbPDZRecords" type="tns:tPDZRecArray" />
+      <xs:element name="dbStatus" type="tns:tDbReqStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PDZInfoResponse" type="tns:tPDZInfoOutput" />
+  <xs:element name="ChangeBoxesType" type="tns:tChangeDBsTypeInput" />
+  <xs:complexType name="tChangeDBsTypeInput">
+    <xs:sequence>
+      <xs:element name="refNumber" type="xs:string" />
+      <xs:element name="newDBType" type="xs:string" />
+      <xs:element name="IDsFile" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChangeBoxesTypeResponse" type="tns:tChangeDBsTypeOutput" />
+  <xs:complexType name="tChangeDBsTypeOutput">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="changeLogFile" type="xs:base64Binary" />
+      <xs:element name="dbStatus" type="tns:tDbReqStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tChangeLogRow">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="changeLogRow" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

@@ -10,8 +10,8 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
-import cz.abclinuxu.datoveschranky.ws.dm.TMessageEnvelopeSub;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
+import cz.abclinuxu.datoveschranky.ws.dm.TMessageCreateInput.DmEnvelope;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.ws.Holder;
@@ -30,7 +30,7 @@ public class DataBoxUploadServiceImpl implements DataBoxUploadService {
 
     public void sendMessage(Message message) {
         Validator.assertValidMessageForSending(message);
-        TMessageEnvelopeSub envelope = new TMessageEnvelopeSub();
+        DmEnvelope envelope = new DmEnvelope();
         envelope.setDbIDRecipient(message.getEnvelope().getRecipient().getdataBoxID());
         envelope.setDmAnnotation(message.getEnvelope().getAnnotation());
         if (message.getEnvelope().getRecipientIdent() != null) {

@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby manipulujícími s datovými schránkami 
      
-                          verze 2.11  
+                          verze 2.16  
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -27,7 +27,7 @@ Seznam služeb:
   Activate
   CreateDataBoxPFOInfo
   GetDataBoxUsers
-  
+  ChangeDataBoxesType
   
                           
  změny:
@@ -43,7 +43,8 @@ Seznam služeb:
                          - přidána WS CreateDataBoxPFOInfo
   1.1.2010   verze 2.7   - přesunuta WS GetDataBoxUsers ze zrušeného db_supplementary.wsdl                     
  11.10.2010  verze 2.10  - změna URL v důsledku přechodu na Basic autentizaci
-                         - přidána WS GetDataBoxList      
+                         - přidána WS GetDataBoxList
+ 06.03.2012  verze 2.16  - přidána WS ChangeBoxesType                            
 ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -199,7 +200,14 @@ Seznam služeb:
     <part name="parameter" element="tns:GetDataBoxListResponse" />        
   </message>
 
-  <!-- ******************************************************************* -->
+  <message name="ChangeBoxesTypeRequest">
+    <part name="parameter" element="tns:ChangeBoxesType" />        
+  </message>
+  <message name="ChangeBoxesTypeResponse">
+    <part name="parameter" element="tns:ChangeBoxesTypeResponse" />        
+  </message>
+
+ <!-- ******************************************************************* -->
   <portType name="DataBoxManipulationPortType">
     <operation name="FindDataBox">
       <input  message="tns:FindDataBoxRequest"/>
@@ -299,6 +307,11 @@ Seznam služeb:
     <operation name="GetDataBoxList">
       <input  message="tns:GetDataBoxListRequest"/>
       <output message="tns:GetDataBoxListResponse"/>
+    </operation>
+
+    <operation name="ChangeBoxesType">
+      <input  message="tns:ChangeBoxesTypeRequest"/>
+      <output message="tns:ChangeBoxesTypeResponse"/>
     </operation>
   </portType>
 
@@ -496,6 +509,16 @@ Seznam služeb:
     </operation>
 
     <operation name="GetDataBoxList">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
+    <operation name="ChangeBoxesType">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />

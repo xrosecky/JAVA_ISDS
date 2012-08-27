@@ -2,20 +2,25 @@
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
      
-                          verze 2.11 
+                          verze 2.16 
       *********************************************************************                    
 Seznam služeb: 
 ==============
   FindDataBox                         
   CheckDataBox
   GetDataBoxList
+  PDZInfo
+
                           
  změny:
   28.4.2009 verze 1.0    
    3.6.2009 verze 2.0  - novela   
   1.11.2009 verze 2.6  - komerční provoz                     
   18.9.2010 verze 2.10 - změna URL v důsledku přechodu na Basic autentizaci
-                       - přidána WS GetDataBoxList      
+                       - přidána WS GetDataBoxList
+  25.8.2010 verze 2.14 - novela zákona 300/2008 Sb.
+                       - přidání WS PDZInfo        
+  
 ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -52,7 +57,14 @@ Seznam služeb:
     <part name="parameter" element="tns:GetDataBoxListResponse" />        
   </message>
 
-  <!-- ******************************************************************* -->
+  <message name="PDZInfoRequest">
+    <part name="parameter" element="tns:PDZInfo" />        
+  </message>
+  <message name="PDZInfoResponse">
+    <part name="parameter" element="tns:PDZInfoResponse" />        
+  </message>
+
+ <!-- ******************************************************************* -->
   <portType name="DataBoxSearchPortType">
     <operation name="FindDataBox">
       <input  message="tns:FindDataBoxRequest"/>
@@ -69,7 +81,12 @@ Seznam služeb:
       <output message="tns:GetDataBoxListResponse"/>
     </operation>
 
-  </portType>
+    <operation name="PDZInfo">
+     <input  message="tns:PDZInfoRequest"/>
+     <output message="tns:PDZInfoResponse"/>
+   </operation>
+
+   </portType>
 
   <!-- ******************************************************************* -->
   <binding name="DataBoxSearchBinding" type="tns:DataBoxSearchPortType">
@@ -103,6 +120,16 @@ Seznam služeb:
         <soap:body use="literal" />
       </output>
     </operation>
+
+    <operation name="PDZInfo">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
 
   </binding>
 
