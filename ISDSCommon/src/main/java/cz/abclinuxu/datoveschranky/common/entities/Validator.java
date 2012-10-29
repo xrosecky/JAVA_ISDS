@@ -67,21 +67,21 @@ public class Validator {
         if (legalTitle != null) {
             // Check law
             if (legalTitle.getLaw() != null) {
-	        try {
-		    Long.parseLong(legalTitle.getLaw());
-	        } catch(Exception e) {
+                try {
+                    Long.parseLong(legalTitle.getLaw());
+                } catch(Exception e) {
                     throw new IllegalArgumentException("Cislo paragrafu zmocneni neni prirozene cislo");
-	        }
+                }
             }
             // Check year
             if (legalTitle.getYear() != null) {
-	        try {
-	            Long.parseLong(legalTitle.getYear());
-	        } catch(Exception e) {
-	            throw new IllegalArgumentException("Rok zmocneni neni prirozene cislo");
+                try {
+                    Long.parseLong(legalTitle.getYear());
+                } catch(Exception e) {
+                    throw new IllegalArgumentException("Rok zmocneni neni prirozene cislo");
                 }
             }
-	}
+        }
 
         Attachment first = attachments.get(0);
         if (!first.getMetaType().equals("main")) {
