@@ -1,6 +1,7 @@
 package cz.abclinuxu.datoveschranky.impl;
 
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
+import cz.abclinuxu.datoveschranky.common.entities.LegalTitle;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.Validator;
@@ -14,6 +15,7 @@ import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessageCreateInput.DmEnvelope;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import javax.xml.ws.Holder;
 
 /**
@@ -33,6 +35,21 @@ public class DataBoxUploadServiceImpl implements DataBoxUploadService {
         DmEnvelope envelope = new DmEnvelope();
         envelope.setDbIDRecipient(message.getEnvelope().getRecipient().getdataBoxID());
         envelope.setDmAnnotation(message.getEnvelope().getAnnotation());
+
+        // Process legal title
+        LegalTitle legalTitle = message.getEnvelope().getLegalTitle();
+        if (legalTitle != null) {
+            if (legalTitle.getLaw() != null) envelope.setDmLegalTitleLaw(BigInteger.valueOf(Long.parseLong(legalTitle.getLaw())));
+                envelope.setDmLegalTitlePar(legalTitle.getPar());
+                envelope.setDmLegalTitlePoint(legalTitle.getPoint());
+                envelope.setDmLegalTitleSect(legalTitle.getSect());
+                if (legalTitle.getYear() != null) envelope.setDmLegalTitleYear(BigInteger.valueOf(Long.parseLong(legalTitle.getYear())));
+        }
+
+        // To hands
+        envelope.setDmToHands(message.getEnvelope().getToHands());
+        envelope.setDmPersonalDelivery(message.getEnvelope().getPersonalDelivery());
+
         if (message.getEnvelope().getRecipientIdent() != null) {
 	    envelope.setDmRecipientIdent(message.getEnvelope().getRecipientIdent().getIdent());
 	    envelope.setDmRecipientRefNumber(message.getEnvelope().getRecipientIdent().getRefNumber());
