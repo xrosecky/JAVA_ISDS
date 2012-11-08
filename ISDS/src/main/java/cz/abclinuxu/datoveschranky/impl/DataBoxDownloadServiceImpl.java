@@ -70,4 +70,5 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
             throw new DataBoxException("Chyba pri zapisu do vystupniho proudu.", ioe);
         }
     }
+
 }

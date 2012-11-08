@@ -5,6 +5,7 @@ import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -72,5 +73,16 @@ public interface DataBoxMessagesService {
      * 
      */
     public void markMessageAsDownloaded(MessageEnvelope env);
+
+    /**
+     * Stáhne doručenku zprávy ve formátu PKCS7 a uloží ji do výstupního
+     * proudu. Tento formát je vhodný pro záholování. PKCS7 je binární formát,
+     * žádné XML ani zfo soubor. Po odstranění podpisu je výsledek XML.
+     *
+     * @param envelope  obálka zprávy, ke které má stáhnout přílohy
+     * @param os        kam se má uložit
+     * @throws DataBoxException
+     */
+    public void getSignedDeliveryInfo(MessageEnvelope envelope, OutputStream os);
             
 }

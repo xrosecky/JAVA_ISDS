@@ -8,6 +8,7 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
+import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.ws.XMLUtils;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
@@ -17,6 +18,8 @@ import cz.abclinuxu.datoveschranky.ws.dm.THash;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +44,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 
     public List<MessageEnvelope> getListOfReceivedMessages(Date from,
             Date to, EnumSet<MessageState> filter, int offset, int limit) {
-	logger.info(String.format("getListOfReceivedMessages: offset:%s limit:%s", offset, limit));
+        logger.info(String.format("getListOfReceivedMessages: offset:%s limit:%s", offset, limit));
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlFrom = XMLUtils.toXmlDate(from);
@@ -51,13 +54,13 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         String value = String.valueOf(MessageState.toInt(filter));
         dataMessageInfo.getListOfReceivedMessages(xmlFrom, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam prijatych zprav", status.value);
-	logger.info(String.format("getListOfReceivedMessages finished"));
+        logger.info(String.format("getListOfReceivedMessages finished"));
         return createMessages(records.value, MessageType.RECEIVED);
     }
 
     public List<MessageEnvelope> getListOfSentMessages(Date from,
             Date to, EnumSet<MessageState> filter, int offset, int limit) {
-	logger.info(String.format("getListOfSentMessages: offset:%s limit:%s", offset, limit));
+        logger.info(String.format("getListOfSentMessages: offset:%s limit:%s", offset, limit));
         Holder<TRecordsArray> records = new Holder<TRecordsArray>();
         Holder<TStatus> status = new Holder<TStatus>();
         XMLGregorianCalendar xmlSince = XMLUtils.toXmlDate(from);
@@ -67,7 +70,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         String value = String.valueOf(MessageState.toInt(filter));
         dataMessageInfo.getListOfSentMessages(xmlSince, xmlTo, null, value, bOffset, bLimit, records, status);
         ErrorHandling.throwIfError("Nemohu stahnout seznam odeslanych zprav", status.value);
-	logger.info(String.format("getListOfSentMessages finished"));
+        logger.info(String.format("getListOfSentMessages finished"));
         return createMessages(records.value, MessageType.SENT);
     }
 
@@ -78,7 +81,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         ErrorHandling.throwIfError("Nemohu overit hash zpravy.", status.value);
         return new Hash(hash.value.getAlgorithm(), hash.value.getValue());
     }
-    
+
     public void markMessageAsDownloaded(MessageEnvelope env) {
         TStatus status = dataMessageInfo.markMessageAsDownloaded(env.getMessageID());
         ErrorHandling.throwIfError("Nemohu oznacit zpravu jako prectenou.", status);
@@ -89,26 +92,24 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         Holder<TDelivery> delivery = new Holder<TDelivery>();
         dataMessageInfo.getDeliveryInfo(env.getMessageID(), delivery, status);
         ErrorHandling.throwIfError("Nemohu stahnout informace o doruceni.", status.value);
-        DeliveryInfo result = new DeliveryInfo();
-        XMLGregorianCalendar accepted = delivery.value.getDmAcceptanceTime();
-        if (accepted != null) {
-            result.setAccepted(accepted.toGregorianCalendar());
-        }
-        XMLGregorianCalendar delivered = delivery.value.getDmDeliveryTime();
-        if (delivered != null) {
-            result.setDelivered(delivered.toGregorianCalendar());
-        }
-        result.setHash(new Hash(delivery.value.getDmHash().getAlgorithm(), delivery.value.getDmHash().getValue()));
-        result.setMessageEnvelope(env);
-        List<DeliveryEvent> events = new ArrayList<DeliveryEvent>();
-        for (TEvent tEvent : delivery.value.getDmEvents().getDmEvent()) {
-            DeliveryEvent event = new DeliveryEvent(tEvent.getDmEventTime().toGregorianCalendar(), tEvent.getDmEventDescr());
-            events.add(event);
-        }
-        result.setEvents(events);
-        return result;
+        return MessageValidator.buildDeliveryInfo(env, delivery.value);
     }
-    
+
+    public void getSignedDeliveryInfo(MessageEnvelope envelope, OutputStream os) {
+        Holder<TStatus> status = new Holder<TStatus>();
+        Holder<byte[]> signedDeliveryInfo = new Holder<byte[]>();
+        dataMessageInfo.getSignedDeliveryInfo(envelope.getMessageID(), signedDeliveryInfo, status);
+        ErrorHandling.throwIfError(String.format("Nemohu stahnout podepsanou dorucenku pro zpravu s id=%s.",
+                envelope.getMessageID()), status.value);
+        try {
+            os.write(signedDeliveryInfo.value);
+            os.flush();
+            logger.info(String.format("getSignedDeliveryInfo successfull"));
+        } catch (IOException ioe) {
+            throw new DataBoxException("Chyba pri zapisu do vystupniho proudu.", ioe);
+        }
+    }
+
     protected List<MessageEnvelope> createMessages(TRecordsArray records, MessageType type) {
         List<MessageEnvelope> result = new ArrayList<MessageEnvelope>();
         for (TRecord record : records.getDmRecord()) {
@@ -149,5 +150,4 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         }
         return result;
     }
-    
 }

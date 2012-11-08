@@ -185,6 +185,10 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         this.storeRequest(post, "dz", os);
     }
 
+    public void getSignedDeliveryInfo(MessageEnvelope envelope, OutputStream os) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
     private void loginImpl(String username, String password) throws Exception {
         String userPassword = username + ":" + password;
         Base64 base64 = new Base64(0, null, false);

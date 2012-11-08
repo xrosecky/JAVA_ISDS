@@ -84,6 +84,19 @@ public class MessageUploadAndDownloadTest {
     }
 
     @Test
+    public void testSignedDeliveryInfo() throws Exception {
+        DataBoxServices services = helper.connectAsFO();
+        List<MessageEnvelope> messages = services.getDataBoxMessagesService().getListOfSentMessages(begin.getTime(), end.getTime(), null, 0, 5);
+        for (MessageEnvelope env : messages) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            services.getDataBoxMessagesService().getSignedDeliveryInfo(env, bos);
+            MessageValidator validator = new MessageValidator();
+            DeliveryInfo delivery = validator.createDeliveryInfo(bos.toByteArray());
+            assert(delivery.getHash() != null);
+        }
+    }
+
+    @Test
     public void testIntegrityOfSentMessages() throws Exception {
 	DataBoxServices services = helper.connectAsFO();
 	testIntegrityOfSentMessages(services);

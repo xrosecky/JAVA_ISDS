@@ -2,6 +2,8 @@ package cz.abclinuxu.datoveschranky.impl;
 
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
+import cz.abclinuxu.datoveschranky.common.entities.DeliveryEvent;
+import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
@@ -14,6 +16,9 @@ import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
+import cz.abclinuxu.datoveschranky.ws.dm.TDelivery;
+import cz.abclinuxu.datoveschranky.ws.dm.TDeliveryMessageOutput;
+import cz.abclinuxu.datoveschranky.ws.dm.TEvent;
 import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
@@ -94,7 +99,7 @@ public class MessageValidator {
         Utils.copy(content.getInputStream(), bos);
         return this.validateAndCreateMessage(bos.toByteArray(), storer, true);
     }
-    
+
     public Message createMessage(Content content, AttachmentStorer storer) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Utils.copy(content.getInputStream(), bos);
@@ -130,15 +135,27 @@ public class MessageValidator {
         if (checkHash) {
             Hash rightHash = computeMessageHash(asXML, message.getTimeStamp().getHash().getAlgorithm());
             if (!rightHash.equals(message.getTimeStamp().getHash())) {
-                throw new DataBoxException("Poruseni integrity zpravy, spocitany has zpravy " +
-                        "nen roven hasi uvedenemu v casovem razitku.");
+                throw new DataBoxException("Poruseni integrity zpravy, spocitany has zpravy "
+                        + "nen roven hasi uvedenemu v casovem razitku.");
             }
             if (!rightHash.equals(messageHash)) {
-                throw new DataBoxException("Poruseni integrity zpravy, spocitany hash zpravy " +
-                        "nen roven hasi uvedenemu ve zprave.");
+                throw new DataBoxException("Poruseni integrity zpravy, spocitany hash zpravy "
+                        + "nen roven hasi uvedenemu ve zprave.");
             }
         }
         return message;
+    }
+
+    public DeliveryInfo createDeliveryInfo(byte[] asPCKS7) {
+        byte[] asXML = validator.readPKCS7(asPCKS7);
+        MarshallerResult result = null;
+        try {
+            result = load(TDeliveryMessageOutput .class, asXML);
+        } catch (Exception ex) {
+            throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
+        }
+        TDeliveryMessageOutput delivery = (TDeliveryMessageOutput) ((JAXBElement) result.value).getValue();
+        return MessageValidator.buildDeliveryInfo(delivery.getDmDelivery().getValue());
     }
 
     /**
@@ -173,6 +190,33 @@ public class MessageValidator {
         } catch (UnsupportedEncodingException uee) {
             throw new DataBoxException(uee.toString(), uee);
         }
+    }
+
+    public static DeliveryInfo buildDeliveryInfo(TDelivery delivery) {
+        return MessageValidator.buildDeliveryInfo(null, delivery);
+    }
+
+    public static DeliveryInfo buildDeliveryInfo(MessageEnvelope env, TDelivery delivery) {
+        DeliveryInfo result = new DeliveryInfo();
+        XMLGregorianCalendar accepted = delivery.getDmAcceptanceTime();
+        if (accepted != null) {
+            result.setAccepted(accepted.toGregorianCalendar());
+        }
+        XMLGregorianCalendar delivered = delivery.getDmDeliveryTime();
+        if (delivered != null) {
+            result.setDelivered(delivered.toGregorianCalendar());
+        }
+        result.setHash(new Hash(delivery.getDmHash().getAlgorithm(), delivery.getDmHash().getValue()));
+        if (env != null) {
+            result.setMessageEnvelope(env);
+        }
+        List<DeliveryEvent> events = new ArrayList<DeliveryEvent>();
+        for (TEvent tEvent : delivery.getDmEvents().getDmEvent()) {
+            DeliveryEvent event = new DeliveryEvent(tEvent.getDmEventTime().toGregorianCalendar(), tEvent.getDmEventDescr());
+            events.add(event);
+        }
+        result.setEvents(events);
+        return result;
     }
 
     MessageEnvelope buildMessageEnvelope(TReturnedMessage message, MessageType type) {
@@ -246,15 +290,15 @@ public class MessageValidator {
     }
 
     public Message readZFO(byte[] input, AttachmentStorer storer) {
-	MarshallerResult result = null;
+        MarshallerResult result = null;
         try {
             result = load(TMessDownOutput.class, input);
         } catch (Exception ex) {
             throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
         }
-	TMessDownOutput out = (TMessDownOutput) ((JAXBElement) result.value).getValue();
+        TMessDownOutput out = (TMessDownOutput) ((JAXBElement) result.value).getValue();
         TReturnedMessage tMessage = out.getDmReturnedMessage().getValue();
-	MessageEnvelope envelope = null;
+        MessageEnvelope envelope = null;
         if (result.rootUri.endsWith("/v20/SentMessage")) {
             envelope = this.buildMessageEnvelope(tMessage, MessageType.SENT);
         } else if (result.rootUri.endsWith("/v20/message")) {
@@ -262,8 +306,8 @@ public class MessageValidator {
         } else {
             envelope = this.buildMessageEnvelope(tMessage, MessageType.CREATED);
         }
-	Message message = this.buildMessage(envelope, tMessage, storer);
-	return message;
+        Message message = this.buildMessage(envelope, tMessage, storer);
+        return message;
     }
 
     private static class MarshallerResult {
