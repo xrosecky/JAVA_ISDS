@@ -145,6 +145,9 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             String recipientIdent = record.getDmRecipientIdent().getValue();
             String recipientRefNumber = record.getDmRecipientRefNumber().getValue();
             env.setRecipientIdent(new DocumentIdent(recipientRefNumber, recipientIdent));
+            env.setToHands(record.getDmToHands().getValue());
+            env.setAllowSubstDelivery(record.getDmAllowSubstDelivery().getValue());
+            env.setPersonalDelivery(record.getDmPersonalDelivery().getValue());
             // a máme hotovo :-)
             result.add(env);
         }

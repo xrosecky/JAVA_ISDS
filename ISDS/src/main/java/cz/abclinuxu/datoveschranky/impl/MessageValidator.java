@@ -259,6 +259,8 @@ public class MessageValidator {
         String recipientIdent = mess.getDmRecipientIdent();
         String recipientRefNumber = mess.getDmRecipientRefNumber();
         result.setRecipientIdent(new DocumentIdent(recipientRefNumber, recipientIdent));
+        result.setRecipientIdent(new DocumentIdent(recipientRefNumber, recipientIdent));
+        result.setToHands(mess.getDmToHands());
         // a máme hotovo :-)
         return result;
     }

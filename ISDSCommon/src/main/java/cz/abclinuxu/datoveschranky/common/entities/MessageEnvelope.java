@@ -31,7 +31,7 @@ public class MessageEnvelope implements Serializable {
     public MessageEnvelope() {
         this.type = MessageType.CREATED;
     }
-    
+
     public MessageEnvelope(MessageType type, DataBox sender, DataBox recipient, String id, String annotation) {
         Validator.assertNotNull(type);
         Validator.assertNotNull(sender);
@@ -45,12 +45,13 @@ public class MessageEnvelope implements Serializable {
         this.id = id;
         this.annotation = annotation;
     }
+
     public MessageEnvelope(MessageType type, DataBox sender, DataBox recipient, String id, String annotation, LegalTitle legalTitle, String toHands, boolean personalDelivery, boolean allowSubstDelivery) {
-    	this(type, sender, recipient, id, annotation);
-    	this.legalTitle = legalTitle;
-    	this.toHands = toHands;
-    	this.allowSubstDelivery = allowSubstDelivery;
-    	this.personalDelivery = personalDelivery;
+        this(type, sender, recipient, id, annotation);
+        this.legalTitle = legalTitle;
+        this.toHands = toHands;
+        this.allowSubstDelivery = allowSubstDelivery;
+        this.personalDelivery = personalDelivery;
     }
 
     /**
@@ -63,14 +64,14 @@ public class MessageEnvelope implements Serializable {
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
     }
-    
+
     /**
      * Vrátí příjemce zprávy. 
      */
     public DataBox getRecipient() {
         return recipient;
     }
-    
+
     public void setRecipient(DataBox recipient) {
         Validator.assertNotNull(recipient);
         this.recipient = recipient;
@@ -82,7 +83,7 @@ public class MessageEnvelope implements Serializable {
     public DataBox getSender() {
         return sender;
     }
-    
+
     public void setSender(DataBox sender) {
         Validator.assertNotNull(sender);
         this.sender = sender;
@@ -98,7 +99,7 @@ public class MessageEnvelope implements Serializable {
     public void setMessageID(String newID) {
         Validator.assertNotNull(newID);
         this.id = newID;
-    }    
+    }
 
     /**
      * Vrátí typ zprávy (zpráva přijatá, odeslaná, vytvořená za účelem odesláni)
@@ -135,7 +136,7 @@ public class MessageEnvelope implements Serializable {
     public void setSenderIdent(DocumentIdent senderIdent) {
         this.senderIdent = senderIdent;
     }
-    
+
     /**
      * Čas, kdy byla zpráva akceptována nebo null, nebyla-li ještě akceptována
      */
@@ -165,28 +166,43 @@ public class MessageEnvelope implements Serializable {
     }
 
     public String getDmType() {
-	return dmType;
+        return dmType;
     }
 
     public void setDmType(String dmType) {
-	this.dmType = dmType;
+        this.dmType = dmType;
     }
 
-	public String getToHands() {
-		return toHands;
-	}
+    public boolean isAllowSubstDelivery() {
+        return allowSubstDelivery;
+    }
 
-	public LegalTitle getLegalTitle() {
-		return legalTitle;
-	}
+    public void setAllowSubstDelivery(boolean allowSubstDelivery) {
+        this.allowSubstDelivery = allowSubstDelivery;
+    }
 
-	public boolean getPersonalDelivery() {
-		return personalDelivery;
-	}
+    public LegalTitle getLegalTitle() {
+        return legalTitle;
+    }
 
-	public boolean getAllowSubstDelivery() {
-		return allowSubstDelivery;
-	}
+    public void setLegalTitle(LegalTitle legalTitle) {
+        this.legalTitle = legalTitle;
+    }
 
-	
+    public boolean getPersonalDelivery() {
+        return personalDelivery;
+    }
+
+    public void setPersonalDelivery(boolean personalDelivery) {
+        this.personalDelivery = personalDelivery;
+    }
+
+    public String getToHands() {
+        return toHands;
+    }
+
+    public void setToHands(String toHands) {
+        this.toHands = toHands;
+    }
+
 }
