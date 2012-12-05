@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.xml.ws.Holder;
 
 /**
@@ -32,6 +33,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
     protected DataBoxManipulationPortType service;
 
     static protected final Map<DataBoxType, TDbType> types = new HashMap<DataBoxType, TDbType>();
+    static protected final Map<TDbType, DataBoxType> typesInverted = new HashMap<TDbType, DataBoxType>();
     static {
 	types.put(DataBoxType.FO, TDbType.FO);
 	types.put(DataBoxType.OVM, TDbType.OVM);
@@ -45,6 +47,9 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	types.put(DataBoxType.PO, TDbType.PO);
 	types.put(DataBoxType.PO_REQ, TDbType.PO_REQ);
 	types.put(DataBoxType.PO_ZAK, TDbType.PO_ZAK);
+        for (Entry<DataBoxType, TDbType> entry : types.entrySet()) {
+            typesInverted.put(entry.getValue(), entry.getKey());
+        }
     }
 
     public DataBoxSearchServiceImpl(DataBoxManipulationPortType serv) {
@@ -149,6 +154,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 
     static DataBoxWithDetails create(TDbOwnerInfo owner) {
         DataBoxWithDetails result = new DataBoxWithDetails(owner.getDbID());
+        result.setDataBoxType(typesInverted.get(owner.getDbType()));
         result.setIdentity(owner.getFirmName());
         String street = null;
         if (owner.getAdNumberInMunicipality() == null || owner.getAdNumberInMunicipality().trim().equals("")) {

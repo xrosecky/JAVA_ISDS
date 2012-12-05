@@ -44,7 +44,6 @@ public class SearchTest {
         List<DataBoxWithDetails> boxes1 = services.getDataBoxSearchService().findOVMsByName("min");
         Assert.assertTrue(boxes1.size() > 1);
         for (DataBoxWithDetails db : boxes1) {
-            Assert.assertNotNull(db.getIC());
             Assert.assertNotNull(db.getAddressDetails().getCity());
             Assert.assertNotNull(db.getAddressDetails().getNumberInStreet());
             Assert.assertNotNull(db.getAddressDetails().getNumberInMunicipality());

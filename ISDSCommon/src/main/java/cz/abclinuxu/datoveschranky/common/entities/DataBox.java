@@ -84,4 +84,9 @@ public class DataBox implements Serializable {
     public DataBoxType getDataBoxType() {
 	return dataBoxType;
     }
+
+    public void setDataBoxType(DataBoxType type) {
+	dataBoxType = type;
+    }
+
 }
