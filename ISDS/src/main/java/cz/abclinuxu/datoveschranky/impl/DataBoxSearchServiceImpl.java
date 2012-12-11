@@ -5,6 +5,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
+import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
@@ -29,9 +30,15 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
     protected final static String OK = "0000";
     protected final static String SEARCH_LIMIT_REACHED = "0003";
     protected final static String NOTHING_FOUND = "0002";
-    List<String> searchOKCodes = Arrays.asList(OK, SEARCH_LIMIT_REACHED, NOTHING_FOUND);
-    protected DataBoxManipulationPortType service;
-
+    protected final static String NO_UNIQUE_RESULT = "1109";
+    protected final static List<String> searchOKCodes = Arrays.asList(OK, SEARCH_LIMIT_REACHED, NOTHING_FOUND, NO_UNIQUE_RESULT);
+    protected final static Map<String, SearchResult.Status> codeToStatus = new HashMap<String, SearchResult.Status>();
+    static {
+	codeToStatus.put(OK, SearchResult.Status.COMPLETE);
+	codeToStatus.put(SEARCH_LIMIT_REACHED, SearchResult.Status.SEARCH_LIMIT_REACHED);
+	codeToStatus.put(NOTHING_FOUND, SearchResult.Status.EMPTY);
+	codeToStatus.put(NO_UNIQUE_RESULT, SearchResult.Status.NO_UNIQUE_RESULT);
+    }
     static protected final Map<DataBoxType, TDbType> types = new HashMap<DataBoxType, TDbType>();
     static protected final Map<TDbType, DataBoxType> typesInverted = new HashMap<TDbType, DataBoxType>();
     static {
@@ -51,6 +58,8 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
             typesInverted.put(entry.getValue(), entry.getKey());
         }
     }
+
+    protected DataBoxManipulationPortType service;
 
     public DataBoxSearchServiceImpl(DataBoxManipulationPortType serv) {
         this.service = serv;
@@ -87,6 +96,53 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         return result;
     }
 
+    public SearchResult find(DataBoxWithDetails what) {
+	TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
+	if (what.getDataBoxType() != null) {
+	    ownerInfo.setDbType(types.get(what.getDataBoxType()));
+	} else {
+	    ownerInfo.setDbType(null);
+	}
+	if (what.getIC() != null) {
+	    ownerInfo.setIc(what.getIC());
+	}
+	if (what.getIdentity() != null) {
+	    ownerInfo.setFirmName(what.getIdentity());
+	}
+	if (what.getAddressDetails() != null) {
+	    Address address = what.getAddressDetails();
+	    if (address.getCity() != null) {
+		ownerInfo.setAdCity(address.getCity());
+	    }
+	    if (address.getStreet() != null) {
+		ownerInfo.setAdStreet(address.getStreet());
+	    }
+	    if (address.getNumberInMunicipality() != null) {
+		ownerInfo.setAdNumberInMunicipality(address.getNumberInMunicipality());
+	    }
+	    if (address.getNumberInStreet() != null) {
+		ownerInfo.setAdNumberInStreet(address.getNumberInStreet());
+	    }
+	}
+	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
+        Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
+        service.findDataBox(ownerInfo, owners, status);
+	SearchResult.Status statusOfSearch = codeToStatus.get(status.value.getDbStatusCode());
+        if (statusOfSearch == null) {
+            ErrorHandling.throwIfError(String.format("Search failed with status: %s (%s)",
+		    status.value.getDbStatusCode(), status.value.getDbStatusMessage()), status.value);
+        }
+        List<DataBoxWithDetails> results = new ArrayList<DataBoxWithDetails>();
+        for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
+            results.add(create(owner));
+        }
+	SearchResult result = new SearchResult();
+	result.setResult(results);
+	result.setStatus(statusOfSearch);
+	return result;
+    }
+
+    //@Deprecated
     public List<DataBoxWithDetails> find(DataBoxType type, DataBoxWithDetails what) {
 	TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
 	if (type != null) {
