@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
+import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.content.ByteContent;
 import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
@@ -139,6 +140,12 @@ public class MessageUploadAndDownloadTest {
 		break;
 	    }
 	    Thread.sleep(5000);
+	}
+	List <MessageStateChange> changes = services.getDataBoxMessagesService().GetMessageStateChanges(null, null);
+	for (MessageStateChange change : changes) {
+	    Assert.assertNotNull(change.getEventTime());
+	    Assert.assertNotNull(change.getMessageId());
+	    Assert.assertNotNull(change.getState());
 	}
     }
 

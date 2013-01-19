@@ -8,6 +8,7 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageType;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.DocumentIdent;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
+import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.ws.XMLUtils;
@@ -17,6 +18,8 @@ import cz.abclinuxu.datoveschranky.ws.dm.TEvent;
 import cz.abclinuxu.datoveschranky.ws.dm.THash;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
+import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesArray;
+import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -72,6 +75,32 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
         ErrorHandling.throwIfError("Nemohu stahnout seznam odeslanych zprav", status.value);
         logger.info(String.format("getListOfSentMessages finished"));
         return createMessages(records.value, MessageType.SENT);
+    }
+
+    public List<MessageStateChange> GetMessageStateChanges(Date from, Date to) {
+	logger.info(String.format("GetMessageStateChanges: from:%s to:%s", from, to));
+        Holder<TStatus> status = new Holder<TStatus>();
+	Holder<TStateChangesArray> changes = new Holder<TStateChangesArray>();
+	XMLGregorianCalendar xmlSince = null;
+	if (from != null) {
+	    xmlSince = XMLUtils.toXmlDate(from);
+	}
+        XMLGregorianCalendar xmlTo = null;
+	if (to != null) {
+	    xmlTo = XMLUtils.toXmlDate(to);
+	}
+	dataMessageInfo.getMessageStateChanges(xmlSince, xmlTo, changes, status);
+	ErrorHandling.throwIfError("GetMessageStateChanges failed", status.value);
+	List<MessageStateChange> result = new ArrayList<MessageStateChange>();
+	for (TStateChangesRecord record : changes.value.getDmRecord()) {
+	    MessageStateChange stateChange = new MessageStateChange();
+	    stateChange.setEventTime(record.getDmEventTime().toGregorianCalendar());
+	    stateChange.setMessageId(record.getDmID());
+	    stateChange.setState(MessageState.valueOf(record.getDmMessageStatus()));
+	    result.add(stateChange);
+	}
+	logger.info(String.format("GetMessageStateChanges finished, result size is %s.", changes.value.getDmRecord().size()));
+	return result;
     }
 
     public Hash verifyMessage(MessageEnvelope envelope) {

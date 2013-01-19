@@ -1,6 +1,7 @@
 package cz.abclinuxu.datoveschranky.tinyDB;
 
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
+import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
@@ -149,6 +150,11 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
 
     public DeliveryInfo getDeliveryInfo(MessageEnvelope arg0) {
         throw new UnsupportedOperationException("Operace getDeliveryInfo neni touto " +
+                "knihovnou podporovana.");
+    }
+
+    public List<MessageStateChange> GetMessageStateChanges(Date from, Date to) {
+	throw new UnsupportedOperationException("Operace GetMessageStateChanges neni touto " +
                 "knihovnou podporovana.");
     }
 

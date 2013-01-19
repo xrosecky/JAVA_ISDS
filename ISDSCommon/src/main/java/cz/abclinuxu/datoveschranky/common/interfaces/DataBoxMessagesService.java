@@ -4,6 +4,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
+import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import java.io.OutputStream;
 import java.util.Date;
@@ -84,5 +85,14 @@ public interface DataBoxMessagesService {
      * @throws DataBoxException
      */
     public void getSignedDeliveryInfo(MessageEnvelope envelope, OutputStream os);
+
+    /**
+     * Stáhne změny stavu u odeslaných zpráv.
+     *
+     * @param from  od
+     * @param to    do
+     * @return seznam změn
+     */
+    public List<MessageStateChange> GetMessageStateChanges(Date from, Date to);
             
 }
