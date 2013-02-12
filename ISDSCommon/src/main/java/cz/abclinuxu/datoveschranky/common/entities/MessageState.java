@@ -57,6 +57,10 @@ public enum MessageState {
 	return download;
     }
     
+    public int getValue() {
+        return value;
+    }
+    
     @Override
     public String toString() {
         return message;
