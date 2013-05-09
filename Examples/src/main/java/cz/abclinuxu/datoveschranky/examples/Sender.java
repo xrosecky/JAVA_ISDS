@@ -5,6 +5,7 @@ import cz.abclinuxu.datoveschranky.common.entities.Message;
 import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxEnvironment;
+import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.impl.Authentication;
 import cz.abclinuxu.datoveschranky.impl.BasicAuthentication;
 import cz.abclinuxu.datoveschranky.impl.DataBoxManager;
