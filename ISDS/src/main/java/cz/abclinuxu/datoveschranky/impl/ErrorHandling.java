@@ -18,7 +18,7 @@ public class ErrorHandling {
     public static void throwIfError(String message, TStatus tstatus) {
         if (!OK.equals(tstatus.getDmStatusCode())) {
             Status status = new Status(tstatus.getDmStatusCode(), tstatus.getDmStatusMessage());
-	    logger.warn(String.format("DataBoxException throwed: message:%s, status:%s", message, status.getStatusCode()));
+	    logger.warn(String.format("DataBoxException throwed: message:%s, status:%s", status.getStatusMesssage(), status.getStatusCode()));
             throw new DataBoxException(message, status);
         }
     }
@@ -26,7 +26,7 @@ public class ErrorHandling {
     public static void throwIfError(String message, TDbReqStatus reqStatus) {
         if (!(OK.equals(reqStatus.getDbStatusCode()))) {
             Status status = new Status(reqStatus.getDbStatusCode(), reqStatus.getDbStatusMessage());
-	    logger.warn(String.format("DataBoxException throwed: message:%s, status:%s", message, status.getStatusCode()));
+	    logger.warn(String.format("DataBoxException throwed: message:%s, status:%s", status.getStatusMesssage(), status.getStatusCode()));
             throw new DataBoxException(message, status);
         }
     }
