@@ -28,7 +28,7 @@ public interface DataBoxDownloadService {
     
     /**
      * Stáhne podepsanou zprávu ve formátu PKCS7 a uloží ji do výstupního
-     * proudu. Tento formát je vhodný pro záholování. PKCS7 je binární formát,
+     * proudu. Tento formát je vhodný pro zálohování. PKCS7 je binární formát,
      * žádné XML ani zfo soubor. Po odstranění podpisu je výsledek XML.
      * 
      * @param envelope  obálka zprávy, ke které má stáhnout přílohy
