@@ -174,7 +174,7 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
 
     /**
      * Stáhne přijatou zprávu včetně SOAP obálky a příloh jako XML soubor. Vhodné pouze
-     * pro debugovací účely, ne pro záholování.
+     * pro debugovací účely, ne pro zálohování.
      * 
      * @param envelope  obálka zprávy, která se má stáhnout
      * @param os        kam přijde uložit
