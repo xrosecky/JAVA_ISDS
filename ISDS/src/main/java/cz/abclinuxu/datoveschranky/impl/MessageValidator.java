@@ -23,10 +23,12 @@ import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage.DmDm;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,12 +36,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -265,7 +278,7 @@ public class MessageValidator {
         return result;
     }
 
-    Message buildMessage(MessageEnvelope envelope, TReturnedMessage message, AttachmentStorer storer) {
+    protected Message buildMessage(MessageEnvelope envelope, TReturnedMessage message, AttachmentStorer storer) {
         List<Attachment> attachments = new ArrayList<Attachment>();
         for (DmFile file : message.getDmDm().getDmFiles().getDmFile()) {
             Attachment attachment = new Attachment();
@@ -276,7 +289,16 @@ public class MessageValidator {
             try {
                 try {
                     os = storer.store(envelope, attachment);
-                    os.write(file.getDmEncodedContent());
+                    if (file.getDmEncodedContent() != null) {
+                    	os.write(file.getDmEncodedContent());
+                    } else if (file.getDmXMLContent() != null) {
+                    	os.write(toByteArray(file.getDmXMLContent().getAny()));
+					} else {
+						throw new IllegalArgumentException(
+								"both file.getDmEncodedContent() "
+										+ "and file.getDmXMLContent() are null, messageId is " 
+										+ envelope.getMessageID());
+                    }
                 } finally {
                     if (os != null) {
                         os.close();
@@ -354,5 +376,22 @@ public class MessageValidator {
         reader.setContentHandler(unmarshaller.getUnmarshallerHandler());
         SAXSource source = new SAXSource(xmlFilter, new InputSource(new ByteArrayInputStream(what)));
         return new MarshallerResult(unmarshaller.unmarshal(source), xmlFilter.rootURI);
+    }
+    
+    protected static byte[] toByteArray(Element element) {
+		try {
+    	  Source source = new DOMSource(element);
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+          Result result = new StreamResult(out);
+          TransformerFactory factory = TransformerFactory.newInstance();
+          Transformer transformer;
+          transformer = factory.newTransformer();
+          transformer.transform(source, result);
+          return out.toByteArray();
+		} catch (TransformerConfigurationException tce) {
+			throw new RuntimeException(tce);
+		} catch (TransformerException te) {
+			throw new RuntimeException(te);
+		}
     }
 }
