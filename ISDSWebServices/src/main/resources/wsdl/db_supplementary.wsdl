@@ -1,55 +1,55 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!--  *********************************************************************
-     WSDL pro doplňkové služby manipulujícími s datovými schránkami 
-     
+     WSDL pro doplňkové služby manipulujícími s datovými schránkami
+
                        verze 2.5
-      *********************************************************************                    
-Seznam služeb: 
+      *********************************************************************
+Seznam služeb:
 ==============
-  GetDataBoxUsers                         
+  GetDataBoxUsers
   GetOwnerInfoFromLogin
   StoreAccessDataDeliveryInfo
 
-  Změny:  
+  Změny:
      9.02.2009  verze 0.1
-     2.03.2009  verze 0.4 - změna zápisu importu XSD                                 
-    20.03.2009  verze 1.0 - formální úpravy vyhovující WS-I Basic Profile                               
-      3.6.2009  verze 2.0 - novela     
-     1.10.2009  verze 2.5 - komerční provoz                     
+     2.03.2009  verze 0.4 - změna zápisu importu XSD
+    20.03.2009  verze 1.0 - formální úpravy vyhovující WS-I Basic Profile
+      3.6.2009  verze 2.0 - novela
+     1.10.2009  verze 2.5 - komerční provoz
 ************************************************************************ -->
 
-<definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20" 
-                                  xmlns="http://schemas.xmlsoap.org/wsdl/" 
-                                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-                                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+<definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20"
+                                  xmlns="http://schemas.xmlsoap.org/wsdl/"
+                                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                                   xmlns:tns="http://isds.czechpoint.cz/v20">
-                                
+
   <types>
     <xs:schema targetNamespace="http://isds.czechpoint.cz/v20">
       <xs:include schemaLocation="dbTypes.xsd" />
     </xs:schema>
   </types>
-  
+
   <!-- ******************************************************************* -->
   <message name="GetDataBoxUsersRequest">
-    <part name="parameter" element="tns:GetDataBoxUsers" />        
+    <part name="parameter" element="tns:GetDataBoxUsers" />
   </message>
   <message name="GetDataBoxUsersResponse">
-    <part name="parameter" element="tns:GetDataBoxUsersResponse" />        
+    <part name="parameter" element="tns:GetDataBoxUsersResponse" />
   </message>
 
   <message name="GetOwnerInfoFromLoginRequest">
-    <part name="parameter" element="tns:GetOwnerInfoFromLogin" />        
+    <part name="parameter" element="tns:GetOwnerInfoFromLogin" />
   </message>
   <message name="GetOwnerInfoFromLoginResponse">
-    <part name="parameter" element="tns:GetOwnerInfoFromLoginResponse" />        
+    <part name="parameter" element="tns:GetOwnerInfoFromLoginResponse" />
   </message>
 
   <message name="StoreAccessDataDeliveryInfoRequest">
-    <part name="parameter" element="tns:StoreAccessDataDeliveryInfo" />        
+    <part name="parameter" element="tns:StoreAccessDataDeliveryInfo" />
   </message>
   <message name="StoreAccessDataDeliveryInfoResponse">
-    <part name="parameter" element="tns:StoreAccessDataDeliveryInfoResponse" />        
+    <part name="parameter" element="tns:StoreAccessDataDeliveryInfoResponse" />
   </message>
 
   <!-- ******************************************************************* -->
@@ -59,16 +59,16 @@ Seznam služeb:
       <output message="tns:GetDataBoxUsersResponse"/>
     </operation>
 
-    <operation name="GetOwnerInfoFromLogin"> 
+    <operation name="GetOwnerInfoFromLogin">
       <input   message="tns:GetOwnerInfoFromLoginRequest"/>
       <output  message="tns:GetOwnerInfoFromLoginResponse"/>
     </operation>
-  
+
     <operation name="StoreAccessDataDeliveryInfo">
       <input  message="tns:StoreAccessDataDeliveryInfoRequest"/>
       <output message="tns:StoreAccessDataDeliveryInfoResponse"/>
     </operation>
-  
+
   </portType>
 
   <!-- ******************************************************************* -->
