@@ -45,13 +45,6 @@ Seznam služeb:
     <part name="parameter" element="tns:GetOwnerInfoFromLoginResponse" />
   </message>
 
-  <message name="StoreAccessDataDeliveryInfoRequest">
-    <part name="parameter" element="tns:StoreAccessDataDeliveryInfo" />
-  </message>
-  <message name="StoreAccessDataDeliveryInfoResponse">
-    <part name="parameter" element="tns:StoreAccessDataDeliveryInfoResponse" />
-  </message>
-
   <!-- ******************************************************************* -->
   <portType name="DataBoxSupplementaryPortType">
     <operation name="GetDataBoxUsers">
@@ -63,12 +56,6 @@ Seznam služeb:
       <input   message="tns:GetOwnerInfoFromLoginRequest"/>
       <output  message="tns:GetOwnerInfoFromLoginResponse"/>
     </operation>
-
-    <operation name="StoreAccessDataDeliveryInfo">
-      <input  message="tns:StoreAccessDataDeliveryInfoRequest"/>
-      <output message="tns:StoreAccessDataDeliveryInfoResponse"/>
-    </operation>
-
   </portType>
 
   <!-- ******************************************************************* -->
@@ -93,17 +80,6 @@ Seznam služeb:
         <soap:body use="literal" />
       </output>
     </operation>
-
-    <operation name="StoreAccessDataDeliveryInfo">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
-
   </binding>
 
   <!-- ******************************************************************* -->
