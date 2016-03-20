@@ -20,7 +20,14 @@
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
     </repository>
   </repositories>
-  
+
+  <properties>
+    <!-- maven project settings -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -29,6 +36,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <modules>
     <module>ISDSCommon</module>
     <module>TinyISDS</module>
@@ -42,35 +50,11 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-	  <encoding>utf-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-javadoc-plugin</artifactId>
 	  <configuration>
 	    <author>Vaclav Rosecky</author>
-	    <additionalparam>-encoding utf-8</additionalparam>
 	  </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
-        <configuration>
-           <encoding>UTF-8</encoding>
-        </configuration>
-       </plugin>
-       <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.2</version>
-	<configuration>
-	  <encoding>UTF-8</encoding>
-	</configuration>
-       </plugin>
     </plugins>
   </build>
   
