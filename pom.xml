@@ -52,7 +52,8 @@
         <groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-javadoc-plugin</artifactId>
 	  <configuration>
-	    <author>Vaclav Rosecky</author>
+	    <author>true</author>
+	    <defaultAuthor>Vaclav Rosecky</defaultAuthor>
 	  </configuration>
       </plugin>
     </plugins>
