@@ -57,8 +57,8 @@
         <executions>
           <execution>
             <id>db</id>
+            <phase>generate-sources</phase>
             <configuration>
-              <phase>generate-sources</phase>
               <staleFile>${project.build.directory}/jaxws/stale/wsdl.db.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
@@ -83,8 +83,8 @@
 
           <execution>
             <id>dm</id>
+            <phase>generate-sources</phase>
             <configuration>
-              <phase>generate-sources</phase>
               <staleFile>${project.build.directory}/jaxws/stale/wsdl.dm.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
