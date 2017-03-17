@@ -68,13 +68,6 @@
                 <wsdlFile>db_search.wsdl</wsdlFile>
                 <wsdlFile>db_supplementary.wsdl</wsdlFile>
               </wsdlFiles>
-              <!--
-              <wsdlUrls>
-                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_manipulations.wsdl</wsdlUrl>
-                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_search.wsdl</wsdlUrl>
-                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/db_supplementary.wsdl</wsdlUrl>
-              </wsdlUrls>
-              -->
             </configuration>
             <goals>
               <goal>wsimport</goal>
@@ -93,12 +86,6 @@
                 <wsdlFile>dm_info.wsdl</wsdlFile>
                 <wsdlFile>dm_operations.wsdl</wsdlFile>
               </wsdlFiles> 
-              <!--
-              <wsdlUrls> 
-                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/dm_info.wsdl</wsdlUrl>
-                 <wsdlUrl>http://anna.fi.muni.cz/~xrosecky/DS/dm_operations.wsdl</wsdlUrl>
-              </wsdlUrls>
-              -->
             </configuration>
             <goals>
               <goal>wsimport</goal>

@@ -15,7 +15,7 @@
         12. smazání dlouhodbě uložené DZ (trezorové) - EraseMessage 
         
               
-                          verze 2.17 
+                          verze 2.22 
 
    Změny:  
      4.2.2009 verze 0.1
@@ -27,7 +27,9 @@
                           - přidání WS GetMessageStateChanges
    10.11.2010 verze 2.11  - přidání WS GetMessageAuthor     
    25.8.2010  verze 2.14  - novela zákona 300   
-   12.4.2012  verze 2.16  - přidání WS EraseMessage            
+   12.4.2012  verze 2.16  - přidání WS EraseMessage      
+   18.09.2015 verze 2.21  - sjednocení verzí       
+   14.10.2015 verze 2.22  - sjednocení verzí
 ************************************************************************ -->
 
 <definitions name="ISDS_dmMessCreate" targetNamespace="http://isds.czechpoint.cz/v20" 

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--Created with Liquid XML Studio 7.1.5.1419 (http://www.liquid-technologies.com)-->
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými zprávami
-                       verze 2.16      
+                       verze 2.22      
                        
  Změny:  
      5.2.2009  verze 0.1   základní verze
@@ -28,7 +27,13 @@
   	25.09.2011 verze 2.15  - novela zákona 300/2008 Sb.
                            - přidání dalších typů zprávy (různé podtypy PDZ)
                        	   - Create[Multiple]Message - nepovinný atribut dmType pro označení Iniciační poštovní zprávy pro Odpovědní DZ resp. Odpovědní DZ
-    12.04.2012  verze 2.16 - přidání typů pro EraseMessage                     
+    12.04.2012  verze 2.16 - přidání typů pro WS EraseMessage      
+    27.07.2012  verze 2.17 - přidání typů pro WS Re-signISDSDocument    
+    05.12.2013  verze 2.18a - drobná oprava u dmXMLContent  
+	  17.04.2014  verze 2.18b - pouze opravy komentářů u atributů elementu dmFile
+    12.09.2015  verze 2.20  - sjednocení verzí
+    18.09.2015  verze 2.21  - sjednocení verzí 
+    14.10.2015  verze 2.22  - sjednocení verzí
     ******************************************************************* -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="tIdDm">
@@ -60,7 +65,7 @@
         </xs:annotation>
         <xs:complexType>
           <xs:sequence>
-            <xs:any namespace="" processContents="skip" />
+            <xs:any processContents="skip" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -82,7 +87,7 @@
               </xs:attribute>
               <xs:attribute name="dmFileMetaType" use="required">
                 <xs:annotation>
-                  <xs:documentation>výčet typů písemností, main je pouze jedna</xs:documentation>
+                  <xs:documentation>typ přílohy, první by měla být "main"</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -105,12 +110,12 @@
               </xs:attribute>
               <xs:attribute name="dmFileDescr" type="xs:string" use="required">
                 <xs:annotation>
-                  <xs:documentation>může obsahovat jméno souboru, příp. jiný popis. Objeví se v seznamu příloh na portále</xs:documentation>
+                  <xs:documentation>Název souboru</xs:documentation>
                 </xs:annotation>
               </xs:attribute>
               <xs:attribute name="dmFormat" type="xs:string" use="optional">
                 <xs:annotation>
-                  <xs:documentation>nepovinný údaj - odkaz na definici formuláře</xs:documentation>
+                  <xs:documentation>nepovinný údaj, nepoužívá se v současné verzi</xs:documentation>
                 </xs:annotation>
               </xs:attribute>
             </xs:extension>
@@ -961,6 +966,20 @@ K - smluvní PDZ, O - odpovědní PDZ, G - globálně dotovaná, Z - omezeně do
   <xs:element name="EraseMessageResponse" type="tns:tEraseMessageOutput" />
   <xs:complexType name="tEraseMessageOutput">
     <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="dmStatus" type="tns:tStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Re-signISDSDocument" type="tns:tResignDocInput" />
+  <xs:complexType name="tResignDocInput">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="dmDoc" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Re-signISDSDocumentResponse" type="tns:tResignDocOutput" />
+  <xs:complexType name="tResignDocOutput">
+    <xs:sequence>
+      <xs:element name="dmResultDoc" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" maxOccurs="1" name="dmValidTo" type="xs:date" />
       <xs:element minOccurs="1" maxOccurs="1" name="dmStatus" type="tns:tStatus" />
     </xs:sequence>
   </xs:complexType>

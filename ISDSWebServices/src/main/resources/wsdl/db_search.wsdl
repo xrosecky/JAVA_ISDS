@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
      
-                          verze 2.16 
+                          verze 2.25    
       *********************************************************************                    
 Seznam služeb: 
 ==============
@@ -10,7 +10,11 @@ Seznam služeb:
   CheckDataBox
   GetDataBoxList
   PDZInfo
-
+  DataBoxCreditInfo
+  ISDSSearch2
+  GetDataBoxActivityStatus
+  FindPersonalDataBox
+  DTInfo
                           
  změny:
   28.4.2009 verze 1.0    
@@ -18,9 +22,14 @@ Seznam služeb:
   1.11.2009 verze 2.6  - komerční provoz                     
   18.9.2010 verze 2.10 - změna URL v důsledku přechodu na Basic autentizaci
                        - přidána WS GetDataBoxList
-  25.8.2010 verze 2.14 - novela zákona 300/2008 Sb.
-                       - přidání WS PDZInfo        
-  
+  25.9.2011 verze 2.14 - přidání WS PDZInfo        
+  24.6.2012 verze 2.18 - přidání WS DataBoxCreditInfo 
+  1.12.2014 verze 2.19 - přidání WS ISDSSearch2
+  15.7.2015 verze 2.20 - přidání WS GetDataBoxActivityStatus 
+  18.9.2015 verze 2.21 - přidání WS FindPersonalDataBox (pro OVM)
+  14.10.2015 verze 2.22 - sjednocení verzí
+  10.3.2016 verze 2.24 - přidána DTInfo
+  10.8.2016 verze 2.25 - přidána WS PDZSendInfo
 ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -64,7 +73,49 @@ Seznam služeb:
     <part name="parameter" element="tns:PDZInfoResponse" />        
   </message>
 
- <!-- ******************************************************************* -->
+  <message name="DataBoxCreditInfoRequest">
+    <part name="parameter" element="tns:DataBoxCreditInfo" />        
+  </message>
+  <message name="DataBoxCreditInfoResponse">
+    <part name="parameter" element="tns:DataBoxCreditInfoResponse" />        
+  </message>
+
+  <message name="ISDSSearch2Request">
+    <part name="parameter" element="tns:ISDSSearch2" />        
+  </message>
+  <message name="ISDSSearch2Response">
+    <part name="parameter" element="tns:ISDSSearch2Response" />        
+  </message>
+
+  <message name="GetDataBoxActivityStatusRequest">
+    <part name="parameter" element="tns:GetDataBoxActivityStatus" />        
+  </message>
+  <message name="GetDataBoxActivityStatusResponse">
+    <part name="parameter" element="tns:GetDataBoxActivityStatusResponse" />        
+  </message>
+
+  <message name="FindPersonalDataBoxRequest">
+    <part name="parameter" element="tns:FindPersonalDataBox" />        
+  </message>
+  <message name="FindPersonalDataBoxResponse">
+    <part name="parameter" element="tns:FindPersonalDataBoxResponse" />        
+  </message>
+
+  <message name="DTInfoRequest">
+    <part name="parameter" element="tns:DTInfo" />        
+  </message>
+  <message name="DTInfoResponse">
+    <part name="parameter" element="tns:DTInfoResponse" />        
+  </message>
+
+  <message name="PDZSendInfoRequest">
+    <part name="parameter" element="tns:PDZSendInfo" />        
+  </message>
+  <message name="PDZSendInfoResponse">
+    <part name="parameter" element="tns:PDZSendInfoResponse" />        
+  </message>
+
+<!-- ******************************************************************* -->
   <portType name="DataBoxSearchPortType">
     <operation name="FindDataBox">
       <input  message="tns:FindDataBoxRequest"/>
@@ -86,7 +137,37 @@ Seznam služeb:
      <output message="tns:PDZInfoResponse"/>
    </operation>
 
-   </portType>
+    <operation name="DataBoxCreditInfo">
+     <input  message="tns:DataBoxCreditInfoRequest"/>
+     <output message="tns:DataBoxCreditInfoResponse"/>
+   </operation>
+
+    <operation name="ISDSSearch2">
+     <input  message="tns:ISDSSearch2Request"/>
+     <output message="tns:ISDSSearch2Response"/>
+   </operation>
+
+    <operation name="GetDataBoxActivityStatus">
+     <input  message="tns:GetDataBoxActivityStatusRequest"/>
+     <output message="tns:GetDataBoxActivityStatusResponse"/>
+   </operation>
+
+    <operation name="FindPersonalDataBox">
+     <input  message="tns:FindPersonalDataBoxRequest"/>
+     <output message="tns:FindPersonalDataBoxResponse"/>
+   </operation>
+
+    <operation name="DTInfo">
+     <input  message="tns:DTInfoRequest"/>
+     <output message="tns:DTInfoResponse"/>
+   </operation>
+
+    <operation name="PDZSendInfo">
+     <input  message="tns:PDZSendInfoRequest"/>
+     <output message="tns:PDZSendInfoResponse"/>
+   </operation>
+
+  </portType>
 
   <!-- ******************************************************************* -->
   <binding name="DataBoxSearchBinding" type="tns:DataBoxSearchPortType">
@@ -131,8 +212,68 @@ Seznam služeb:
      </output>
    </operation>
 
-  </binding>
+    <operation name="DataBoxCreditInfo">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
 
+    <operation name="ISDSSearch2">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+
+    <operation name="GetDataBoxActivityStatus">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+
+    <operation name="FindPersonalDataBox">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+
+    <operation name="DTInfo">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+  
+    <operation name="PDZSendInfo">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+
+  </binding>
+  
   <!-- ******************************************************************* -->
   <service name="DataBoxSearch">
     <port name="DataBoxSearchPortType" binding="tns:DataBoxSearchBinding">
