@@ -1,10 +1,13 @@
 package cz.abclinuxu.datoveschranky.common.interfaces;
 
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxQuery;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxSearchResult;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
+
 import java.util.List;
 
 /**
@@ -43,6 +46,8 @@ public interface DataBoxSearchService {
      * @param what    co se má hledat (hledá se podle atributů, co nejsou null, více dokumentace k ISDS)
      */
     public List<DataBoxWithDetails> find(DataBoxType type, DataBoxWithDetails what);
+
+    public DataBoxSearchResult find(DataBoxQuery query);
 
     /**
      * Vrátí seznam datových schránek OVM, jež vyhovují dotazu.

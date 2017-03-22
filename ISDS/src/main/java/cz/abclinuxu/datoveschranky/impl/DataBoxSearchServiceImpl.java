@@ -5,19 +5,28 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxQuery;
 import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxSearchResult;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
+import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnersArray;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 import cz.abclinuxu.datoveschranky.ws.db.TDbType;
+import cz.abclinuxu.datoveschranky.ws.db.TdbResult;
+import cz.abclinuxu.datoveschranky.ws.db.TdbResultsArray;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.xml.ws.Holder;
 
 /**
@@ -59,17 +68,20 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         }
     }
 
-    protected DataBoxManipulationPortType service;
+    protected DataBoxManipulationPortType manipulationService;
 
-    public DataBoxSearchServiceImpl(DataBoxManipulationPortType serv) {
-        this.service = serv;
+    protected DataBoxSearchPortType searchService;
+
+    public DataBoxSearchServiceImpl(DataBoxManipulationPortType manipulationService, DataBoxSearchPortType searchService) {
+        this.manipulationService = manipulationService;
+        this.searchService = searchService;
     }
 
-    public DataBoxState checkDataBox(DataBox db) {
+	public DataBoxState checkDataBox(DataBox db) {
         String id = db.getdataBoxID();
         Holder<Integer> dbState = new Holder<Integer>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        service.checkDataBox(id, true, "", dbState, status);
+        manipulationService.checkDataBox(id, true, "", dbState, status);
         ErrorHandling.throwIfError(String.format("Chyba pri zjistovani stavu schranky "
                 + "s id=%s.", db.getdataBoxID()), status.value);
         return DataBoxState.create(dbState.value);
@@ -85,7 +97,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         ownerInfo.setDbType(TDbType.OVM);
         Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        service.findDataBox(ownerInfo, owners, status);
+        manipulationService.findDataBox(ownerInfo, owners, status);
         if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
             ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
         }
@@ -94,6 +106,34 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
             result.add(create(owner));
         }
         return result;
+    }
+   
+    public DataBoxSearchResult find(DataBoxQuery query) {
+    	Holder<BigInteger> totalCount = new Holder<BigInteger>();
+    	Holder<BigInteger> currentCount = new Holder<BigInteger>();
+    	Holder<BigInteger> position = new Holder<BigInteger>();
+    	Holder<Boolean> lastPage = new Holder<Boolean>();
+    	Holder<TdbResultsArray> dbResults = new Holder<TdbResultsArray>();
+    	Holder<TDbReqStatus> dbStatus = new Holder<TDbReqStatus>(); 
+    	String type = (query.getQueryType() != null) ? query.getQueryType().type() : null;
+    	String scope = (query.getScope() != null) ? query.getScope().name() : null;
+    	this.searchService.isdsSearch2(query.getQuery(), type, scope,
+    			BigInteger.valueOf(query.getPage()), BigInteger.valueOf(query.getPageSize()),
+    		false, totalCount, currentCount, position, lastPage, dbResults, dbStatus);
+    	DataBoxSearchResult searchResult = new DataBoxSearchResult();
+    	if (!searchOKCodes.contains(dbStatus.value.getDbStatusCode())) {
+            ErrorHandling.throwIfError("Hledani v ISDS selhalo", dbStatus.value);
+        }
+    	List<DataBoxWithDetails> results = new ArrayList<DataBoxWithDetails>(dbResults.value.getDbResult().size());
+    	for (TdbResult result : dbResults.value.getDbResult()) {
+    		results.add(create(result));
+    	}
+    	searchResult.setResult(results);
+    	searchResult.setCurrentCount(currentCount.value.intValue());
+    	searchResult.setTotalCount(totalCount.value.intValue());
+    	searchResult.setPosition(position.value.intValue());
+    	searchResult.setLastPage(lastPage.value.booleanValue());
+    	return searchResult;
     }
 
     public SearchResult find(DataBoxWithDetails what) {
@@ -126,7 +166,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	}
 	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        service.findDataBox(ownerInfo, owners, status);
+        manipulationService.findDataBox(ownerInfo, owners, status);
 	SearchResult.Status statusOfSearch = codeToStatus.get(status.value.getDbStatusCode());
         if (statusOfSearch == null) {
             ErrorHandling.throwIfError(String.format("Search failed with status: %s (%s)",
@@ -173,7 +213,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	}
 	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        service.findDataBox(ownerInfo, owners, status);
+        manipulationService.findDataBox(ownerInfo, owners, status);
         if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
             ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
         }
@@ -193,7 +233,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
         TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
         ownerInfo.setDbID(id);
-        service.findDataBox(ownerInfo, owners, status);
+        manipulationService.findDataBox(ownerInfo, owners, status);
         ErrorHandling.throwIfError(String.format("Chyba při hledaní datové "
                 + "schránky s id=%s.", id), status.value);
         List<TDbOwnerInfo> found = owners.value.getDbOwnerInfo();
@@ -233,4 +273,14 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         result.setAddressDetails(addressDetail);
         return result;
     }
+    
+    static DataBoxWithDetails create(TdbResult tdbResult) {
+    	DataBoxWithDetails result = new DataBoxWithDetails(tdbResult.getDbID());
+    	result.setIdentity(tdbResult.getDbName());
+    	result.setDataBoxType(typesInverted.get(tdbResult.getDbType()));
+    	result.setIC(tdbResult.getDbICO());
+    	result.setAddress(tdbResult.getDbAddress());
+    	return result;
+    }
+
 }

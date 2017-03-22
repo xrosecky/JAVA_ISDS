@@ -1,12 +1,17 @@
 package cz.abclinuxu.datoveschranky;
 
 import cz.abclinuxu.datoveschranky.common.entities.Address;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxQuery;
+import cz.abclinuxu.datoveschranky.common.entities.DataBoxSearchResult;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
+
 import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,17 +45,24 @@ public class SearchTest {
     public void tearDown() {
     }
     
-    @Test 
+    @Test
+    public void find() {
+    	DataBoxQuery query = new DataBoxQuery();
+    	query.setQuery("ministerstvo");
+    	query.setPageSize(10);
+		DataBoxSearchResult result = services.getDataBoxSearchService().find(query);
+		Assert.assertNotNull(result);
+		Assert.assertEquals(result.getResult().size(), 10);
+		Assert.assertNotNull(result.getResult().get(0).getIdentity());
+		Assert.assertNotNull(result.getResult().get(0).getAddress());
+    }
+    
+    @Test
     public void search() {
-        List<DataBoxWithDetails> boxes1 = services.getDataBoxSearchService().findOVMsByName("min");
+        List<DataBoxWithDetails> boxes1 = services.getDataBoxSearchService().findOVMsByName("minist");
         Assert.assertTrue(boxes1.size() > 1);
         for (DataBoxWithDetails db : boxes1) {
             Assert.assertNotNull(db.getAddressDetails().getCity());
-            Assert.assertNotNull(db.getAddressDetails().getNumberInStreet());
-            Assert.assertNotNull(db.getAddressDetails().getNumberInMunicipality());
-            Assert.assertNotNull(db.getAddressDetails().getStreet());
-            Assert.assertNotNull(db.getAddressDetails().getZipCode());
-            Assert.assertNotNull(db.getAddressDetails().getState());
         }
         List<DataBoxWithDetails> boxes2 = services.getDataBoxSearchService().findOVMsByName("Ministerstvo nepravdy a lasky");
         Assert.assertTrue(boxes2.isEmpty());

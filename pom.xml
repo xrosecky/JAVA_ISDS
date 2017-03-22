@@ -9,16 +9,16 @@
   <url>http://maven.apache.org</url>
   
   <repositories>
-  <!--
+    <!--
     <repository>
       <id>some repository 1</id>
       <url>http://repository.jboss.org/maven2</url>
     </repository>
-  -->
     <repository>
       <id>some repository 2</id>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
     </repository>
+    -->
   </repositories>
 
   <properties>

@@ -9,8 +9,10 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.ws.ServiceBuilder;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
+import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
+
 import java.io.File;
 
 /**
@@ -75,10 +77,13 @@ public class DataBoxManager implements DataBoxServices {
 
     public DataBoxSearchService getDataBoxSearchService() {
         if (dataBoxFindingService == null) {
-            DataBoxManipulationPortType service = auth.createService(
+            DataBoxManipulationPortType manipulationService = auth.createService(
                     ServiceBuilder.createDataBoxManipulation(),
                     DataBoxManipulationPortType.class, "df");
-            dataBoxFindingService = new DataBoxSearchServiceImpl(service);
+            DataBoxSearchPortType searchService = auth.createService(
+                    ServiceBuilder.createDataBoxSearch(),
+                    DataBoxSearchPortType.class, "df");
+            dataBoxFindingService = new DataBoxSearchServiceImpl(manipulationService, searchService);
         }
         return dataBoxFindingService;
     }
