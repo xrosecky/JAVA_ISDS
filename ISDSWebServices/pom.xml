@@ -59,6 +59,7 @@
             <id>db</id>
             <phase>generate-sources</phase>
             <configuration>
+              <target>2.0</target>
               <staleFile>${project.build.directory}/jaxws/stale/wsdl.db.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
@@ -78,6 +79,7 @@
             <id>dm</id>
             <phase>generate-sources</phase>
             <configuration>
+              <target>2.0</target>
               <staleFile>${project.build.directory}/jaxws/stale/wsdl.dm.done</staleFile>
               <packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
