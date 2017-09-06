@@ -2,6 +2,7 @@ package cz.abclinuxu.datoveschranky.ws;
 
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulation;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearch;
+import cz.abclinuxu.datoveschranky.ws.db.DataBoxSupplementary;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoWebService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsWebService;
 
@@ -37,6 +38,12 @@ public class ServiceBuilder {
         QName qName = new QName("http://isds.czechpoint.cz/v20", "DataBoxSearch");
         URL url = ServiceBuilder.class.getResource("/wsdl/db_search.wsdl");
         return new DataBoxSearch(url, qName);
+    }
+
+    public static DataBoxSupplementary createDataBoxAccessService() {
+    	QName qName = new QName("http://isds.czechpoint.cz/v20", "DataBoxSupplementary");
+    	URL url = ServiceBuilder.class.getResource("/wsdl/db_supplementary.wsdl");
+    	return new DataBoxSupplementary(url, qName);
     }
 
 }
