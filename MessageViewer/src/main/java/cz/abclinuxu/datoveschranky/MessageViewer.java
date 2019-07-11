@@ -8,6 +8,8 @@ import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.impl.MessageValidator;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +18,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -65,9 +68,23 @@ public class MessageViewer extends javax.swing.JFrame {
 
     private void showFile(File file) {
         this.openedFile = file;
+        String extension = getExtension(file.getName());
         Content content = new FileContent(file);
+        Message mess = null;
         try {
-            Message mess = validator.createMessage(content, new ByteArrayAttachmentStorer());
+            if (extension.toLowerCase().equals("xml")) {
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int bytesRead = 0;
+                byte[] data = new byte[4096];
+                InputStream is = content.getInputStream();
+                while ((bytesRead = is.read(data, 0, data.length)) != -1) {
+                  buffer.write(data, 0, bytesRead);
+                }
+                byte[] asByte = buffer.toByteArray();
+                mess = validator.readZFO(asByte, new ByteArrayAttachmentStorer());
+            } else {
+                mess = validator.createMessage(content, new ByteArrayAttachmentStorer());
+            }
             messageInfo.setModel(new MessageTableModel(file, mess));
             attachmentsTable.setModel(new AttachmentTableModel(mess.getAttachments()));
             attachmentMenu.setEnabled(false);
@@ -77,6 +94,14 @@ public class MessageViewer extends javax.swing.JFrame {
                     "zprávu z Datové schránky?");
             logger.log(Level.SEVERE, "Nemohu zobrazit zpravu.", ioe);
         }
+    }
+
+    private String getExtension(String fileName) {
+        int i = fileName.lastIndexOf('.');
+        if (i == 0) {
+            return "";
+        }
+        return fileName.substring(i+1);
     }
 
     private void showError(String message) {
