@@ -23,6 +23,7 @@ import cz.abclinuxu.datoveschranky.ws.dm.TFilesArray.DmFile;
 import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage.DmDm;
+import cz.abclinuxu.datoveschranky.ws.dm.TSignedMessDownOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -119,7 +120,7 @@ public class MessageValidator {
         return this.validateAndCreateMessage(bos.toByteArray(), storer, false);
     }
 
-    public Message createMessage(byte[] content, AttachmentStorer storer) throws IOException {
+    public Message createMessage(byte[] content, AttachmentStorer storer) {
         return this.validateAndCreateMessage(content, storer, false);
     }
 
@@ -320,8 +321,16 @@ public class MessageValidator {
         } catch (Exception ex) {
             throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
         }
-        TMessDownOutput out = (TMessDownOutput) ((JAXBElement) result.value).getValue();
-        TReturnedMessage tMessage = out.getDmReturnedMessage().getValue();
+        Object value = ((JAXBElement) result.value).getValue();
+        TReturnedMessage tMessage = null;
+        if (value instanceof TMessDownOutput) {
+            TMessDownOutput out = ((TMessDownOutput) value);
+            tMessage = (TReturnedMessage) out.getDmReturnedMessage().getValue();
+        } else if (value instanceof TSignedMessDownOutput) {
+            TSignedMessDownOutput out = ((TSignedMessDownOutput) value);
+            byte[] signature = out.getDmSignature();
+            return createMessage(signature, storer);
+        }
         MessageEnvelope envelope = null;
         if (result.rootUri.endsWith("/v20/SentMessage")) {
             envelope = this.buildMessageEnvelope(tMessage, MessageType.SENT);
