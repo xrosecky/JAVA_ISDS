@@ -72,7 +72,7 @@ public class MessageViewer extends javax.swing.JFrame {
         Content content = new FileContent(file);
         Message mess = null;
         try {
-            if (extension.toLowerCase().equals("xml")) {
+            if (extension.equalsIgnoreCase("xml")) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 int bytesRead = 0;
                 byte[] data = new byte[4096];
@@ -98,7 +98,7 @@ public class MessageViewer extends javax.swing.JFrame {
 
     private String getExtension(String fileName) {
         int i = fileName.lastIndexOf('.');
-        if (i == 0) {
+        if (i == -1) {
             return "";
         }
         return fileName.substring(i+1);
