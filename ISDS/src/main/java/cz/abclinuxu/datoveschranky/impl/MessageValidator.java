@@ -28,17 +28,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.SAXParserFactory;
@@ -71,6 +74,8 @@ import org.xml.sax.helpers.XMLFilterImpl;
  */
 public class MessageValidator {
 
+	private static Map<Class<?>, JAXBContext> CONTEXTS = new ConcurrentHashMap<Class<?>, JAXBContext>();
+
     private static final String encoding = "UTF-8";
     private static final String startTag = "<p:dmDm";
     private static final String endTag = "</p:dmDm>";
@@ -81,7 +86,7 @@ public class MessageValidator {
         this.validator = new Validator();
     }
 
-    public MessageValidator(Config config) {
+	public MessageValidator(Config config) {
         this.validator = new Validator(Utils.getX509Certificates(config.getKeyStore()), false);
     }
 
@@ -163,7 +168,7 @@ public class MessageValidator {
         byte[] asXML = validator.readPKCS7(asPCKS7);
         MarshallerResult result = null;
         try {
-            result = load(TDeliveryMessageOutput .class, asXML);
+            result = load(TDeliveryMessageOutput.class, asXML);
         } catch (Exception ex) {
             throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
         }
@@ -367,7 +372,7 @@ public class MessageValidator {
     }
 
     private static <E> MarshallerResult load(Class<E> clazz, byte[] what) throws Exception {
-        JAXBContext context = JAXBContext.newInstance(clazz);
+        JAXBContext context = getContext(clazz);
         Unmarshaller unmarshaller = context.createUnmarshaller();
         SAXParserFactory SAXfactory = SAXParserFactory.newInstance();
         XMLReader reader = SAXfactory.newSAXParser().getXMLReader();
@@ -377,7 +382,16 @@ public class MessageValidator {
         SAXSource source = new SAXSource(xmlFilter, new InputSource(new ByteArrayInputStream(what)));
         return new MarshallerResult(unmarshaller.unmarshal(source), xmlFilter.rootURI);
     }
-    
+
+    private static JAXBContext getContext(Class<?> clazz) throws JAXBException {
+        JAXBContext context = CONTEXTS.get(clazz);
+        if (context == null) {
+            context = JAXBContext.newInstance(clazz);
+            CONTEXTS.put(clazz, context);
+        }
+        return context;
+    }
+
     protected static byte[] toByteArray(Element element) {
 		try {
     	  Source source = new DOMSource(element);
