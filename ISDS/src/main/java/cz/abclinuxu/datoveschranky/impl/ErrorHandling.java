@@ -13,6 +13,9 @@ import org.apache.log4j.Logger;
 public class ErrorHandling {
 
     private final static String OK = "0000";
+
+    private final static Status UNKNOWN_ERROR = new Status("9999", "Unknown error");
+
     static Logger logger = Logger.getLogger(ErrorHandling.class);
     
     public static void throwIfError(String message, TStatus tstatus) {
@@ -24,6 +27,10 @@ public class ErrorHandling {
     }
     
     public static void throwIfError(String message, TDbReqStatus reqStatus) {
+        if (reqStatus == null) {
+            logger.warn(String.format("DataBoxException - unknown error"));
+            throw new DataBoxException(message, UNKNOWN_ERROR);
+        }
         if (!(OK.equals(reqStatus.getDbStatusCode()))) {
             Status status = new Status(reqStatus.getDbStatusCode(), reqStatus.getDbStatusMessage());
 	    logger.warn(String.format("DataBoxException throwed: message:%s, status:%s", status.getStatusMesssage(), status.getStatusCode()));
