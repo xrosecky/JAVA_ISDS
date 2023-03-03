@@ -12,6 +12,7 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
+import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfoExt;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnersArray;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 import cz.abclinuxu.datoveschranky.ws.db.TDbType;
@@ -81,7 +82,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         String id = db.getdataBoxID();
         Holder<Integer> dbState = new Holder<Integer>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        manipulationService.checkDataBox(id, true, "", dbState, status);
+        searchService.checkDataBox(id, true, "", dbState, status);
         ErrorHandling.throwIfError(String.format("Chyba pri zjistovani stavu schranky "
                 + "s id=%s.", db.getdataBoxID()), status.value);
         return DataBoxState.create(dbState.value);
@@ -97,12 +98,12 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         ownerInfo.setDbType(TDbType.OVM);
         Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        manipulationService.findDataBox(ownerInfo, owners, status);
+        searchService.findDataBox(ownerInfo, owners, status);
         if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
             ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
         }
         List<DataBoxWithDetails> result = new ArrayList<DataBoxWithDetails>();
-        for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
+        for (TDbOwnerInfoExt owner : owners.value.getDbOwnerInfo()) {
             result.add(create(owner));
         }
         return result;
@@ -166,14 +167,14 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	}
 	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        manipulationService.findDataBox(ownerInfo, owners, status);
+        searchService.findDataBox(ownerInfo, owners, status);
 	SearchResult.Status statusOfSearch = codeToStatus.get(status.value.getDbStatusCode());
         if (statusOfSearch == null) {
             ErrorHandling.throwIfError(String.format("Search failed with status: %s (%s)",
 		    status.value.getDbStatusCode(), status.value.getDbStatusMessage()), status.value);
         }
         List<DataBoxWithDetails> results = new ArrayList<DataBoxWithDetails>();
-        for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
+        for (TDbOwnerInfoExt owner : owners.value.getDbOwnerInfo()) {
             results.add(create(owner));
         }
 	SearchResult result = new SearchResult();
@@ -213,12 +214,12 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	}
 	Holder<TDbOwnersArray> owners = new Holder<TDbOwnersArray>();
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
-        manipulationService.findDataBox(ownerInfo, owners, status);
+        searchService.findDataBox(ownerInfo, owners, status);
         if (!searchOKCodes.contains(status.value.getDbStatusCode())) {
             ErrorHandling.throwIfError("Nemohu najit OVM.", status.value);
         }
         List<DataBoxWithDetails> result = new ArrayList<DataBoxWithDetails>();
-        for (TDbOwnerInfo owner : owners.value.getDbOwnerInfo()) {
+        for (TDbOwnerInfoExt owner : owners.value.getDbOwnerInfo()) {
             result.add(create(owner));
         }
 	return result;
@@ -233,10 +234,10 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
         TDbOwnerInfo ownerInfo = new TDbOwnerInfo();
         ownerInfo.setDbID(id);
-        manipulationService.findDataBox(ownerInfo, owners, status);
+        searchService.findDataBox(ownerInfo, owners, status);
         ErrorHandling.throwIfError(String.format("Chyba při hledaní datové "
                 + "schránky s id=%s.", id), status.value);
-        List<TDbOwnerInfo> found = owners.value.getDbOwnerInfo();
+        List<TDbOwnerInfoExt> found = owners.value.getDbOwnerInfo();
         if (found.size() > 1) {
             throw new AssertionError(String.format("Metoda findDataBoxByID pri hledani datove "
                     + "schranky s id=%s vratila vice nez jednu schranku.", id));
@@ -248,7 +249,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         }
     }
 
-    static DataBoxWithDetails create(TDbOwnerInfo owner) {
+    static DataBoxWithDetails create(TDbOwnerInfoExt owner) {
         DataBoxWithDetails result = new DataBoxWithDetails(owner.getDbID());
         result.setDataBoxType(typesInverted.get(owner.getDbType()));
         result.setIdentity(owner.getFirmName());

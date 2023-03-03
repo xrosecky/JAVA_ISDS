@@ -1,21 +1,31 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+﻿<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--  *********************************************************************
      WSDL pro doplňkové služby související s přihlašováním 
-     
-                       verze 2.22
+
+     verze: 2.36
+     klasifikace: Veřejný dokument    
       *********************************************************************                    
 Seznam služeb: 
 ==============
   GetOwnerInfoFromLogin
+  GetOwnerInfoFromLogin2
   GetUserInfoFromLogin
+  GetUserInfoFromLogin2
   ChangeISDSPassword
   GetPasswordInfo
 
   Změny:  
-    9.12.2009  verze 2.7
-    18.9.2010  verze 2.10  - změna URL v důsledku přechodu na Basic autentizaci
-    18.9.2015  verze 2.21  - sjednocení verzí 
-    14.10.2015 verze 2.22  - sjednocení verzí
+    09.12.2009  verze 2.7
+    18.09.2010  verze 2.10 - změna URL v důsledku přechodu na Basic autentizaci
+    18.09.2015  verze 2.21 - sjednocení verzí 
+    14.10.2015 verze 2.22 - sjednocení verzí
+    31.01.2017  verze 2.26 - sjednocení verzí                                  
+    21.11.2017  verze 2.27 - sjednocení verzí
+    04.09.2018  verze 2.31 - přidány "dvojkové" verze GetOwnerInfoFromLogin2 a GetUserInfoFromLogin2
+    27.07.2021  verze 2.33 - sjednocení verzí
+    25.04.2022  verze 2.35 - sjednocení verzí
+    13.10.2022  verze 2.36 - sjednocení verzí
+    
 ************************************************************************ -->
 
 <definitions name="ISDS_db_suppl" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -38,11 +48,25 @@ Seznam služeb:
     <part name="parameter" element="tns:GetOwnerInfoFromLoginResponse" />        
   </message>
 
+  <message name="GetOwnerInfoFromLogin2Request">
+    <part name="parameter" element="tns:GetOwnerInfoFromLogin2" />        
+  </message>
+  <message name="GetOwnerInfoFromLogin2Response">
+    <part name="parameter" element="tns:GetOwnerInfoFromLogin2Response" />        
+  </message>
+
   <message name="GetUserInfoFromLoginRequest">
     <part name="parameter" element="tns:GetUserInfoFromLogin" />        
   </message>
   <message name="GetUserInfoFromLoginResponse">
     <part name="parameter" element="tns:GetUserInfoFromLoginResponse" />        
+  </message>
+ 
+  <message name="GetUserInfoFromLogin2Request">
+    <part name="parameter" element="tns:GetUserInfoFromLogin2" />        
+  </message>
+  <message name="GetUserInfoFromLogin2Response">
+    <part name="parameter" element="tns:GetUserInfoFromLogin2Response" />        
   </message>
  
   <message name="ChangeISDSPasswordRequest">
@@ -67,9 +91,19 @@ Seznam služeb:
       <output  message="tns:GetOwnerInfoFromLoginResponse"/>
     </operation>
   
+    <operation name="GetOwnerInfoFromLogin2"> 
+      <input   message="tns:GetOwnerInfoFromLogin2Request"/>
+      <output  message="tns:GetOwnerInfoFromLogin2Response"/>
+    </operation>
+  
     <operation name="GetUserInfoFromLogin"> 
       <input   message="tns:GetUserInfoFromLoginRequest"/>
       <output  message="tns:GetUserInfoFromLoginResponse"/>
+    </operation>
+  
+    <operation name="GetUserInfoFromLogin2"> 
+      <input   message="tns:GetUserInfoFromLogin2Request"/>
+      <output  message="tns:GetUserInfoFromLogin2Response"/>
     </operation>
   
     <operation name="ChangeISDSPassword"> 
@@ -98,7 +132,27 @@ Seznam služeb:
       </output>
     </operation>
 
+    <operation name="GetOwnerInfoFromLogin2">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
     <operation name="GetUserInfoFromLogin">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+
+    <operation name="GetUserInfoFromLogin2">
       <soap:operation soapAction=""  />
       <input>
         <soap:body use="literal" />

@@ -10,7 +10,7 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.ws.ServiceBuilder;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
-import cz.abclinuxu.datoveschranky.ws.db.DataBoxSupplementaryPortType;
+import cz.abclinuxu.datoveschranky.ws.db.DataBoxAccessPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 
@@ -65,9 +65,9 @@ public class ThreadSafeDataBoxManager implements DataBoxServices {
     }
 
     public DataBoxAccessService getDataBoxAccessService() {
-        DataBoxSupplementaryPortType service = auth.createService(
+        DataBoxAccessPortType service = auth.createService(
                 ServiceBuilder.createDataBoxAccessService(),
-                DataBoxSupplementaryPortType.class, "DsManage");
+                DataBoxAccessPortType.class, "DsManage");
         return new DataBoxAccessServiceImpl(service);
     }
 

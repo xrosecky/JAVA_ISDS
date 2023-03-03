@@ -1,17 +1,20 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+﻿<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
-     
-                          verze 2.25    
+
+     verze: 2.36
+     klasifikace: Veřejný dokument    
       *********************************************************************                    
 Seznam služeb: 
 ==============
   FindDataBox                         
+  FindDataBox2                         
   CheckDataBox
   GetDataBoxList
   PDZInfo
   DataBoxCreditInfo
   ISDSSearch2
+  ISDSSearch3
   GetDataBoxActivityStatus
   FindPersonalDataBox
   DTInfo
@@ -27,9 +30,14 @@ Seznam služeb:
   1.12.2014 verze 2.19 - přidání WS ISDSSearch2
   15.7.2015 verze 2.20 - přidání WS GetDataBoxActivityStatus 
   18.9.2015 verze 2.21 - přidání WS FindPersonalDataBox (pro OVM)
-  14.10.2015 verze 2.22 - sjednocení verzí
   10.3.2016 verze 2.24 - přidána DTInfo
   10.8.2016 verze 2.25 - přidána WS PDZSendInfo
+   2.5.2017 verze 2.27 - sjednocení verzí
+   4.9.2018 verze 2.31 - přidány "dvojkové" verze FindDataBox2 a ISDSSearch3
+  29.7.2021 verze 2.33 - sjednocení verzí   
+  25.4.2022 verze 2.35 - sjednocení verzí
+  13.10.2022 verze 2.36 - sjednocení verzí
+    
 ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 
@@ -50,6 +58,13 @@ Seznam služeb:
   </message>
   <message name="FindDataBoxResponse">
     <part name="parameter" element="tns:FindDataBoxResponse" />        
+  </message>
+
+  <message name="FindDataBox2Request">
+    <part name="parameter" element="tns:FindDataBox2" />        
+  </message>
+  <message name="FindDataBox2Response">
+    <part name="parameter" element="tns:FindDataBox2Response" />        
   </message>
 
   <message name="CheckDataBoxRequest">
@@ -87,6 +102,13 @@ Seznam služeb:
     <part name="parameter" element="tns:ISDSSearch2Response" />        
   </message>
 
+  <message name="ISDSSearch3Request">
+    <part name="parameter" element="tns:ISDSSearch3" />        
+  </message>
+  <message name="ISDSSearch3Response">
+    <part name="parameter" element="tns:ISDSSearch3Response" />        
+  </message>
+
   <message name="GetDataBoxActivityStatusRequest">
     <part name="parameter" element="tns:GetDataBoxActivityStatus" />        
   </message>
@@ -122,6 +144,11 @@ Seznam služeb:
       <output message="tns:FindDataBoxResponse"/>
     </operation>
 
+    <operation name="FindDataBox2">
+      <input  message="tns:FindDataBox2Request"/>
+      <output message="tns:FindDataBox2Response"/>
+    </operation>
+
     <operation name="CheckDataBox">
       <input  message="tns:CheckDataBoxRequest"/>
       <output message="tns:CheckDataBoxResponse"/>
@@ -145,6 +172,11 @@ Seznam služeb:
     <operation name="ISDSSearch2">
      <input  message="tns:ISDSSearch2Request"/>
      <output message="tns:ISDSSearch2Response"/>
+   </operation>
+
+    <operation name="ISDSSearch3">
+     <input  message="tns:ISDSSearch3Request"/>
+     <output message="tns:ISDSSearch3Response"/>
    </operation>
 
     <operation name="GetDataBoxActivityStatus">
@@ -173,6 +205,16 @@ Seznam služeb:
   <binding name="DataBoxSearchBinding" type="tns:DataBoxSearchPortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="FindDataBox">
+      <soap:operation soapAction=""  />
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+
+    <operation name="FindDataBox2">
       <soap:operation soapAction=""  />
       <input>
         <soap:body use="literal"/>
@@ -222,7 +264,17 @@ Seznam služeb:
      </output>
    </operation>
 
-    <operation name="ISDSSearch2">
+   <operation name="ISDSSearch2">
+     <soap:operation soapAction="" />
+     <input>
+       <soap:body use="literal" />
+     </input>
+     <output>
+       <soap:body use="literal" />
+     </output>
+   </operation>
+
+   <operation name="ISDSSearch3">
      <soap:operation soapAction="" />
      <input>
        <soap:body use="literal" />

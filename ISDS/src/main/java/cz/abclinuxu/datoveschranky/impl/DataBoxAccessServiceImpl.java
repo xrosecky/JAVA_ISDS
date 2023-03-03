@@ -9,15 +9,15 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.OwnerInfo;
 import cz.abclinuxu.datoveschranky.common.entities.UserInfo;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxAccessService;
-import cz.abclinuxu.datoveschranky.ws.db.DataBoxSupplementaryPortType;
+import cz.abclinuxu.datoveschranky.ws.db.DataBoxAccessPortType;
 import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 
 public class DataBoxAccessServiceImpl implements DataBoxAccessService {
 	
-	private DataBoxSupplementaryPortType dmOp = null;
+	private DataBoxAccessPortType dmOp = null;
 	
-	public DataBoxAccessServiceImpl(DataBoxSupplementaryPortType dmOp) {
+	public DataBoxAccessServiceImpl(DataBoxAccessPortType dmOp) {
 		this.dmOp = dmOp;
 	}
 

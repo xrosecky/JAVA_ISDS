@@ -64,10 +64,11 @@
               <packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
               <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+              <extension>true</extension>
               <wsdlFiles>
                 <wsdlFile>db_manipulations.wsdl</wsdlFile>
                 <wsdlFile>db_search.wsdl</wsdlFile>
-                <wsdlFile>db_supplementary.wsdl</wsdlFile>
+                <wsdlFile>db_access.wsdl</wsdlFile>
               </wsdlFiles>
             </configuration>
             <goals>
@@ -84,6 +85,7 @@
               <packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
               <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+              <bindingDirectory>src/main/resources/wsdl</bindingDirectory>
               <wsdlFiles> 
                 <wsdlFile>dm_info.wsdl</wsdlFile>
                 <wsdlFile>dm_operations.wsdl</wsdlFile>
