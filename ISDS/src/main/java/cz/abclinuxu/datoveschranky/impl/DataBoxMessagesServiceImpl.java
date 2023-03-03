@@ -1,7 +1,6 @@
 package cz.abclinuxu.datoveschranky.impl;
 
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
-import cz.abclinuxu.datoveschranky.common.entities.DeliveryEvent;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
@@ -14,13 +13,13 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxMessagesService;
 import cz.abclinuxu.datoveschranky.ws.XMLUtils;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TDelivery;
-import cz.abclinuxu.datoveschranky.ws.dm.TEvent;
 import cz.abclinuxu.datoveschranky.ws.dm.THash;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
@@ -28,10 +27,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
-import org.apache.log4j.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author xrosecky
@@ -39,7 +40,7 @@ import org.apache.log4j.Logger;
 public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 
     protected DmInfoPortType dataMessageInfo;
-    static Logger logger = Logger.getLogger(DataBoxMessagesServiceImpl.class);
+    static Logger logger = LoggerFactory.getLogger(DataBoxMessagesServiceImpl.class);
 
     public DataBoxMessagesServiceImpl(DmInfoPortType dmInfo) {
         this.dataMessageInfo = dmInfo;

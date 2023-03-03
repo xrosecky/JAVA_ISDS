@@ -9,10 +9,14 @@ import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxDownloadService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
+
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.xml.ws.Holder;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -22,7 +26,7 @@ public class DataBoxDownloadServiceImpl implements DataBoxDownloadService {
 
     private DmOperationsPortType dmOp = null;
     private MessageValidator validator = null;
-    static Logger logger = Logger.getLogger(DataBoxDownloadServiceImpl.class);
+    static Logger logger = LoggerFactory.getLogger(DataBoxDownloadServiceImpl.class);
 
     public DataBoxDownloadServiceImpl(DmOperationsPortType dmOpService, MessageValidator validate) {
         this.dmOp = dmOpService;

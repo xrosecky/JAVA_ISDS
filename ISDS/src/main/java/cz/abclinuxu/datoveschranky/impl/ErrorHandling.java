@@ -1,10 +1,12 @@
 package cz.abclinuxu.datoveschranky.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Status;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class ErrorHandling {
 
     private final static String OK = "0000";
-    static Logger logger = Logger.getLogger(ErrorHandling.class);
+    static Logger logger = LoggerFactory.getLogger(ErrorHandling.class);
     
     public static void throwIfError(String message, TStatus tstatus) {
         if (!OK.equals(tstatus.getDmStatusCode())) {

@@ -3,6 +3,7 @@ package cz.abclinuxu.datoveschranky.impl;
 import cz.abclinuxu.datoveschranky.common.entities.Hash;
 import cz.abclinuxu.datoveschranky.common.entities.TimeStamp;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
+
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSSignedData;
@@ -30,6 +31,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.tsp.TimeStampTokenInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -52,7 +55,7 @@ public class Validator {
     }
     private Collection<X509Certificate> certs = null;
     private boolean isValidating = false;
-    private Logger logger = Logger.getLogger(Validator.class.getCanonicalName());
+    private Logger logger = LoggerFactory.getLogger(Validator.class.getCanonicalName());
 
     public Validator(Collection<X509Certificate> certs, boolean validating) {
         this.certs = certs;
