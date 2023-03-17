@@ -25,7 +25,10 @@ public interface DataBoxDownloadService {
      */
     public Message downloadMessage(MessageEnvelope envelope,
             AttachmentStorer storer);
-    
+
+    public Message downloadBigMessage(MessageEnvelope envelope,
+            AttachmentStorer storer);
+
     /**
      * Stáhne podepsanou zprávu ve formátu PKCS7 a uloží ji do výstupního
      * proudu. Tento formát je vhodný pro zálohování. PKCS7 je binární formát,
@@ -36,5 +39,7 @@ public interface DataBoxDownloadService {
      * @throws DataBoxException
      */
     public void downloadSignedMessage(MessageEnvelope envelope, OutputStream os);
-    
+
+    public void downloadSignedBigMessage(MessageEnvelope envelope, OutputStream os);
+
 }

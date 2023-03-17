@@ -12,6 +12,7 @@ import cz.abclinuxu.datoveschranky.ws.db.DataBoxManipulationPortType;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
+import cz.abclinuxu.datoveschranky.ws.dm.DmVoDZPortType;
 
 import java.io.File;
 
@@ -50,7 +51,10 @@ public class DataBoxManager implements DataBoxServices {
             DmOperationsPortType dataMessageOperationsService = auth.createService(
                     ServiceBuilder.createDmOperationsWebService(),
                     DmOperationsPortType.class, "dz");
-            dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService, messageValidator);
+            DmVoDZPortType dataBigMessageOperationsService = auth.createService(
+                    ServiceBuilder.createDmVoDZWebService(),
+                    DmVoDZPortType.class, "vodz");
+            dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService, dataBigMessageOperationsService, messageValidator);
         }
         return dataBoxDownloadService;
     }

@@ -1,7 +1,7 @@
 ﻿<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--  *********************************************************************
 
-   verze: 2.36
+   verze: 3.01 (pouze pro Veřejný test ISDS, shodná s verzi 2.35)
    klasifikace: Veřejný dokument    
  
      WSDL pro služby
@@ -38,8 +38,9 @@
    21.11.2017 verze 2.27 - sjednocení verzí
    04.09.2018 verze 2.31 - sjednocení verzí
    29.07.2021 verze 2.33 - přidány WS GetListOfErasedMessages a PickUpAsyncResponse a RegisterForNotifications a GetListForNotifications
+   24.11.2021 verze 3.0 (pro VT) - upravené XSD definice 
    25.04.2022 verze 2.35 - přidána WS GetMessageAuthor2
-   13.10.2022 verze 2.36 - sjednocení verzí 
+   25.04.2021 verze 3.01 (pro VT) - přidána WS GetMessageAuthor2
    
 ************************************************************************ -->
 
@@ -200,7 +201,7 @@
       <output message="tns:ListOfReceivedMessagesResponse"/>
     </operation>
 
-    <operation name="GetMessageStateChanges">
+     <operation name="GetMessageStateChanges">
       <input  message="tns:GetMessageStateChangesRequest"/>
       <output message="tns:GetMessageStateChangesResponse"/>
     </operation>
@@ -215,7 +216,7 @@
       <output message="tns:GetMessageAuthor2Response"/>
     </operation>
 
-    <operation name="EraseMessage">
+     <operation name="EraseMessage">
       <input  message="tns:EraseMessageRequest"/>
       <output message="tns:EraseMessageResponse"/>
     </operation>
@@ -401,7 +402,7 @@
   <!-- ******************************************************************* -->
   <service name="dmInfoWebService">
     <port name="dmInfoPortType" binding="tns:dmInfoBinding">
-      <soap:address location="https://ws1.mojedatovaschranka.cz/DS/dx"/>
+      <soap:address location="https://ws1.czebox.cz/DS/dx"/>
     </port>
   </service>
 

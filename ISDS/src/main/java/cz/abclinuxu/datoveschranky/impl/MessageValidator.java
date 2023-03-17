@@ -16,6 +16,7 @@ import cz.abclinuxu.datoveschranky.common.impl.Config;
 import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.impl.Utils;
 import cz.abclinuxu.datoveschranky.common.interfaces.AttachmentStorer;
+import cz.abclinuxu.datoveschranky.ws.dm.BigMessageDownloadResponse.DmReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TDelivery;
 import cz.abclinuxu.datoveschranky.ws.dm.TDeliveryMessageOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TEvent;
@@ -286,37 +287,54 @@ public class MessageValidator {
     protected Message buildMessage(MessageEnvelope envelope, TReturnedMessage message, AttachmentStorer storer) {
         List<Attachment> attachments = new ArrayList<Attachment>();
         for (DmFile file : message.getDmDm().getDmFiles().getDmFile()) {
-            Attachment attachment = new Attachment();
-            attachment.setDescription(file.getDmFileDescr());
-            attachment.setMetaType(file.getDmFileMetaType());
-            attachment.setMimeType(file.getDmMimeType());
-            OutputStream os = null;
-            try {
-                try {
-                    os = storer.store(envelope, attachment);
-                    if (file.getDmEncodedContent() != null) {
-                    	os.write(file.getDmEncodedContent());
-                    } else if (file.getDmXMLContent() != null) {
-                    	os.write(toByteArray(file.getDmXMLContent().getAny()));
-					} else {
-						throw new IllegalArgumentException(
-								"both file.getDmEncodedContent() "
-										+ "and file.getDmXMLContent() are null, messageId is " 
-										+ envelope.getMessageID());
-                    }
-                } finally {
-                    if (os != null) {
-                        os.close();
-                    }
-                }
-            } catch (IOException ioe) {
-                throw new DataBoxException("Nelze zapisovat do vystupniho proudu", ioe);
-            }
+            Attachment attachment = createAttachment(envelope, storer, file);
             attachments.add(attachment);
         }
         TimeStamp ts = validator.readTimeStamp(message.getDmQTimestamp());
         return new Message(envelope, ts, null, attachments);
     }
+
+	protected Message buildBigMessage(MessageEnvelope envelope,
+			DmReturnedMessage message, AttachmentStorer storer) {
+		List<Attachment> attachments = new ArrayList<Attachment>();
+		for (DmFile file : message.getDmDm().getDmFiles().getDmFile()) {
+			Attachment attachment = this.createAttachment(envelope, storer, file);
+			attachments.add(attachment);
+		}
+		TimeStamp ts = validator.readTimeStamp(message.getDmQTimestamp());
+        return new Message(envelope, ts, null, attachments);
+	}
+
+	protected Attachment createAttachment(MessageEnvelope envelope,
+			AttachmentStorer storer, DmFile file) {
+		Attachment attachment = new Attachment();
+		attachment.setDescription(file.getDmFileDescr());
+		attachment.setMetaType(file.getDmFileMetaType());
+		attachment.setMimeType(file.getDmMimeType());
+		OutputStream os = null;
+		try {
+		    try {
+		        os = storer.store(envelope, attachment);
+		        if (file.getDmEncodedContent() != null) {
+		        	os.write(file.getDmEncodedContent());
+		        } else if (file.getDmXMLContent() != null) {
+		        	os.write(toByteArray(file.getDmXMLContent().getAny()));
+				} else {
+					throw new IllegalArgumentException(
+							"both file.getDmEncodedContent() "
+									+ "and file.getDmXMLContent() are null, messageId is " 
+									+ envelope.getMessageID());
+		        }
+		    } finally {
+		        if (os != null) {
+		            os.close();
+		        }
+		    }
+		} catch (IOException ioe) {
+		    throw new DataBoxException("Nelze zapisovat do vystupniho proudu", ioe);
+		}
+		return attachment;
+	}
 
     public Message readZFO(byte[] input, AttachmentStorer storer) {
         MarshallerResult result = null;

@@ -13,6 +13,7 @@ import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearchPortType;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxAccessPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoPortType;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsPortType;
+import cz.abclinuxu.datoveschranky.ws.dm.DmVoDZPortType;
 
 /**
  *
@@ -37,7 +38,10 @@ public class ThreadSafeDataBoxManager implements DataBoxServices {
         DmOperationsPortType dataMessageOperationsService = auth.createService(
                 ServiceBuilder.createDmOperationsWebService(),
                 DmOperationsPortType.class, "dz");
-        return new DataBoxDownloadServiceImpl(dataMessageOperationsService, messageValidator);
+        DmVoDZPortType dataBigMessageOperationsService = auth.createService(
+                ServiceBuilder.createDmVoDZWebService(),
+                DmVoDZPortType.class, "vodz");
+        return new DataBoxDownloadServiceImpl(dataMessageOperationsService, dataBigMessageOperationsService, messageValidator);
     }
 
     public DataBoxMessagesService getDataBoxMessagesService() {

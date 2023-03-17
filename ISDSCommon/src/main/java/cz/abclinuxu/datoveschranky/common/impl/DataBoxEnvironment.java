@@ -11,8 +11,8 @@ package cz.abclinuxu.datoveschranky.common.impl;
  */
 public enum DataBoxEnvironment {
 
-    TEST ("ws1.czebox.cz", "ws1c.czebox.cz"),
-    PRODUCTION ("ws1.mojedatovaschranka.cz", "ws1c.mojedatovaschranka.cz");
+    TEST ("ws2.czebox.cz", "ws2c.czebox.cz"),
+    PRODUCTION ("ws2.mojedatovaschranka.cz", "ws2c.mojedatovaschranka.cz");
 
     private String basicURL;
     private String clientCertURL;

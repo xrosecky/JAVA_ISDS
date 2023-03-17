@@ -26,6 +26,7 @@ public class MessageEnvelope implements Serializable {
     private LegalTitle legalTitle;
     private boolean personalDelivery;
     private boolean allowSubstDelivery;
+    private boolean isVODZ;
     private String dmType = null;
 
     public MessageEnvelope() {
@@ -173,7 +174,15 @@ public class MessageEnvelope implements Serializable {
         this.dmType = dmType;
     }
 
-    public boolean isAllowSubstDelivery() {
+    public boolean isVODZ() {
+		return isVODZ;
+	}
+
+	public void setVODZ(boolean isVODZ) {
+		this.isVODZ = isVODZ;
+	}
+
+	public boolean isAllowSubstDelivery() {
         return allowSubstDelivery;
     }
 

@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!--  *********************************************************************
 
-   verze: 2.36
+   verze: 2.35
    klasifikace: Veřejný dokument    
 
      WSDL pro služby
@@ -32,7 +32,6 @@
     04.09.2018 verze 2.31 - sjednocení verzí
     27.07.2021 verze 2.33 - sjednocení verzí
     25.04.2022 verze 2.35 - sjednocení verzí
-    13.10.2022 verze 2.36 - sjednocení verzí
     
 ************************************************************************ -->
 

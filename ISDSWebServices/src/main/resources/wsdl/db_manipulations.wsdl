@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby manipulujícími s datovými schránkami 
 
-     verze: 2.36
+     verze: 2.35
      klasifikace: Veřejný dokument    
       *********************************************************************                    
 Seznam služeb: 
@@ -51,9 +51,6 @@ Seznam služeb:
   13.1.2021  verze 2.32 - přidány typy schránek PFO_ZNALEC a PFO_TLUMOCNIK
   29.7.202   verze 2.33 - sjednocení verzí
   25.4.2022  verze 2.35 - sjednocení verzí  
-  13.10.2022 verze 2.36 - sjednocení verzí
-  
-  
 ************************************************************************ -->
 
 <definitions name="ISDS_db" targetNamespace="http://isds.czechpoint.cz/v20" 

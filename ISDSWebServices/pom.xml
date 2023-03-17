@@ -9,7 +9,7 @@
   </parent>
   <groupId>cz.abclinuxu.datoveschranky</groupId>
   <artifactId>ISDSWebServices</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <name>ISDSWebServices</name>
   <url>http://maven.apache.org</url>
   
@@ -86,16 +86,18 @@
               <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
               <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
               <bindingDirectory>src/main/resources/wsdl</bindingDirectory>
+              <extension>true</extension>
               <wsdlFiles> 
                 <wsdlFile>dm_info.wsdl</wsdlFile>
                 <wsdlFile>dm_operations.wsdl</wsdlFile>
+                <wsdlFile>dm_VoDZ.wsdl</wsdlFile>
               </wsdlFiles> 
             </configuration>
             <goals>
               <goal>wsimport</goal>
             </goals>
           </execution>
-          
+
         </executions>
         
       </plugin>

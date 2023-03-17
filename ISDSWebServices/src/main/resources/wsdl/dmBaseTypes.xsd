@@ -3,14 +3,11 @@
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými zprávami
 
-   verze: 2.36
+   verze: 3.01  (společná verze pro definice verze 2.35 i 3.01)
    klasifikace: Veřejný dokument    
                        
  Změny:  
      5.2.2009  verze 0.1   základní verze
-    24.2.2009  verze 0.5   - změněn základní namespace na http://isds.czechpoint.cz
-    20.3.2009  verze 1.0   - přidány elementy (na první úrovni) k jednotlivým typům pro použití jako parametry ve WSDL (document/literal)+komplexní typy pro tyto elementy popisující jednotlivé parametry operací
-                           - podle požadavku MV upraveny v grupě gMessageEnvelopeSub elementy pro Číslo jednací a Spisovou značku: zdvojeny (1x pro odesílatel, 1x pro příjemce), u původních změněno jméno, nově tedy jsou: dmRecipientRefNumber, dmSenderRefNumber, dmRecipientIdent, dmSenderIdent
      3.6.2009  verze 2.0   - novela zákona 300/2008 Sb. a ChangeRequesty
                            - do obálky stažené zprávy (a tudíž do všech struktur pracujících se zprávou) přibyl element dmSenderType typu int pro typ DS odesílatele 
                            - do stažené zprávy (tReturnedMessage), stažené obálky zprávy (tReturnedMessageEnvelope) a do staženého seznamu zpráv (tRecord) přibyl element dmAttachmentSize typu int pro velikost přílohy v DS
@@ -39,12 +36,13 @@
     21.11.2017 verze 2.27 - sjednocení verzí
     04.09.2018 verze 2.31 - sjednocení verzí
     29.07.2021 verze 2.33 - nové služby GetListOfErasedMessages a PickUpAsyncResponse a RegisterForNotifications a GetListForNotifications
-    25.04.2022 verze 2.35 - kompatibilní rozšíření CreateMessage o atribut s výčtem předaných osobních údajů (IdLevel)
+    
+    24.11.2021 verze 3.0 - více změn, přidány typy pro nové služby s VoDZ, upraveny seznamy a obálky - přidány nepovinné atributy
+    25.04.2022 verze 3.01 - kompatibilní rozšíření CreateMessage a CreateBigMessage o atribut s výčtem předaných osobních údajů (IdLevel)
                           - nová služba GetMessageAuthor2 
-    13.10.2022 verze 2.36 - kompatibilní rozšíření CreateMultipleMessage o atribut s výčtem předaných osobních údajů (IdLevel)
- 
+
     ******************************************************************* -->
-<xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:simpleType name="tIdDm">
         <xs:annotation>
             <xs:documentation>ID datové zprávy</xs:documentation>
@@ -305,15 +303,7 @@
         <xs:sequence>
             <xs:group ref="tns:gMultipleMessageEnvelopeSub" />
             <xs:element name="dmOVM" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true" />
-            <xs:element name="dmPublishOwnID" minOccurs="0" maxOccurs="1" nillable="true">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:boolean">
-                            <xs:attribute name="IdLevel" type="xs:integer" use="optional" />
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="dmPublishOwnID" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="tMultipleMessageRecipients">
@@ -628,6 +618,8 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="dmType" type="tns:tDmType" use="optional" />
+        <xs:attribute name="dmVODZ" type="xs:boolean" />
+        <xs:attribute name="attsNum" type="xs:integer" />
     </xs:complexType>
     <xs:complexType name="tMessageEnvelopeSub">
         <xs:annotation>
@@ -757,6 +749,7 @@
                 <xs:restriction base="tns:tDmType" />
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="dmVODZ" type="xs:boolean" />
     </xs:complexType>
     <xs:complexType name="tRecordsArray">
         <xs:annotation>
@@ -1096,6 +1089,356 @@ K - smluvní PDZ, O - odpovědní PDZ, G - globálně dotovaná, Z - omezeně do
     <xs:element name="RegisterForNotificationsResponse">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UploadAttachment">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmFile" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="dmEncodedContent" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+                        </xs:sequence>
+                        <xs:attribute name="dmMimeType" type="xs:string" use="required" />
+                        <xs:attribute name="dmFileDescr" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UploadAttachmentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmAttID" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="dmAttHash1" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="AttHashAlg" type="xs:string" />
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="dmAttHash2" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="AttHashAlg" type="xs:string" />
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DownloadAttachment">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmID" type="xs:string" />
+                <xs:element name="attNum" type="xs:integer" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DownloadAttachmentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmFile" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="dmEncodedContent" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+                        </xs:sequence>
+                        <xs:attribute name="dmFileMetaType" type="xs:string" />
+                        <xs:attribute name="dmMimeType" type="xs:string" />
+                        <xs:attribute name="dmFileDescr" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateBigMessage" type="tns:tBigMessageInput" />
+    <xs:complexType name="tBigMessageInput">
+        <xs:sequence>
+            <xs:element name="dmEnvelope" type="tns:tBigMessEnvelope" />
+            <xs:element name="dmFiles">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="dmExtFile" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="dmFileMetaType" type="xs:string" use="required" />
+                                <xs:attribute name="dmAttID" type="xs:string" use="required" />
+                                <xs:attribute name="dmAttHash1" type="xs:string" use="required" />
+                                <xs:attribute name="dmAttHash1Alg" type="xs:string" use="required" />
+                                <xs:attribute name="dmAttHash2" type="xs:string" use="required" />
+                                <xs:attribute name="dmAttHash2Alg" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="dmFile" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="dmEncodedContent" type="xs:base64Binary" />
+                                </xs:sequence>
+                                <xs:attribute name="dmFileMetaType" type="xs:string" use="required" />
+                                <xs:attribute name="dmFileDescr" type="xs:string" use="required" />
+                                <xs:attribute name="dmMimeType" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="tBigMessEnvelope">
+        <xs:sequence>
+            <xs:element name="dmSenderOrgUnit" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Organizační jednotka odesílatele slovně; nepovinné, mohou doplňovat ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmSenderOrgUnitNum" type="xs:integer" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Organizační jednotka odesílatele hodnotou z číselníku; ESS, nepovinné</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dbIDRecipient" type="tns:tIdDb" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>ID datové schránky příjemce</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmRecipientOrgUnit" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Organizační jednotka příjemce slovně, nepovinné, možné upřesnění příjemce při podání z portálu</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmRecipientOrgUnitNum" type="xs:integer" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Organizační jednotka příjemce hodnotou z číselníku; ESS, nepovinné</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmToHands" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>K rukám - pomocný údaj </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmAnnotation" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Textová poznámka (Věc, Předmět, Anotace)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmRecipientRefNumber" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Číslo jednací za strany příjemce; nepovinné, </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmSenderRefNumber" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Číslo jednací za strany odesílatele; nepovinné</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmRecipientIdent" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Spisová značka ze strany příjemce; nepovinné</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmSenderIdent" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Spisová značka a strany odesílatele; nepovinné</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dmLegalTitleLaw" type="xs:integer" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Zmocnění - číslo zákona; ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmLegalTitleYear" type="xs:integer" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Zmocnění - rok vydání zákona; ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmLegalTitleSect" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Zmocnění - paragraf v zákoně; ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmLegalTitlePar" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Zmocnění - odstavec v paragrafu; ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmLegalTitlePoint" type="xs:string" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Zmocnění - písmeno v odstavci; ESS</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmPersonalDelivery" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Příznak Do vlastních rukou - může číst pouze adresát nebo osoba s explicitně daným oprávněním</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmAllowSubstDelivery" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Náhradní doručení povoleno/nepovoleno - pouze pro některé subjekty (např. soudy)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dmOVM" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true" />
+            <xs:element name="dmPublishOwnID" minOccurs="0" maxOccurs="1" nillable="true">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:boolean">
+                            <xs:attribute name="IdLevel" type="xs:integer" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="dmType" type="xs:string" use="optional" />
+    </xs:complexType>
+    <xs:element name="CreateBigMessageResponse" type="tns:tBigMessageOutput" />
+    <xs:complexType name="tBigMessageOutput">
+        <xs:sequence>
+            <xs:element name="dmID" type="tns:tIdDm" minOccurs="0" maxOccurs="1" />
+            <xs:element name="dmStatus" type="tns:tStatus" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AuthenticateBigMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmMessage" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="AuthenticateBigMessageResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmAuthResult" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true" />
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SignedBigMessageDownload">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmID" type="tns:tIdDm" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SignedBigMessageDownloadResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmSignature" type="xs:base64Binary" minOccurs="0" maxOccurs="1" xmime:expectedContentTypes="application/octet-stream" />
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SignedSentBigMessageDownload">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmID" type="tns:tIdDm" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SignedSentBigMessageDownloadResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmSignature" type="xs:base64Binary" minOccurs="0" maxOccurs="1" xmime:expectedContentTypes="application/octet-stream" />
+                <xs:element name="dmStatus" type="tns:tStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BigMessageDownload">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmID" type="tns:tIdDm" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BigMessageDownloadResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dmReturnedMessage" minOccurs="0" maxOccurs="1" nillable="true">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:sequence>
+                                <xs:element name="dmDm">
+                                    <xs:annotation>
+                                        <xs:documentation>Datová zpráva</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:group ref="tns:gMessageEnvelope" />
+                                            <xs:element name="dmFiles" type="tns:tFilesArray">
+                                                <xs:annotation>
+                                                    <xs:documentation>Pole písemností DZ</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="dmHash" type="tns:tHash">
+                                    <xs:annotation>
+                                        <xs:documentation>Hash kompletní DZ (z elementu dmDm)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="dmQTimestamp" type="xs:base64Binary" nillable="true">
+                                    <xs:annotation>
+                                        <xs:documentation>Kvalifikované časové razítko</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="dmDeliveryTime" type="xs:dateTime" nillable="true">
+                                    <xs:annotation>
+                                        <xs:documentation>čas dodání do DS</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="dmAcceptanceTime" type="xs:dateTime" nillable="true">
+                                    <xs:annotation>
+                                        <xs:documentation>čas doručení</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="dmMessageStatus" type="xs:integer">
+                                    <xs:annotation>
+                                        <xs:documentation>Stav DZ (dodaná, doručená atd.); celé číslo 1-9</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="dmAttachmentSize" type="xs:integer" nillable="true">
+                                    <xs:annotation>
+                                        <xs:documentation>velikost přílohy v kilobajtech (zaokrouhleno)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:sequence>
+                        <xs:attribute name="dmType" type="tns:tDmType" />
+                        <xs:attribute name="dmVODZ" type="xs:boolean" />
+                        <xs:attribute name="attsNum" type="xs:integer" />
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="dmStatus" type="tns:tStatus" />
             </xs:sequence>
         </xs:complexType>

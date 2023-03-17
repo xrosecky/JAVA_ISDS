@@ -195,6 +195,16 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
         throw new UnsupportedOperationException("Not supported.");
     }
 
+	public Message downloadBigMessage(MessageEnvelope envelope,
+			AttachmentStorer storer) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	public void downloadSignedBigMessage(MessageEnvelope envelope,
+			OutputStream os) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
     private void loginImpl(String username, String password) throws Exception {
         String userPassword = username + ":" + password;
         Base64 base64 = new Base64(0, null, false);
@@ -278,6 +288,5 @@ public class DataBoxManager implements DataBoxMessagesService, DataBoxDownloadSe
             con.disconnect();
         }
     }
-    
-    
+
 }

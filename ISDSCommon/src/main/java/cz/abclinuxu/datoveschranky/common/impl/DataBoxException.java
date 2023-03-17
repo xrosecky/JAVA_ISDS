@@ -13,8 +13,7 @@ public class DataBoxException extends RuntimeException {
     public DataBoxException(String mess) {
         super(mess);
     }
-    
-    
+
     public DataBoxException(String mess, Exception cause) {
         super(mess, cause);
     }
@@ -23,8 +22,12 @@ public class DataBoxException extends RuntimeException {
         super(mess);
         this.status = st;
     }
-    
-    @Override
+
+    public Status getStatus() {
+		return status;
+	}
+
+	@Override
     public String toString() {
         if (status == null) {
             return super.toString();

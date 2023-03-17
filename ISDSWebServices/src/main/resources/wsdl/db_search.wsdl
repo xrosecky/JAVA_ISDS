@@ -2,7 +2,7 @@
 <!--  *********************************************************************
      WSDL pro služby související s vyhledáváním DS 
 
-     verze: 2.36
+     verze: 2.35
      klasifikace: Veřejný dokument    
       *********************************************************************                    
 Seznam služeb: 
@@ -36,7 +36,6 @@ Seznam služeb:
    4.9.2018 verze 2.31 - přidány "dvojkové" verze FindDataBox2 a ISDSSearch3
   29.7.2021 verze 2.33 - sjednocení verzí   
   25.4.2022 verze 2.35 - sjednocení verzí
-  13.10.2022 verze 2.36 - sjednocení verzí
     
 ************************************************************************ -->
 

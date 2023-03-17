@@ -16,12 +16,12 @@ public class Config implements Serializable {
      *  URL testovacího provozu
      */
     @Deprecated
-    public static final String TEST_URL = "ws1.czebox.cz"; // was ws1.czebox.cz
+    public static final String TEST_URL = "ws2.czebox.cz"; // was ws1.czebox.cz
     /**
      *  URL produkčního prostředí
      */
     @Deprecated
-    public static final String PRODUCTION_URL = "ws1.mojedatovaschranka.cz"; // was ws1.mojedatovaschranka.cz
+    public static final String PRODUCTION_URL = "ws2.mojedatovaschranka.cz"; // was ws1.mojedatovaschranka.cz
     private final DataBoxEnvironment dataBoxEnvironment;
     // private final String url;
     private final KeyStore keyStore;

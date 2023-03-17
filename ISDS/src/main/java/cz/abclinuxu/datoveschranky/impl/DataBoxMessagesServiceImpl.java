@@ -166,6 +166,11 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
             if (record.getDmDeliveryTime().getValue() != null) {
                 env.setDeliveryTime(record.getDmDeliveryTime().getValue().toGregorianCalendar());
             }
+            boolean isVODZ = false;
+            if (record.isDmVODZ() != null) {
+            	isVODZ = record.isDmVODZ();
+            }
+            env.setVODZ(isVODZ);
             env.setState(MessageState.valueOf(record.getDmMessageStatus().intValue()));
             // identifikace zprávy odesílatelem
             String senderIdent = record.getDmSenderIdent().getValue();

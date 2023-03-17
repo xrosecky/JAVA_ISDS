@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<!--Created with Liquid Studio 2020 (https://www.liquid-technologies.com)-->
 <!-- ************************************************************************
    XSD schema typů použitých ve WSDL pro manipulaci s datovými schránkami a ve WSDL pro vyhledávání DS
 
-   verze: 2.36
+   verze: 2.35
    klasifikace: Veřejný dokument    
 
  změny:
@@ -70,7 +69,6 @@
  13.1.2021 - verze 2.32 - přidány typy schránek PFO_ZNALEC a PFO_TLUMOCNIK
  29.7.2021 - verze 2.33 - sjednocení verzí
  25.4.2022 - verze 2.35 - sjednocení verzí
- 13.10.2022 - verze 2.36 - přidán typ schránky PFO_REQ (existující od 1.1.2023)
  
 **************************************************************************** -->
 <xs:schema xmlns:tns="http://isds.czechpoint.cz/v20" elementFormDefault="qualified" targetNamespace="http://isds.czechpoint.cz/v20" xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -199,12 +197,11 @@
     </xs:complexType>
     <xs:simpleType name="tDbType">
         <xs:annotation>
-            <xs:documentation>typ DS podle zákona - výčet FO, PO, FPO a OVM. Některé mají podtypy, např. PFO_ADVOK aj.</xs:documentation>
+            <xs:documentation>typ DS podle zákona - výčet FO,PO,FPO a OVM. Některé mají podtypy, např. FPO_INSSPR aj.</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="FO" />
             <xs:enumeration value="PFO" />
-            <xs:enumeration value="PFO_REQ" />
             <xs:enumeration value="PFO_ADVOK" />
             <xs:enumeration value="PFO_DANPOR" />
             <xs:enumeration value="PFO_INSSPR" />
@@ -1399,13 +1396,10 @@
                         <xs:enumeration value="PO_ZAK" />
                         <xs:enumeration value="PO_REQ" />
                         <xs:enumeration value="PFO" />
-                        <xs:enumeration value="PFO_REQ" />
                         <xs:enumeration value="PFO_ADVOK" />
                         <xs:enumeration value="PFO_INSSPR" />
                         <xs:enumeration value="PFO_DANPOR" />
                         <xs:enumeration value="PFO_AUDITOR" />
-                        <xs:enumeration value="PFO_ZNALEC" />
-                        <xs:enumeration value="PFO_TLUMOCNIK" />
                         <xs:enumeration value="FO" />
                     </xs:restriction>
                 </xs:simpleType>
@@ -1484,7 +1478,6 @@
                         <xs:enumeration value="PO_ZAK" />
                         <xs:enumeration value="PO_REQ" />
                         <xs:enumeration value="PFO" />
-                        <xs:enumeration value="PFO_REQ" />
                         <xs:enumeration value="PFO_ADVOK" />
                         <xs:enumeration value="PFO_INSSPR" />
                         <xs:enumeration value="PFO_DANPOR" />

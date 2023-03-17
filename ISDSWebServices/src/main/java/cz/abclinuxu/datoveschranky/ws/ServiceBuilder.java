@@ -5,6 +5,7 @@ import cz.abclinuxu.datoveschranky.ws.db.DataBoxSearch;
 import cz.abclinuxu.datoveschranky.ws.db.DataBoxAccess;
 import cz.abclinuxu.datoveschranky.ws.dm.DmInfoWebService;
 import cz.abclinuxu.datoveschranky.ws.dm.DmOperationsWebService;
+import cz.abclinuxu.datoveschranky.ws.dm.DmVoDZWebService;
 
 import java.net.URL;
 
@@ -44,6 +45,12 @@ public class ServiceBuilder {
     	QName qName = new QName("http://isds.czechpoint.cz/v20", "DataBoxSupplementary");
     	URL url = ServiceBuilder.class.getResource("/wsdl/db_supplementary.wsdl");
         return new DataBoxAccess(url, qName);
+    }
+
+    public static DmVoDZWebService createDmVoDZWebService() {
+    	QName qName = new QName("http://isds.czechpoint.cz/v20", "dmVoDZWebService");
+    	URL url = ServiceBuilder.class.getResource("/wsdl/dm_VoDZ.wsdl");
+        return new DmVoDZWebService(url, qName);
     }
 
 }
