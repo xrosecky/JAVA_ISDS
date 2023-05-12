@@ -17,14 +17,14 @@ import javax.xml.ws.Service;
  */
 public abstract class Authentication {
 
+	protected static final String SERVICE_POSTFIX_FOR_VODZ = "vodz";
+
     protected final Config config;
-    // protected SSLSocketFactory socketFactory = null;
+
     protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
     protected Authentication(Config config) {
         this.config = config;
-        // KeyStore keyStore = config.getKeyStore();
-        // this.socketFactory = Utils.createSSLSocketFactory(keyStore);
     }
 
     public <T> T createService(Service serviceBuilder, Class<T> serviceClass, String servicePostfix) {
@@ -34,8 +34,9 @@ public abstract class Authentication {
     }
 
     protected void configureService(Map<String, Object> requestContext, String servicePostfix) {
+    	boolean isVODZ = SERVICE_POSTFIX_FOR_VODZ.equals(servicePostfix);
         requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, this.createSSLSocketFactory());
-        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, config.getServiceURL() + servicePostfix);
+        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, config.getServiceURL(isVODZ) + servicePostfix);
         this.configureServiceOverride(requestContext, servicePostfix);
     }
 
