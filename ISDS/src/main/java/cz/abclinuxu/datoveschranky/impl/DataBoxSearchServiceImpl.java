@@ -272,6 +272,7 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
         addressDetail.setStreet(owner.getAdStreet());
         addressDetail.setZipCode(owner.getAdZipCode());
         result.setAddressDetails(addressDetail);
+        result.setOpenAddressing(owner.isDbOpenAddressing() == true);
         return result;
     }
     
