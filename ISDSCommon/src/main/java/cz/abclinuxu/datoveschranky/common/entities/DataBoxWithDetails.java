@@ -13,6 +13,7 @@ public class DataBoxWithDetails extends DataBox {
 
     private Address addressDetail;
     private String IC;
+    private boolean openAddressing;
 
     public DataBoxWithDetails() {
     }
@@ -37,7 +38,15 @@ public class DataBoxWithDetails extends DataBox {
         this.IC = ic;
     }
 
-    @Override
+    public boolean isOpenAddressing() {
+		return openAddressing;
+	}
+
+	public void setOpenAddressing(boolean openAddressing) {
+		this.openAddressing = openAddressing;
+	}
+
+	@Override
     public String toString() {
 	if (this.getIC() != null) {
 	    return "IC:" + this.getIC() + " " + super.toString();
