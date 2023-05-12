@@ -40,16 +40,15 @@ public class ClientCertAuthentication extends Authentication {
 
     @Override
     protected void configureService(Map<String, Object> requestContext, String servicePostfix) {
+    	boolean isVODZ = SERVICE_POSTFIX_FOR_VODZ.equals(servicePostfix);
         requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, this.createSSLSocketFactory());
-        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, config.getServiceURLClientCert() + servicePostfix);
+        requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, config.getServiceURLClientCert(isVODZ) + servicePostfix);
         this.configureServiceOverride(requestContext, servicePostfix);
     }
 
     @Override
     protected SSLSocketFactory createSSLSocketFactory() throws DataBoxException {
         try {
-            // System.setProperty("https.protocols", "SSLv3");
-            // System.setProperty("javax.net.debug", "all");
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             // KeyStore keyStore = Utils.createTrustStore();

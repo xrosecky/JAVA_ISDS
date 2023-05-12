@@ -75,8 +75,15 @@ public class Config implements Serializable {
     }
 
     public String getServiceURL() {
-        // return "https://" + url + "/cert/DS/"; // was "/DS/"
         return "https://" + dataBoxEnvironment.basicURL() + "/DS/";
+    }
+
+    public String getServiceURL(boolean isVODZ) {
+        return "https://" + dataBoxEnvironment.basicURL(isVODZ) + "/DS/";
+    }
+
+    public String getServiceURLClientCert(boolean isVODZ) {
+        return "https://" + dataBoxEnvironment.clientCertURL(isVODZ) + "/cert/DS/";
     }
 
     public String getServiceURLClientCert() {
