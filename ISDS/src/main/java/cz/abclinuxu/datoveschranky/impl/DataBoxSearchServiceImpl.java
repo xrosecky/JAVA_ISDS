@@ -57,7 +57,13 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	types.put(DataBoxType.OVM_EXEKUT, TDbType.OVM_EXEKUT);
 	types.put(DataBoxType.OVM_NOTAR, TDbType.OVM_NOTAR);
 	types.put(DataBoxType.OVM_REQ, TDbType.OVM_REQ);
+	types.put(DataBoxType.OVM_FO, TDbType.OVM_FO);
+	types.put(DataBoxType.OVM_PFO, TDbType.OVM_PFO);
+	types.put(DataBoxType.OVM_PO, TDbType.OVM_PO);
 	types.put(DataBoxType.PFO, TDbType.PFO);
+	types.put(DataBoxType.PFO_AUDITOR, TDbType.PFO_AUDITOR);
+	types.put(DataBoxType.PFO_ZNALEC, TDbType.PFO_ZNALEC);
+	types.put(DataBoxType.PFO_TLUMOCNIK, TDbType.PFO_TLUMOCNIK);
 	types.put(DataBoxType.PFO_ADVOK, TDbType.PFO_ADVOK);
 	types.put(DataBoxType.PFO_DANPOR, TDbType.PFO_DANPOR);
 	types.put(DataBoxType.PFO_INSSPR, TDbType.PFO_INSSPR);
