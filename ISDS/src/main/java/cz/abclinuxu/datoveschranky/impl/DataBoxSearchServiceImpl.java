@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxQuery;
+import cz.abclinuxu.datoveschranky.common.entities.PDZType;
 import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxSearchResult;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxSearchService;
@@ -273,6 +274,17 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 		} else {
 			return null;
 		}
+	}
+
+	public boolean getPDZSendInfo(String dbId, PDZType type) {
+		if (dbId == null) {
+			throw new NullPointerException("dbId");
+		}
+		Holder<Boolean> pdZsiResult = new Holder<Boolean>();
+		Holder<TDbReqStatus> status = new Holder<TDbReqStatus>();
+		this.searchService.pdzSendInfo(dbId, type.type(), pdZsiResult, status);
+		ErrorHandling.throwIfError("PDZSendInfo failed", status.value);
+		return pdZsiResult.value;
 	}
 
 	static DataBoxWithDetails create(TDbOwnerInfoExt owner) {

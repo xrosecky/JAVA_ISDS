@@ -6,6 +6,7 @@ import cz.abclinuxu.datoveschranky.common.entities.DataBoxSearchResult;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxState;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxType;
 import cz.abclinuxu.datoveschranky.common.entities.DataBoxWithDetails;
+import cz.abclinuxu.datoveschranky.common.entities.PDZType;
 import cz.abclinuxu.datoveschranky.common.entities.SearchResult;
 
 import java.util.List;
@@ -64,5 +65,14 @@ public interface DataBoxSearchService {
 	 *            dokumentace k ISDS)
 	 */
 	public SearchResult find(DataBoxWithDetails what);
+
+	/**
+	 * Služba pro získání informací o možnosti zaslat PDZ
+	 *
+	 * @param dbId ID datove schránky
+	 * @param type typ
+	 * @return povoleno odeslání
+	 */
+	public boolean getPDZSendInfo(String dbId, PDZType type);
 
 }
