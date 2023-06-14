@@ -9,11 +9,12 @@ import cz.abclinuxu.datoveschranky.common.entities.Message;
  */
 public interface DataBoxUploadService {
 
-    /**
-     * Odešle zprávu. V případě jakékoliv chyby vyhodí vyjímku.
-     * 
-     * @param mess   zpráva k odeslání
-     */ 
-    public void sendMessage(Message mess);
-    
+	/**
+	 * Odešle zprávu. V případě jakékoliv chyby vyhodí vyjímku.
+	 * 
+	 * @param mess
+	 *            zpráva k odeslání
+	 */
+	public void sendMessage(Message mess);
+
 }

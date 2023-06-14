@@ -20,13 +20,16 @@ public class MessageValidatorTest {
 	@Test
 	public void testZfoWithXmlAttachment() throws Exception {
 		MessageValidator validator = new MessageValidator();
-		InputStream is = this.getClass().getResourceAsStream("/examples/ODZ_with_xml_attachment.zfo");
+		InputStream is = this.getClass().getResourceAsStream(
+				"/examples/ODZ_with_xml_attachment.zfo");
 		byte[] bytes = getBytesFromInputStream(is);
-		Message mess = validator.createMessage(bytes, new ByteArrayAttachmentStorer());
-		ByteContent content = (ByteContent) mess.getAttachments().get(0).getContent();
+		Message mess = validator.createMessage(bytes,
+				new ByteArrayAttachmentStorer());
+		ByteContent content = (ByteContent) mess.getAttachments().get(0)
+				.getContent();
 		System.out.println(new String(content.getBytes(), "UTF-8"));
 	}
-	
+
 	public static byte[] getBytesFromInputStream(InputStream is) {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
@@ -40,5 +43,5 @@ public class MessageValidatorTest {
 			return null;
 		}
 	}
-	
+
 }

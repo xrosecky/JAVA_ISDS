@@ -16,31 +16,34 @@ import java.io.OutputStream;
  */
 public class FileAttachmentStorer implements AttachmentStorer {
 
-    protected File directory = null;
+	protected File directory = null;
 
-    /**
-     * Soubory se budou ukládat do adresáře dir.
-     * 
-     * @param dir adresář, do kterého se mají ukládat soubory
-     */ 
-    public FileAttachmentStorer(File dir) {
-        if (!dir.isDirectory()) {
-            throw new IllegalArgumentException(String.format("%s neni adresarem.", dir.getAbsolutePath()));
-        }
-        this.directory = dir;
-    }
-    
-    public OutputStream store(MessageEnvelope envelope, Attachment attachment) throws IOException {
-        String name = name(envelope, attachment);
-        File output = new File(directory, name);
-        attachment.setContents(new FileContent(output));
-        return new FileOutputStream(output);
-    }
-    
-    protected String name(MessageEnvelope envelope, Attachment attachment) {
-        String prefix = envelope.getMessageID();
-        String description = attachment.getDescription();
-        return prefix + "_" + description;
-    }
-    
+	/**
+	 * Soubory se budou ukládat do adresáře dir.
+	 * 
+	 * @param dir
+	 *            adresář, do kterého se mají ukládat soubory
+	 */
+	public FileAttachmentStorer(File dir) {
+		if (!dir.isDirectory()) {
+			throw new IllegalArgumentException(String.format(
+					"%s neni adresarem.", dir.getAbsolutePath()));
+		}
+		this.directory = dir;
+	}
+
+	public OutputStream store(MessageEnvelope envelope, Attachment attachment)
+			throws IOException {
+		String name = name(envelope, attachment);
+		File output = new File(directory, name);
+		attachment.setContents(new FileContent(output));
+		return new FileOutputStream(output);
+	}
+
+	protected String name(MessageEnvelope envelope, Attachment attachment) {
+		String prefix = envelope.getMessageID();
+		String description = attachment.getDescription();
+		return prefix + "_" + description;
+	}
+
 }

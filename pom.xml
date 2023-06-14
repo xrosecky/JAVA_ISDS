@@ -1,62 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>cz.abclinuxu.datoveschranky</groupId>
-  <artifactId>JAVA_ISDS</artifactId>
-  <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
-  <name>JAVA_ISDS</name>
-  <url>http://maven.apache.org</url>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cz.abclinuxu.datoveschranky</groupId>
+	<artifactId>JAVA_ISDS</artifactId>
+	<packaging>pom</packaging>
+	<version>1.1-SNAPSHOT</version>
+	<name>JAVA_ISDS</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.5</maven.compiler.source>
+		<maven.compiler.target>1.5</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<modules>
+		<module>ISDSCommon</module>
+		<module>TinyISDS</module>
+		<module>ISDSWebServices</module>
+		<module>ISDS</module>
+		<module>MessageViewer</module>
+		<module>Examples</module>
+	</modules>
   
-  <repositories>
-    <!--
-    <repository>
-      <id>some repository 1</id>
-      <url>http://repository.jboss.org/maven2</url>
-    </repository>
-    <repository>
-      <id>some repository 2</id>
-      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-    </repository>
-    -->
-  </repositories>
-
-  <properties>
-    <!-- maven project settings -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <modules>
-    <module>ISDSCommon</module>
-    <module>TinyISDS</module>
-    <module>ISDSWebServices</module>
-    <module>ISDS</module>
-    <module>MessageViewer</module>
-    <module>Examples</module>
-  </modules>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-javadoc-plugin</artifactId>
-	  <configuration>
-	    <author>true</author>
-	    <defaultAuthor>Vaclav Rosecky</defaultAuthor>
-	  </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<author>true</author>
+					<defaultAuthor>Vaclav Rosecky</defaultAuthor>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
   
 </project>

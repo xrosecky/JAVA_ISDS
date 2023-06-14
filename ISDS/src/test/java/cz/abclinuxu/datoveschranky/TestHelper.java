@@ -15,76 +15,79 @@ import java.util.ResourceBundle;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author xrosecky
  */
 public class TestHelper {
 
-    /*
-    public static final String login = "5e7mvf";
-    public static final String passwd = "Ab123456b";
-    public static final File certFile = new File("/path/to/your/certificate.p12");
-    public static final String certPassword = "your_client_cert_password";
-    public static final Config config = new Config(DataBoxEnvironment.TEST);
-     */
-    private final Properties properties;
-    private final Config config = new Config(DataBoxEnvironment.TEST);
+	/*
+	 * public static final String login = "5e7mvf"; public static final String
+	 * passwd = "Ab123456b"; public static final File certFile = new
+	 * File("/path/to/your/certificate.p12"); public static final String
+	 * certPassword = "your_client_cert_password"; public static final Config
+	 * config = new Config(DataBoxEnvironment.TEST);
+	 */
+	private final Properties properties;
+	private final Config config = new Config(DataBoxEnvironment.TEST);
 
-    // public static final Properties properties = new Properties(TestHelper.class.getClassLoader().getSystemResourceAsStream("configuration.properties"));
-    public TestHelper() {
-	InputStream is = this.getClass().getResourceAsStream("/configuration.properties");
-	properties = new Properties();
-	try {
-	    properties.load(is);
-	} catch (IOException ioe) {
-	    throw new RuntimeException(ioe);
+	// public static final Properties properties = new
+	// Properties(TestHelper.class.getClassLoader().getSystemResourceAsStream("configuration.properties"));
+	public TestHelper() {
+		InputStream is = this.getClass().getResourceAsStream(
+				"/configuration.properties");
+		properties = new Properties();
+		try {
+			properties.load(is);
+		} catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
 	}
-    }
 
-    public DataBoxServices connectAsOVM() throws Exception {
-	return connectBasicAuthAsOVM();
-    }
+	public DataBoxServices connectAsOVM() throws Exception {
+		return connectBasicAuthAsOVM();
+	}
 
-    public DataBoxServices connectAsFO() throws Exception {
-	return connectBasicAuthAsFO();
-    }
+	public DataBoxServices connectAsFO() throws Exception {
+		return connectBasicAuthAsFO();
+	}
 
-    private DataBoxServices connectClientCertAsOVM() throws Exception {
-	File certFile = null;
-	String certPassword = null;
-	Config config = new Config(DataBoxEnvironment.TEST);
-	Authentication auth = new ClientCertAuthentication(config, certFile, certPassword);
-	return new DataBoxManager(config, auth);
-    }
+	private DataBoxServices connectClientCertAsOVM() throws Exception {
+		File certFile = null;
+		String certPassword = null;
+		Config config = new Config(DataBoxEnvironment.TEST);
+		Authentication auth = new ClientCertAuthentication(config, certFile,
+				certPassword);
+		return new DataBoxManager(config, auth);
+	}
 
-    private DataBoxServices connectBasicAuthAsOVM() throws Exception {
-	Config config = new Config(DataBoxEnvironment.TEST);
-	String login = properties.getProperty("ovm.login");
-	String passwd = properties.getProperty("ovm.password");
-	Authentication auth = new BasicAuthentication(config, login, passwd);
-	return new DataBoxManager(config, auth);
-    }
+	private DataBoxServices connectBasicAuthAsOVM() throws Exception {
+		Config config = new Config(DataBoxEnvironment.TEST);
+		String login = properties.getProperty("ovm.login");
+		String passwd = properties.getProperty("ovm.password");
+		Authentication auth = new BasicAuthentication(config, login, passwd);
+		return new DataBoxManager(config, auth);
+	}
 
-    private DataBoxServices connectBasicAuthAsFO() throws Exception {
-	Config config = new Config(DataBoxEnvironment.TEST);
-	String login = properties.getProperty("fo.login");
-	String passwd = properties.getProperty("fo.password");
-	Authentication auth = new BasicAuthentication(config, login, passwd);
-	return new DataBoxManager(config, auth);
-    }
+	private DataBoxServices connectBasicAuthAsFO() throws Exception {
+		Config config = new Config(DataBoxEnvironment.TEST);
+		String login = properties.getProperty("fo.login");
+		String passwd = properties.getProperty("fo.password");
+		Authentication auth = new BasicAuthentication(config, login, passwd);
+		return new DataBoxManager(config, auth);
+	}
 
-    public Properties getProperties() {
-	return properties;
-    }
+	public Properties getProperties() {
+		return properties;
+	}
 
-    @Test
-    public void testConnect() throws Exception {
-	TestHelper helper = new TestHelper();
-	helper.connectAsOVM();
-    }
+	@Test
+	public void testConnect() throws Exception {
+		TestHelper helper = new TestHelper();
+		helper.connectAsOVM();
+	}
 
-    public Config getConfig() {
-	return config;
-    }
-    
+	public Config getConfig() {
+		return config;
+	}
+
 }

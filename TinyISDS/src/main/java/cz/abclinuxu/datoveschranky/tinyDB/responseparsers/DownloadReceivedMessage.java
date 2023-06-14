@@ -21,48 +21,50 @@ import org.xml.sax.Attributes;
  */
 public class DownloadReceivedMessage extends AbstractResponseParser {
 
-    private Attachment attachment = null; // právě zpracovávaná příloha
-    private List<Attachment> attachments = new ArrayList<Attachment>();
-    private AttachmentStorer storer = null;
-    private MessageEnvelope envelope = null;
-    
-    public DownloadReceivedMessage(MessageEnvelope env, AttachmentStorer attachStorer) {
-        this.envelope = env;
-        this.storer = attachStorer;
-    }
+	private Attachment attachment = null; // právě zpracovávaná příloha
+	private List<Attachment> attachments = new ArrayList<Attachment>();
+	private AttachmentStorer storer = null;
+	private MessageEnvelope envelope = null;
 
-    @Override
-    public OutputHolder startElementImpl(String elName, Attributes attributes) {
-        if ("dmFile".equals(elName)) {
-            attachment = new Attachment();
-            attachment.setDescription(attributes.getValue("dmFileDescr"));
-            attachment.setMetaType(attributes.getValue("dmFileMetaType"));
-            attachment.setMimeType(attributes.getValue("dmMimeType"));
-        }
-        if ("dmEncodedContent".equals(elName)) {
-            try {
-                OutputStream os = storer.store(envelope, attachment);
-                attachments.add(attachment);
-                // FileOutputStream fos = new FileOutputStream(file);
-                Base64OutputStream bos = new Base64OutputStream(os, false, 0, null);
-                OutputHolder input = new OutputStreamHolder(bos);
-                return input;
-            } catch (IOException ioe) {
-                throw new RuntimeException("Nemohu otevrit soubor", ioe);
-            }
+	public DownloadReceivedMessage(MessageEnvelope env,
+			AttachmentStorer attachStorer) {
+		this.envelope = env;
+		this.storer = attachStorer;
+	}
 
-        }
-        return null;
-    }
+	@Override
+	public OutputHolder startElementImpl(String elName, Attributes attributes) {
+		if ("dmFile".equals(elName)) {
+			attachment = new Attachment();
+			attachment.setDescription(attributes.getValue("dmFileDescr"));
+			attachment.setMetaType(attributes.getValue("dmFileMetaType"));
+			attachment.setMimeType(attributes.getValue("dmMimeType"));
+		}
+		if ("dmEncodedContent".equals(elName)) {
+			try {
+				OutputStream os = storer.store(envelope, attachment);
+				attachments.add(attachment);
+				// FileOutputStream fos = new FileOutputStream(file);
+				Base64OutputStream bos = new Base64OutputStream(os, false, 0,
+						null);
+				OutputHolder input = new OutputStreamHolder(bos);
+				return input;
+			} catch (IOException ioe) {
+				throw new RuntimeException("Nemohu otevrit soubor", ioe);
+			}
 
-    @Override
-    public void endElementImpl(String elName, OutputHolder handle) {
-        if (handle instanceof Closeable) {
-            Utils.close((Closeable) handle);
-        }
-    }
-    
-    public List<Attachment> getResult() {
-        return attachments;
-    }
+		}
+		return null;
+	}
+
+	@Override
+	public void endElementImpl(String elName, OutputHolder handle) {
+		if (handle instanceof Closeable) {
+			Utils.close((Closeable) handle);
+		}
+	}
+
+	public List<Attachment> getResult() {
+		return attachments;
+	}
 }

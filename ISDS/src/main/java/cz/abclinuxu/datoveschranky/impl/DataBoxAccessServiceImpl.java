@@ -14,15 +14,15 @@ import cz.abclinuxu.datoveschranky.ws.db.TDbOwnerInfo;
 import cz.abclinuxu.datoveschranky.ws.db.TDbReqStatus;
 
 public class DataBoxAccessServiceImpl implements DataBoxAccessService {
-	
+
 	private DataBoxAccessPortType dmOp = null;
-	
+
 	public DataBoxAccessServiceImpl(DataBoxAccessPortType dmOp) {
 		this.dmOp = dmOp;
 	}
 
 	public OwnerInfo GetOwnerInfoFromLogin() {
-		Holder<TDbOwnerInfo> dbOwner = new Holder<TDbOwnerInfo>(); 
+		Holder<TDbOwnerInfo> dbOwner = new Holder<TDbOwnerInfo>();
 		Holder<TDbReqStatus> dbStatus = new Holder<TDbReqStatus>();
 		dmOp.getOwnerInfoFromLogin("", dbOwner, dbStatus);
 		TDbOwnerInfo owner = dbOwner.value;

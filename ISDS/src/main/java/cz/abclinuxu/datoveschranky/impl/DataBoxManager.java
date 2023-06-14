@@ -17,84 +17,95 @@ import cz.abclinuxu.datoveschranky.ws.dm.DmVoDZPortType;
 import java.io.File;
 
 /**
- *
+ * 
  * @author xrosecky
  */
 public class DataBoxManager implements DataBoxServices {
 
-    protected Authentication auth = null;
-    protected Config config = null;
-    protected DataBoxMessagesService dataBoxMessagesService = null;
-    protected DataBoxDownloadService dataBoxDownloadService = null;
-    protected DataBoxUploadService dataBoxUploadService = null;
-    protected DataBoxSearchServiceImpl dataBoxFindingService = null;
-    protected MessageValidator messageValidator = null;
+	protected Authentication auth = null;
+	protected Config config = null;
+	protected DataBoxMessagesService dataBoxMessagesService = null;
+	protected DataBoxDownloadService dataBoxDownloadService = null;
+	protected DataBoxUploadService dataBoxUploadService = null;
+	protected DataBoxSearchServiceImpl dataBoxFindingService = null;
+	protected MessageValidator messageValidator = null;
 
-    public DataBoxManager(Config conf, Authentication auth) {
-        this.auth = auth;
-        this.config = conf;
-        this.messageValidator = new MessageValidator(config);
-    }
+	public DataBoxManager(Config conf, Authentication auth) {
+		this.auth = auth;
+		this.config = conf;
+		this.messageValidator = new MessageValidator(config);
+	}
 
-    public static DataBoxManager login(Config config, String userName, String password) throws Exception {
-        Authentication auth = BasicAuthentication.login(config, userName, password);
-        DataBoxManager manager = new DataBoxManager(config, auth);
-        return manager;
-    }
+	public static DataBoxManager login(Config config, String userName,
+			String password) throws Exception {
+		Authentication auth = BasicAuthentication.login(config, userName,
+				password);
+		DataBoxManager manager = new DataBoxManager(config, auth);
+		return manager;
+	}
 
-    public static DataBoxManager login(Config config, File clientCert, String password) throws Exception {
-        return null;
-    }
+	public static DataBoxManager login(Config config, File clientCert,
+			String password) throws Exception {
+		return null;
+	}
 
-    public DataBoxDownloadService getDataBoxDownloadService() {
-        if (dataBoxDownloadService == null) {
-            DmOperationsPortType dataMessageOperationsService = auth.createService(
-                    ServiceBuilder.createDmOperationsWebService(),
-                    DmOperationsPortType.class, "dz");
-            DmVoDZPortType dataBigMessageOperationsService = auth.createService(
-                    ServiceBuilder.createDmVoDZWebService(),
-                    DmVoDZPortType.class, "vodz");
-            dataBoxDownloadService = new DataBoxDownloadServiceImpl(dataMessageOperationsService, dataBigMessageOperationsService, messageValidator);
-        }
-        return dataBoxDownloadService;
-    }
+	public DataBoxDownloadService getDataBoxDownloadService() {
+		if (dataBoxDownloadService == null) {
+			DmOperationsPortType dataMessageOperationsService = auth
+					.createService(
+							ServiceBuilder.createDmOperationsWebService(),
+							DmOperationsPortType.class, "dz");
+			DmVoDZPortType dataBigMessageOperationsService = auth
+					.createService(ServiceBuilder.createDmVoDZWebService(),
+							DmVoDZPortType.class, "vodz");
+			dataBoxDownloadService = new DataBoxDownloadServiceImpl(
+					dataMessageOperationsService,
+					dataBigMessageOperationsService, messageValidator);
+		}
+		return dataBoxDownloadService;
+	}
 
-    public DataBoxMessagesService getDataBoxMessagesService() {
-        if (dataBoxMessagesService == null) {
-            DmInfoPortType dataMessageInfo = auth.createService(
-                    ServiceBuilder.createDmInfoWebService(),
-                    DmInfoPortType.class, "dx");
-            dataBoxMessagesService = new DataBoxMessagesServiceImpl(dataMessageInfo);
-        }
-        return dataBoxMessagesService;
-    }
+	public DataBoxMessagesService getDataBoxMessagesService() {
+		if (dataBoxMessagesService == null) {
+			DmInfoPortType dataMessageInfo = auth.createService(
+					ServiceBuilder.createDmInfoWebService(),
+					DmInfoPortType.class, "dx");
+			dataBoxMessagesService = new DataBoxMessagesServiceImpl(
+					dataMessageInfo);
+		}
+		return dataBoxMessagesService;
+	}
 
-    public DataBoxUploadService getDataBoxUploadService() {
-        if (dataBoxUploadService == null) {
-            DmOperationsPortType dataMessageOperationsService = auth.createService(
-                    ServiceBuilder.createDmOperationsWebService(),
-                    DmOperationsPortType.class, "dz");
-            dataBoxUploadService = new DataBoxUploadServiceImpl(dataMessageOperationsService);
-        }
-        return dataBoxUploadService;
-    }
+	public DataBoxUploadService getDataBoxUploadService() {
+		if (dataBoxUploadService == null) {
+			DmOperationsPortType dataMessageOperationsService = auth
+					.createService(
+							ServiceBuilder.createDmOperationsWebService(),
+							DmOperationsPortType.class, "dz");
+			dataBoxUploadService = new DataBoxUploadServiceImpl(
+					dataMessageOperationsService);
+		}
+		return dataBoxUploadService;
+	}
 
-    public DataBoxSearchService getDataBoxSearchService() {
-        if (dataBoxFindingService == null) {
-            DataBoxManipulationPortType manipulationService = auth.createService(
-                    ServiceBuilder.createDataBoxManipulation(),
-                    DataBoxManipulationPortType.class, "df");
-            DataBoxSearchPortType searchService = auth.createService(
-                    ServiceBuilder.createDataBoxSearch(),
-                    DataBoxSearchPortType.class, "df");
-            dataBoxFindingService = new DataBoxSearchServiceImpl(manipulationService, searchService);
-        }
-        return dataBoxFindingService;
-    }
-    
-    public DataBoxAccessService getDataBoxAccessService() {
-        throw new UnsupportedOperationException("Operace getDataBoxAccessService neni " +
-        "touto knihovnou podporovana.");
-    }
+	public DataBoxSearchService getDataBoxSearchService() {
+		if (dataBoxFindingService == null) {
+			DataBoxManipulationPortType manipulationService = auth
+					.createService(ServiceBuilder.createDataBoxManipulation(),
+							DataBoxManipulationPortType.class, "df");
+			DataBoxSearchPortType searchService = auth.createService(
+					ServiceBuilder.createDataBoxSearch(),
+					DataBoxSearchPortType.class, "df");
+			dataBoxFindingService = new DataBoxSearchServiceImpl(
+					manipulationService, searchService);
+		}
+		return dataBoxFindingService;
+	}
+
+	public DataBoxAccessService getDataBoxAccessService() {
+		throw new UnsupportedOperationException(
+				"Operace getDataBoxAccessService neni "
+						+ "touto knihovnou podporovana.");
+	}
 
 }

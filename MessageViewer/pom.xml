@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>JAVA_ISDS</artifactId>
-    <groupId>cz.abclinuxu.datoveschranky</groupId>
-    <version>1.1-SNAPSHOT</version>
-  </parent>
-  <groupId>cz.abclinuxu.datoveschranky</groupId>
-  <artifactId>MessageViewer</artifactId>
-  <version>1.1-SNAPSHOT</version>
-  <name>MessageViewer</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
-      <groupId>cz.abclinuxu.datoveschranky</groupId>
-      <artifactId>ISDS</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <plugins>
-    
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>cz.abclinuxu.datoveschranky.MessageViewer</mainClass>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      <!-- -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>copy-dependencies</id>
-              <phase>package</phase>
-              <goals>
-                <goal>copy-dependencies</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                <overWriteReleases>false</overWriteReleases>
-                <overWriteSnapshots>false</overWriteSnapshots>
-                <overWriteIfNewer>true</overWriteIfNewer>
-              </configuration>
-            </execution>
-          </executions>
-      </plugin>
-      
-    </plugins>
-  </build>
-  
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>JAVA_ISDS</artifactId>
+		<groupId>cz.abclinuxu.datoveschranky</groupId>
+		<version>1.1-SNAPSHOT</version>
+	</parent>
+	<groupId>cz.abclinuxu.datoveschranky</groupId>
+	<artifactId>MessageViewer</artifactId>
+	<version>1.1-SNAPSHOT</version>
+	<name>MessageViewer</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>cz.abclinuxu.datoveschranky</groupId>
+			<artifactId>ISDS</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>cz.abclinuxu.datoveschranky.MessageViewer</mainClass>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
 </project>

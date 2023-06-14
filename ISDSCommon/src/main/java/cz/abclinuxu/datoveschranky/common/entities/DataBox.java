@@ -9,84 +9,86 @@ import java.io.Serializable;
  */
 public class DataBox implements Serializable {
 
-    private static final long serialVersionUID = 2L;
-    private String dataBoxID = null;
-    private String identity = null;
-    private String address = null;
-    private DataBoxType dataBoxType = null;
+	private static final long serialVersionUID = 2L;
+	private String dataBoxID = null;
+	private String identity = null;
+	private String address = null;
+	private DataBoxType dataBoxType = null;
 
-    public DataBox() {
-    }
-
-    public DataBox(String id) {
-	this.dataBoxID = id;
-    }
-
-    public DataBox(String id, String name, String adress) {
-	if (id == null) {
-	    throw new NullPointerException("id");
+	public DataBox() {
 	}
-	this.dataBoxID = id;
-	this.identity = name;
-	this.address = adress;
-    }
 
-    public DataBox(String id, DataBoxType dataBoxType, String name, String adress) {
-	if (id == null) {
-	    throw new NullPointerException("id");
+	public DataBox(String id) {
+		this.dataBoxID = id;
 	}
-	this.dataBoxID = id;
-	this.identity = name;
-	this.address = adress;
-	this.dataBoxType = dataBoxType;
-    }
 
-    /**
-     * Vrátí jednoznačné ID schránky.
-     */
-    public String getdataBoxID() {
-	return dataBoxID;
-    }
+	public DataBox(String id, String name, String adress) {
+		if (id == null) {
+			throw new NullPointerException("id");
+		}
+		this.dataBoxID = id;
+		this.identity = name;
+		this.address = adress;
+	}
 
-    public void setDataBoxID(String newID) {
-	Validator.assertNotNull(newID);
-	Validator.assertValidDataBoxID(newID);
-	this.dataBoxID = newID;
-    }
+	public DataBox(String id, DataBoxType dataBoxType, String name,
+			String adress) {
+		if (id == null) {
+			throw new NullPointerException("id");
+		}
+		this.dataBoxID = id;
+		this.identity = name;
+		this.address = adress;
+		this.dataBoxType = dataBoxType;
+	}
 
-    /**
-     * Jméno majitele datové schránky.
-     */
-    public String getIdentity() {
-	return identity;
-    }
+	/**
+	 * Vrátí jednoznačné ID schránky.
+	 */
+	public String getdataBoxID() {
+		return dataBoxID;
+	}
 
-    public void setIdentity(String identity) {
-	this.identity = identity;
-    }
+	public void setDataBoxID(String newID) {
+		Validator.assertNotNull(newID);
+		Validator.assertValidDataBoxID(newID);
+		this.dataBoxID = newID;
+	}
 
-    /**
-     * Adresa majitele datové schránky
-     */
-    public String getAddress() {
-	return address;
-    }
+	/**
+	 * Jméno majitele datové schránky.
+	 */
+	public String getIdentity() {
+		return identity;
+	}
 
-    public void setAddress(String address) {
-	this.address = address;
-    }
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
 
-    @Override
-    public String toString() {
-	return String.format("Uzivatel:%s, id schranky:%s adresa:%s", identity, dataBoxID, address);
-    }
+	/**
+	 * Adresa majitele datové schránky
+	 */
+	public String getAddress() {
+		return address;
+	}
 
-    public DataBoxType getDataBoxType() {
-	return dataBoxType;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setDataBoxType(DataBoxType type) {
-	dataBoxType = type;
-    }
+	@Override
+	public String toString() {
+		return String.format("Uzivatel:%s, id schranky:%s adresa:%s", identity,
+				dataBoxID, address);
+	}
+
+	public DataBoxType getDataBoxType() {
+		return dataBoxType;
+	}
+
+	public void setDataBoxType(DataBoxType type) {
+		dataBoxType = type;
+	}
 
 }

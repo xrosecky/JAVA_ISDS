@@ -27,299 +27,320 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- *
+ * 
  * @author xrosecky
  */
 public class MessageViewer extends javax.swing.JFrame {
 
-    private class SelectionListener implements ListSelectionListener {
+	private class SelectionListener implements ListSelectionListener {
 
-        private JTable table;
+		private JTable table;
 
-        public SelectionListener(JTable table) {
-            this.table = table;
-        }
+		public SelectionListener(JTable table) {
+			this.table = table;
+		}
 
-        public void valueChanged(ListSelectionEvent event) {
-            if (event.getValueIsAdjusting()) {
-                return;
-            }
-            attachmentMenu.setEnabled(table.getSelectedRow() != -1);
-        }
-    }
-    private final JFileChooser chooseFile = new JFileChooser();
-    private final JFileChooser saveAttachment = new JFileChooser();
-    private final Logger logger = Logger.getLogger(MessageViewer.class.getCanonicalName());
-    private final MessageValidator validator;
-    private File openedFile = null;
+		public void valueChanged(ListSelectionEvent event) {
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			attachmentMenu.setEnabled(table.getSelectedRow() != -1);
+		}
+	}
 
-    /** Creates new form NewApplication */
-    public MessageViewer() {
-        initComponents();
-        super.setTitle("Message Viewer");
-        Config config = new Config(Config.PRODUCTION_URL);
-        validator = new MessageValidator(config);
-        attachmentsTable.getSelectionModel().addListSelectionListener(
-                new SelectionListener(attachmentsTable));
-        attachmentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        attachmentMenu.setEnabled(false);
-        saveAsMenuItem.setEnabled(false);
-    }
+	private final JFileChooser chooseFile = new JFileChooser();
+	private final JFileChooser saveAttachment = new JFileChooser();
+	private final Logger logger = Logger.getLogger(MessageViewer.class
+			.getCanonicalName());
+	private final MessageValidator validator;
+	private File openedFile = null;
 
-    private void showFile(File file) {
-        this.openedFile = file;
-        String extension = getExtension(file.getName());
-        Content content = new FileContent(file);
-        Message mess = null;
-        try {
-            if (extension.equalsIgnoreCase("xml")) {
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                int bytesRead = 0;
-                byte[] data = new byte[4096];
-                InputStream is = content.getInputStream();
-                while ((bytesRead = is.read(data, 0, data.length)) != -1) {
-                  buffer.write(data, 0, bytesRead);
-                }
-                byte[] asByte = buffer.toByteArray();
-                mess = validator.readZFO(asByte, new ByteArrayAttachmentStorer());
-            } else {
-                mess = validator.createMessage(content, new ByteArrayAttachmentStorer());
-            }
-            messageInfo.setModel(new MessageTableModel(file, mess));
-            attachmentsTable.setModel(new AttachmentTableModel(mess.getAttachments()));
-            attachmentMenu.setEnabled(false);
-            saveAsMenuItem.setEnabled(true);
-        } catch (Exception ioe) {
-            this.showError("Nemohu otevřít staženou zprávu. Jedná se opravdu o podepsanou " +
-                    "zprávu z Datové schránky?");
-            logger.log(Level.SEVERE, "Nemohu zobrazit zpravu.", ioe);
-        }
-    }
+	/** Creates new form NewApplication */
+	public MessageViewer() {
+		initComponents();
+		super.setTitle("Message Viewer");
+		Config config = new Config(Config.PRODUCTION_URL);
+		validator = new MessageValidator(config);
+		attachmentsTable.getSelectionModel().addListSelectionListener(
+				new SelectionListener(attachmentsTable));
+		attachmentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		attachmentMenu.setEnabled(false);
+		saveAsMenuItem.setEnabled(false);
+	}
 
-    private String getExtension(String fileName) {
-        int i = fileName.lastIndexOf('.');
-        if (i == -1) {
-            return "";
-        }
-        return fileName.substring(i+1);
-    }
+	private void showFile(File file) {
+		this.openedFile = file;
+		String extension = getExtension(file.getName());
+		Content content = new FileContent(file);
+		Message mess = null;
+		try {
+			if (extension.equalsIgnoreCase("xml")) {
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int bytesRead = 0;
+				byte[] data = new byte[4096];
+				InputStream is = content.getInputStream();
+				while ((bytesRead = is.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, bytesRead);
+				}
+				byte[] asByte = buffer.toByteArray();
+				mess = validator.readZFO(asByte,
+						new ByteArrayAttachmentStorer());
+			} else {
+				mess = validator.createMessage(content,
+						new ByteArrayAttachmentStorer());
+			}
+			messageInfo.setModel(new MessageTableModel(file, mess));
+			attachmentsTable.setModel(new AttachmentTableModel(mess
+					.getAttachments()));
+			attachmentMenu.setEnabled(false);
+			saveAsMenuItem.setEnabled(true);
+		} catch (Exception ioe) {
+			this.showError("Nemohu otevřít staženou zprávu. Jedná se opravdu o podepsanou "
+					+ "zprávu z Datové schránky?");
+			logger.log(Level.SEVERE, "Nemohu zobrazit zpravu.", ioe);
+		}
+	}
 
-    private void showError(String message) {
-        JOptionPane.showMessageDialog(this, message);
-    }
+	private String getExtension(String fileName) {
+		int i = fileName.lastIndexOf('.');
+		if (i == -1) {
+			return "";
+		}
+		return fileName.substring(i + 1);
+	}
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	private void showError(String message) {
+		JOptionPane.showMessageDialog(this, message);
+	}
 
-        jInternalFrame1 = new javax.swing.JInternalFrame();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        messageInfo = new javax.swing.JTable();
-        jInternalFrame2 = new javax.swing.JInternalFrame();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        attachmentsTable = new javax.swing.JTable();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        attachmentMenu = new javax.swing.JMenu();
-        saveAttachmentMenuItem = new javax.swing.JMenuItem();
+	/**
+	 * This method is called from within the constructor to initialize the form.
+	 * WARNING: Do NOT modify this code. The content of this method is always
+	 * regenerated by the Form Editor.
+	 */
+	@SuppressWarnings("unchecked")
+	// <editor-fold defaultstate="collapsed"
+	// desc="Generated Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		jInternalFrame1 = new javax.swing.JInternalFrame();
+		jScrollPane1 = new javax.swing.JScrollPane();
+		messageInfo = new javax.swing.JTable();
+		jInternalFrame2 = new javax.swing.JInternalFrame();
+		jScrollPane2 = new javax.swing.JScrollPane();
+		attachmentsTable = new javax.swing.JTable();
+		menuBar = new javax.swing.JMenuBar();
+		fileMenu = new javax.swing.JMenu();
+		openMenuItem = new javax.swing.JMenuItem();
+		saveAsMenuItem = new javax.swing.JMenuItem();
+		exitMenuItem = new javax.swing.JMenuItem();
+		attachmentMenu = new javax.swing.JMenu();
+		saveAttachmentMenuItem = new javax.swing.JMenuItem();
 
-        jInternalFrame1.setResizable(true);
-        jInternalFrame1.setTitle("Obálka zprávy");
-        jInternalFrame1.setVisible(true);
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        messageInfo.setModel(new MessageTableModel());
-        jScrollPane1.setViewportView(messageInfo);
+		jInternalFrame1.setResizable(true);
+		jInternalFrame1.setTitle("Obálka zprávy");
+		jInternalFrame1.setVisible(true);
 
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-        );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-        );
+		messageInfo.setModel(new MessageTableModel());
+		jScrollPane1.setViewportView(messageInfo);
 
-        jInternalFrame2.setResizable(true);
-        jInternalFrame2.setTitle("Přílohy zprávy");
-        jInternalFrame2.setVisible(true);
+		javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(
+				jInternalFrame1.getContentPane());
+		jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+		jInternalFrame1Layout.setHorizontalGroup(jInternalFrame1Layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane1,
+						javax.swing.GroupLayout.DEFAULT_SIZE, 482,
+						Short.MAX_VALUE));
+		jInternalFrame1Layout.setVerticalGroup(jInternalFrame1Layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane1,
+						javax.swing.GroupLayout.DEFAULT_SIZE, 205,
+						Short.MAX_VALUE));
 
-        attachmentsTable.setModel(new AttachmentTableModel());
-        jScrollPane2.setViewportView(attachmentsTable);
+		jInternalFrame2.setResizable(true);
+		jInternalFrame2.setTitle("Přílohy zprávy");
+		jInternalFrame2.setVisible(true);
 
-        javax.swing.GroupLayout jInternalFrame2Layout = new javax.swing.GroupLayout(jInternalFrame2.getContentPane());
-        jInternalFrame2.getContentPane().setLayout(jInternalFrame2Layout);
-        jInternalFrame2Layout.setHorizontalGroup(
-            jInternalFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-        );
-        jInternalFrame2Layout.setVerticalGroup(
-            jInternalFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-        );
+		attachmentsTable.setModel(new AttachmentTableModel());
+		jScrollPane2.setViewportView(attachmentsTable);
 
-        fileMenu.setText("Soubor");
+		javax.swing.GroupLayout jInternalFrame2Layout = new javax.swing.GroupLayout(
+				jInternalFrame2.getContentPane());
+		jInternalFrame2.getContentPane().setLayout(jInternalFrame2Layout);
+		jInternalFrame2Layout.setHorizontalGroup(jInternalFrame2Layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane2,
+						javax.swing.GroupLayout.DEFAULT_SIZE, 482,
+						Short.MAX_VALUE));
+		jInternalFrame2Layout.setVerticalGroup(jInternalFrame2Layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(jScrollPane2,
+						javax.swing.GroupLayout.DEFAULT_SIZE, 176,
+						Short.MAX_VALUE));
 
-        openMenuItem.setText("Otevřít");
-        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(openMenuItem);
+		fileMenu.setText("Soubor");
 
-        saveAsMenuItem.setText("Uložit jako");
-        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveAsMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(saveAsMenuItem);
+		openMenuItem.setText("Otevřít");
+		openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				openMenuItemActionPerformed(evt);
+			}
+		});
+		fileMenu.add(openMenuItem);
 
-        exitMenuItem.setText("Konec");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
+		saveAsMenuItem.setText("Uložit jako");
+		saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				saveAsMenuItemActionPerformed(evt);
+			}
+		});
+		fileMenu.add(saveAsMenuItem);
 
-        menuBar.add(fileMenu);
+		exitMenuItem.setText("Konec");
+		exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				exitMenuItemActionPerformed(evt);
+			}
+		});
+		fileMenu.add(exitMenuItem);
 
-        attachmentMenu.setText("Příloha");
+		menuBar.add(fileMenu);
 
-        saveAttachmentMenuItem.setText("Uložit jako");
-        saveAttachmentMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveAttachmentMenuItemActionPerformed(evt);
-            }
-        });
-        attachmentMenu.add(saveAttachmentMenuItem);
+		attachmentMenu.setText("Příloha");
 
-        menuBar.add(attachmentMenu);
+		saveAttachmentMenuItem.setText("Uložit jako");
+		saveAttachmentMenuItem
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent evt) {
+						saveAttachmentMenuItemActionPerformed(evt);
+					}
+				});
+		attachmentMenu.add(saveAttachmentMenuItem);
 
-        setJMenuBar(menuBar);
+		menuBar.add(attachmentMenu);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jInternalFrame2)
-            .addComponent(jInternalFrame1)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jInternalFrame1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jInternalFrame2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+		setJMenuBar(menuBar);
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(
+				getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(jInternalFrame2).addComponent(jInternalFrame1));
+		layout.setVerticalGroup(layout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(
+						javax.swing.GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup()
+								.addComponent(jInternalFrame1)
+								.addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jInternalFrame2,
+										javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE,
+										javax.swing.GroupLayout.PREFERRED_SIZE)));
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
+		pack();
+	}// </editor-fold>//GEN-END:initComponents
 
-private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-    int result = chooseFile.showOpenDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File file = chooseFile.getSelectedFile();
-        showFile(file);
-    }
-}//GEN-LAST:event_openMenuItemActionPerformed
+	private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exitMenuItemActionPerformed
+		System.exit(0);
+	}// GEN-LAST:event_exitMenuItemActionPerformed
 
-private void saveAttachmentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAttachmentMenuItemActionPerformed
-    int row = attachmentsTable.getSelectedRow();
-    if (row == -1) {
-        this.showError("Žádná příloha není vybrána.");
-        return;
-    }
-    List<Attachment> attachments = ((AttachmentTableModel) attachmentsTable.getModel()).getData();
-    Attachment attachment = attachments.get(row);
-    saveAttachment.setSelectedFile(new File(attachment.getDescription()));
-    int result = saveAttachment.showSaveDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File file = saveAttachment.getSelectedFile();
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            try {
-                in = attachment.getContent().getInputStream();
-                out = new FileOutputStream(file);
-                Utils.copy(in, out);
-            } finally {
-                Utils.close(in, out);
-            }
-        } catch (Exception ex) {
-            this.showError("Nemohu uložit přílohu do souboru.");
-            logger.log(Level.SEVERE, "Nemohu ulozit prilohu do souboru.", ex);
-        }
-    }
-}//GEN-LAST:event_saveAttachmentMenuItemActionPerformed
+	private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openMenuItemActionPerformed
+		int result = chooseFile.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = chooseFile.getSelectedFile();
+			showFile(file);
+		}
+	}// GEN-LAST:event_openMenuItemActionPerformed
 
-private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
-    int result = saveAttachment.showSaveDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File file = saveAttachment.getSelectedFile();
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            try {
-                in = new FileInputStream(openedFile);
-                out = new FileOutputStream(file);
-                Utils.copy(in, out);
-            } finally {
-                Utils.close(in, out);
-            }
-        } catch (Exception ex) {
-            this.showError("Nemohu uložit zprávu do souboru.");
-            logger.log(Level.SEVERE, "Nemohu ulozit zpravu do souboru.", ex);
-        }
-    }
-}//GEN-LAST:event_saveAsMenuItemActionPerformed
+	private void saveAttachmentMenuItemActionPerformed(
+			java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveAttachmentMenuItemActionPerformed
+		int row = attachmentsTable.getSelectedRow();
+		if (row == -1) {
+			this.showError("Žádná příloha není vybrána.");
+			return;
+		}
+		List<Attachment> attachments = ((AttachmentTableModel) attachmentsTable
+				.getModel()).getData();
+		Attachment attachment = attachments.get(row);
+		saveAttachment.setSelectedFile(new File(attachment.getDescription()));
+		int result = saveAttachment.showSaveDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = saveAttachment.getSelectedFile();
+			InputStream in = null;
+			OutputStream out = null;
+			try {
+				try {
+					in = attachment.getContent().getInputStream();
+					out = new FileOutputStream(file);
+					Utils.copy(in, out);
+				} finally {
+					Utils.close(in, out);
+				}
+			} catch (Exception ex) {
+				this.showError("Nemohu uložit přílohu do souboru.");
+				logger.log(Level.SEVERE, "Nemohu ulozit prilohu do souboru.",
+						ex);
+			}
+		}
+	}// GEN-LAST:event_saveAttachmentMenuItemActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(final String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+	private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveAsMenuItemActionPerformed
+		int result = saveAttachment.showSaveDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = saveAttachment.getSelectedFile();
+			InputStream in = null;
+			OutputStream out = null;
+			try {
+				try {
+					in = new FileInputStream(openedFile);
+					out = new FileOutputStream(file);
+					Utils.copy(in, out);
+				} finally {
+					Utils.close(in, out);
+				}
+			} catch (Exception ex) {
+				this.showError("Nemohu uložit zprávu do souboru.");
+				logger.log(Level.SEVERE, "Nemohu ulozit zpravu do souboru.", ex);
+			}
+		}
+	}// GEN-LAST:event_saveAsMenuItemActionPerformed
 
-            public void run() {
-                MessageViewer app = new MessageViewer();
-                app.setVisible(true);
-                if (args.length == 1) {
-                    app.showFile(new File(args[0]));
-                }
-            }
-        });
-    }
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(final String args[]) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu attachmentMenu;
-    private javax.swing.JTable attachmentsTable;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JInternalFrame jInternalFrame1;
-    private javax.swing.JInternalFrame jInternalFrame2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JMenuBar menuBar;
-    private javax.swing.JTable messageInfo;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveAttachmentMenuItem;
-    // End of variables declaration//GEN-END:variables
+			public void run() {
+				MessageViewer app = new MessageViewer();
+				app.setVisible(true);
+				if (args.length == 1) {
+					app.showFile(new File(args[0]));
+				}
+			}
+		});
+	}
+
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JMenu attachmentMenu;
+	private javax.swing.JTable attachmentsTable;
+	private javax.swing.JMenuItem exitMenuItem;
+	private javax.swing.JMenu fileMenu;
+	private javax.swing.JInternalFrame jInternalFrame1;
+	private javax.swing.JInternalFrame jInternalFrame2;
+	private javax.swing.JScrollPane jScrollPane1;
+	private javax.swing.JScrollPane jScrollPane2;
+	private javax.swing.JMenuBar menuBar;
+	private javax.swing.JTable messageInfo;
+	private javax.swing.JMenuItem openMenuItem;
+	private javax.swing.JMenuItem saveAsMenuItem;
+	private javax.swing.JMenuItem saveAttachmentMenuItem;
+	// End of variables declaration//GEN-END:variables
 }
