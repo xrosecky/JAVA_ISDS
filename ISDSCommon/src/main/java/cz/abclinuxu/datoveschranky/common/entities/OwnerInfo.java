@@ -4,8 +4,7 @@ public class OwnerInfo {
 	private String dataBoxID = null;
 	private DataBoxType dataBoxType = null;
 	private DataBoxState dbState = null;
-	
-	
+
 	private String personNameFirstName = null;
 	private String personNameMiddleName = null;
 	private String personNameLastName = null;
@@ -16,11 +15,9 @@ public class OwnerInfo {
 	private String birthCounty = null;
 	private String birthState = null;
 
-	
 	private String firmName = null;
 	private String IC = null;
 
-	
 	private String addressCity = null;
 	private String addressStreet = null;
 	private String addressNumberInStreet = null;
@@ -31,11 +28,13 @@ public class OwnerInfo {
 	private String nationality = null;
 	private String identifier = null;
 	private String registryCode = null;
-	
+
 	private boolean dbEffectiveOVM = false;
 	private boolean dbOpenAddressing = false;
 
-	public OwnerInfo(String dataBoxID, DataBoxType dataBoxType, DataBoxState dbState, boolean dbEffectiveOVM, boolean dbOpenAddressing) {
+	public OwnerInfo(String dataBoxID, DataBoxType dataBoxType,
+			DataBoxState dbState, boolean dbEffectiveOVM,
+			boolean dbOpenAddressing) {
 		super();
 		this.dataBoxID = dataBoxID;
 		this.dataBoxType = dataBoxType;
@@ -176,7 +175,8 @@ public class OwnerInfo {
 		return addressNumberInMunicipality;
 	}
 
-	public void setAddressNumberInMunicipality(String addressNumberInMunicipality) {
+	public void setAddressNumberInMunicipality(
+			String addressNumberInMunicipality) {
 		this.addressNumberInMunicipality = addressNumberInMunicipality;
 	}
 
@@ -235,7 +235,5 @@ public class OwnerInfo {
 	public void setDbOpenAddressing(boolean dbOpenAddressing) {
 		this.dbOpenAddressing = dbOpenAddressing;
 	}
-	
-	
-	
+
 }

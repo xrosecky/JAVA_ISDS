@@ -12,25 +12,23 @@ import java.io.InputStream;
  */
 public class FileContent implements Content {
 
-    private File file;
+	private File file;
 
-    public FileContent(File file) {
-        this.file = file;
-    }
-    
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
-    }
+	public FileContent(File file) {
+		this.file = file;
+	}
 
-    public long estimatedSize() {
-        return file.length();
-    }
+	public InputStream getInputStream() throws IOException {
+		return new FileInputStream(file);
+	}
 
-    
-    
-    @Override
-    public String toString() {
-        return file.getAbsolutePath();
-    }
-    
+	public long estimatedSize() {
+		return file.length();
+	}
+
+	@Override
+	public String toString() {
+		return file.getAbsolutePath();
+	}
+
 }

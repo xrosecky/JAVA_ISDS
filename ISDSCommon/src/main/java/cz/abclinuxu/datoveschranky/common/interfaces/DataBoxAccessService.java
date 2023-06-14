@@ -7,13 +7,14 @@ import cz.abclinuxu.datoveschranky.common.entities.UserInfo;
 
 public interface DataBoxAccessService {
 
-    OwnerInfo GetOwnerInfoFromLogin();
+	OwnerInfo GetOwnerInfoFromLogin();
 
-    UserInfo GetUserInfoFromLogin();
+	UserInfo GetUserInfoFromLogin();
 
-    /**
-     * Vraci datum expirace hesla
-     * @return
-     */
-    GregorianCalendar GetPasswordInfo();
+	/**
+	 * Vraci datum expirace hesla
+	 * 
+	 * @return
+	 */
+	GregorianCalendar GetPasswordInfo();
 }

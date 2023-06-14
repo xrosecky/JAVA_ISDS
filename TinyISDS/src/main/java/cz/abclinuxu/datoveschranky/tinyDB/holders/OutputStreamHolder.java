@@ -12,31 +12,32 @@ import java.io.OutputStreamWriter;
  * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
-public class OutputStreamHolder implements OutputHolder<OutputStream>, Closeable {
+public class OutputStreamHolder implements OutputHolder<OutputStream>,
+		Closeable {
 
-    private final OutputStream os;
-    private final BufferedWriter bw;
-    
-    public OutputStreamHolder(OutputStream os) {
-        this.os = os;
-        bw = new BufferedWriter(new OutputStreamWriter(os));
-    }
-    
-    public void write(char[] array, int start, int length) {
-        try {
-            bw.write(array, start, length);
-            bw.flush();
-        } catch (IOException ioe) {
-            throw new RuntimeException("Nemohu zapisovat do bufferu", ioe);
-        }
-    }
-    
-    public OutputStream getResult() {
-        return os;
-    }
-    
-    public void close() {
-        Utils.close(bw, os);
-    }
+	private final OutputStream os;
+	private final BufferedWriter bw;
+
+	public OutputStreamHolder(OutputStream os) {
+		this.os = os;
+		bw = new BufferedWriter(new OutputStreamWriter(os));
+	}
+
+	public void write(char[] array, int start, int length) {
+		try {
+			bw.write(array, start, length);
+			bw.flush();
+		} catch (IOException ioe) {
+			throw new RuntimeException("Nemohu zapisovat do bufferu", ioe);
+		}
+	}
+
+	public OutputStream getResult() {
+		return os;
+	}
+
+	public void close() {
+		Utils.close(bw, os);
+	}
 
 }

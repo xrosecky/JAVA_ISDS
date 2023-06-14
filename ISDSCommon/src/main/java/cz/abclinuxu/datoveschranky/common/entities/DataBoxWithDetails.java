@@ -6,39 +6,39 @@
 package cz.abclinuxu.datoveschranky.common.entities;
 
 /**
- *
+ * 
  * @author xrosecky
  */
 public class DataBoxWithDetails extends DataBox {
 
-    private Address addressDetail;
-    private String IC;
-    private boolean openAddressing;
+	private Address addressDetail;
+	private String IC;
+	private boolean openAddressing;
 
-    public DataBoxWithDetails() {
-    }
+	public DataBoxWithDetails() {
+	}
 
-    public DataBoxWithDetails(String id) {
-        super(id);
-    }
+	public DataBoxWithDetails(String id) {
+		super(id);
+	}
 
-    public Address getAddressDetails() {
-        return addressDetail;
-    }
+	public Address getAddressDetails() {
+		return addressDetail;
+	}
 
-    public void setAddressDetails(Address address) {
-        this.addressDetail = address;
-    }
+	public void setAddressDetails(Address address) {
+		this.addressDetail = address;
+	}
 
-    public String getIC() {
-        return IC;
-    }
+	public String getIC() {
+		return IC;
+	}
 
-    public void setIC(String ic) {
-        this.IC = ic;
-    }
+	public void setIC(String ic) {
+		this.IC = ic;
+	}
 
-    public boolean isOpenAddressing() {
+	public boolean isOpenAddressing() {
 		return openAddressing;
 	}
 
@@ -47,12 +47,12 @@ public class DataBoxWithDetails extends DataBox {
 	}
 
 	@Override
-    public String toString() {
-	if (this.getIC() != null) {
-	    return "IC:" + this.getIC() + " " + super.toString();
-	} else {
-	    return super.toString();
+	public String toString() {
+		if (this.getIC() != null) {
+			return "IC:" + this.getIC() + " " + super.toString();
+		} else {
+			return super.toString();
+		}
 	}
-    }
 
 }

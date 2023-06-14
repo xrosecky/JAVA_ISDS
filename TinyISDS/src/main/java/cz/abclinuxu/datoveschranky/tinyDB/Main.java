@@ -17,71 +17,83 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- *
+ * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
 public class Main {
-    
-    public static void main(String[] args) throws Exception {
-        if (args.length != 4) {
-            String readMe = Utils.readResourceAsString(Main.class, "/readme.txt");
-            System.err.println(readMe);
-            System.exit(1);
-        }
-        String type = args[0];
-        String loginName = args[1];
-        String password = args[2];
-        String directory = args[3];
-        download(type, loginName, password, directory);
-    }
 
-    public static void download(String type, String loginName, String password, String directory) throws Exception {
-        File whereToPutFiles = new File(directory);
-        String url = type.equals("production")?Config.PRODUCTION_URL:Config.TEST_URL;
-        Config config = new Config(url);
-        DataBoxServices services = DataBoxManager.login(config, loginName, password);
-        DataBoxMessagesService messagesService = services.getDataBoxMessagesService();
-        DataBoxDownloadService downloadService = services.getDataBoxDownloadService();
-        GregorianCalendar begin = new GregorianCalendar();
-        begin.roll(Calendar.DAY_OF_YEAR, -28);
-        GregorianCalendar end = new GregorianCalendar();
-        end.roll(Calendar.DAY_OF_YEAR, 1);
-        List<MessageEnvelope> messages = messagesService.getListOfReceivedMessages(begin.getTime(), end.getTime(), null, 0, 15);
-        FileAttachmentStorer storer = new FileAttachmentStorer(whereToPutFiles);
-        for (MessageEnvelope envelope : messages) {
-            // uložíme celou podepsanou zprávu
-            FileOutputStream fos = new FileOutputStream(new File(whereToPutFiles,
-                    envelope.getMessageID() + ".bin"));
-            try {
-                downloadService.downloadSignedMessage(envelope, fos);
-            } finally {
-                fos.close();
-            }
-            // stáhneme přílohy ke zprávě
-            List<Attachment> attachments = downloadService.downloadMessage(envelope, storer).getAttachments();
-            Hash hash = messagesService.verifyMessage(envelope);
-            print(envelope, attachments, hash);
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		if (args.length != 4) {
+			String readMe = Utils.readResourceAsString(Main.class,
+					"/readme.txt");
+			System.err.println(readMe);
+			System.exit(1);
+		}
+		String type = args[0];
+		String loginName = args[1];
+		String password = args[2];
+		String directory = args[3];
+		download(type, loginName, password, directory);
+	}
 
-    public static void print(MessageEnvelope envelope, List<Attachment> attachments, Hash hash) {
-        String sep = "=======================================";
-            sep = sep + sep;
-            System.out.println(sep);
-            DataBox sender = envelope.getSender();
-            System.out.println(String.format("Odesilatel: %s (%s)", sender.getIdentity(),
-                    sender.getAddress()));
-            System.out.println("Jednoznacne ID zpravy: " + envelope.getMessageID());
-            System.out.println("Predmet zpravy: " + envelope.getAnnotation());
-            System.out.println("Zprava byla prijata: " + envelope.getDeliveryTime().getTime());
-            System.out.println("Zprava byla akceptovana: " + envelope.getAcceptanceTime().getTime());
-            System.out.println("Hash zpravy je: " + hash);
-            System.out.println("Seznam priloh zpravy:");
-            for (Attachment attachment : attachments) {
-                System.out.println("       "+ attachment.getDescription() + " -> " +
-                        attachment.getContent().toString());
-            }
-            System.out.println(sep);
-    }
+	public static void download(String type, String loginName, String password,
+			String directory) throws Exception {
+		File whereToPutFiles = new File(directory);
+		String url = type.equals("production") ? Config.PRODUCTION_URL
+				: Config.TEST_URL;
+		Config config = new Config(url);
+		DataBoxServices services = DataBoxManager.login(config, loginName,
+				password);
+		DataBoxMessagesService messagesService = services
+				.getDataBoxMessagesService();
+		DataBoxDownloadService downloadService = services
+				.getDataBoxDownloadService();
+		GregorianCalendar begin = new GregorianCalendar();
+		begin.roll(Calendar.DAY_OF_YEAR, -28);
+		GregorianCalendar end = new GregorianCalendar();
+		end.roll(Calendar.DAY_OF_YEAR, 1);
+		List<MessageEnvelope> messages = messagesService
+				.getListOfReceivedMessages(begin.getTime(), end.getTime(),
+						null, 0, 15);
+		FileAttachmentStorer storer = new FileAttachmentStorer(whereToPutFiles);
+		for (MessageEnvelope envelope : messages) {
+			// uložíme celou podepsanou zprávu
+			FileOutputStream fos = new FileOutputStream(new File(
+					whereToPutFiles, envelope.getMessageID() + ".bin"));
+			try {
+				downloadService.downloadSignedMessage(envelope, fos);
+			} finally {
+				fos.close();
+			}
+			// stáhneme přílohy ke zprávě
+			List<Attachment> attachments = downloadService.downloadMessage(
+					envelope, storer).getAttachments();
+			Hash hash = messagesService.verifyMessage(envelope);
+			print(envelope, attachments, hash);
+		}
+	}
+
+	public static void print(MessageEnvelope envelope,
+			List<Attachment> attachments, Hash hash) {
+		String sep = "=======================================";
+		sep = sep + sep;
+		System.out.println(sep);
+		DataBox sender = envelope.getSender();
+		System.out.println(String.format("Odesilatel: %s (%s)",
+				sender.getIdentity(), sender.getAddress()));
+		System.out.println("Jednoznacne ID zpravy: " + envelope.getMessageID());
+		System.out.println("Predmet zpravy: " + envelope.getAnnotation());
+		System.out.println("Zprava byla prijata: "
+				+ envelope.getDeliveryTime().getTime());
+		System.out.println("Zprava byla akceptovana: "
+				+ envelope.getAcceptanceTime().getTime());
+		System.out.println("Hash zpravy je: " + hash);
+		System.out.println("Seznam priloh zpravy:");
+		for (Attachment attachment : attachments) {
+			System.out.println("       " + attachment.getDescription() + " -> "
+					+ attachment.getContent().toString());
+		}
+		System.out.println(sep);
+	}
 
 }

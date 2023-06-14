@@ -17,43 +17,52 @@ import java.util.List;
  */
 public interface DataBoxSearchService {
 
-    /**
-     * Vráti stav schránky.
-     * 
-     * @param db  datová schránka
-     */
-    public DataBoxState checkDataBox(DataBox db);
+	/**
+	 * Vráti stav schránky.
+	 * 
+	 * @param db
+	 *            datová schránka
+	 */
+	public DataBoxState checkDataBox(DataBox db);
 
-    /**
-     * Vrátí datovou schránku s daným id pokud existuje, v opačném případě 
-     * vrátí null
-     * 
-     * @param id  ID datové schránky
-     */
-    public DataBoxWithDetails findDataBoxByID(String id);
+	/**
+	 * Vrátí datovou schránku s daným id pokud existuje, v opačném případě vrátí
+	 * null
+	 * 
+	 * @param id
+	 *            ID datové schránky
+	 */
+	public DataBoxWithDetails findDataBoxByID(String id);
 
-    /**
-     * Vrátí seznam datových schránek OVM, jejichž jméno začína na prefix.
-     * 
-     * @param prefix  prefix jména OVM
-     */
-    public List<DataBoxWithDetails> findOVMsByName(String prefix);
+	/**
+	 * Vrátí seznam datových schránek OVM, jejichž jméno začína na prefix.
+	 * 
+	 * @param prefix
+	 *            prefix jména OVM
+	 */
+	public List<DataBoxWithDetails> findOVMsByName(String prefix);
 
-    /**
-     * Vrátí seznam datových schránek OVM, jež vyhovují dotazu.
-     *
-     * @param type    typ schránky (povinný atribut)
-     * @param what    co se má hledat (hledá se podle atributů, co nejsou null, více dokumentace k ISDS)
-     */
-    public List<DataBoxWithDetails> find(DataBoxType type, DataBoxWithDetails what);
+	/**
+	 * Vrátí seznam datových schránek OVM, jež vyhovují dotazu.
+	 * 
+	 * @param type
+	 *            typ schránky (povinný atribut)
+	 * @param what
+	 *            co se má hledat (hledá se podle atributů, co nejsou null, více
+	 *            dokumentace k ISDS)
+	 */
+	public List<DataBoxWithDetails> find(DataBoxType type,
+			DataBoxWithDetails what);
 
-    public DataBoxSearchResult find(DataBoxQuery query);
+	public DataBoxSearchResult find(DataBoxQuery query);
 
-    /**
-     * Vrátí seznam datových schránek OVM, jež vyhovují dotazu.
-     *
-     * @param what    co se má hledat (hledá se podle atributů, co nejsou null, více dokumentace k ISDS)
-     */
-    public SearchResult find(DataBoxWithDetails what);
+	/**
+	 * Vrátí seznam datových schránek OVM, jež vyhovují dotazu.
+	 * 
+	 * @param what
+	 *            co se má hledat (hledá se podle atributů, co nejsou null, více
+	 *            dokumentace k ISDS)
+	 */
+	public SearchResult find(DataBoxWithDetails what);
 
 }

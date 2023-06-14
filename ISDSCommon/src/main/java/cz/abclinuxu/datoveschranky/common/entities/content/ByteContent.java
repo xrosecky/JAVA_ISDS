@@ -5,26 +5,26 @@ import java.io.InputStream;
 
 /**
  * Obsah přílohy uložený v bytovém poli v paměti.
- *  
+ * 
  * @author Vaclav Rosecky <xrosecky 'at' gmail 'dot' com>
  */
 public class ByteContent implements Content {
 
-    byte[] content;
+	byte[] content;
 
-    public ByteContent(byte[] cont) {
-        this.content = cont;
-    }
+	public ByteContent(byte[] cont) {
+		this.content = cont;
+	}
 
-    public InputStream getInputStream() {
-        return new ByteArrayInputStream(content);
-    }
+	public InputStream getInputStream() {
+		return new ByteArrayInputStream(content);
+	}
 
-    public byte[] getBytes() {
-        return content;
-    }
+	public byte[] getBytes() {
+		return content;
+	}
 
-    public long estimatedSize() {
-        return content.length;
-    }
+	public long estimatedSize() {
+		return content.length;
+	}
 }

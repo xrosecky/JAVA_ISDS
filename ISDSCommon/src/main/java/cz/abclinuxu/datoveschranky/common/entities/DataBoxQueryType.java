@@ -2,10 +2,7 @@ package cz.abclinuxu.datoveschranky.common.entities;
 
 public enum DataBoxQueryType {
 
-	GENERAL("GENERAL"),
-	ADDRESS("ADDRESS"),
-	ICO("ICO"),
-	DBID("DBID");
+	GENERAL("GENERAL"), ADDRESS("ADDRESS"), ICO("ICO"), DBID("DBID");
 
 	private final String type;
 

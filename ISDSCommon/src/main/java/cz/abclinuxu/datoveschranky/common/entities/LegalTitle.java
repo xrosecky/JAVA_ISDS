@@ -6,8 +6,9 @@ public class LegalTitle {
 	private String sect;
 	private String par;
 	private String point;
-	
-	public LegalTitle(String law, String year, String sect, String par, String point) {
+
+	public LegalTitle(String law, String year, String sect, String par,
+			String point) {
 		super();
 		this.law = law;
 		this.year = year;
@@ -35,8 +36,5 @@ public class LegalTitle {
 	public String getPoint() {
 		return point;
 	}
-	
-	
-	
-	
+
 }

@@ -1,108 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>JAVA_ISDS</artifactId>
-    <groupId>cz.abclinuxu.datoveschranky</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>cz.abclinuxu.datoveschranky</groupId>
-  <artifactId>ISDSWebServices</artifactId>
-  <version>1.1-SNAPSHOT</version>
-  <name>ISDSWebServices</name>
-  <url>http://maven.apache.org</url>
-  
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.ws</groupId>
-      <artifactId>jaxws-rt</artifactId>
-      <version>2.3.3</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>mimepull</artifactId>
-            <groupId>org.jvnet</groupId>
-          </exclusion>
-        </exclusions>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/wsdl</directory>
-      </resource>
-    </resources>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>JAVA_ISDS</artifactId>
+		<groupId>cz.abclinuxu.datoveschranky</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<groupId>cz.abclinuxu.datoveschranky</groupId>
+	<artifactId>ISDSWebServices</artifactId>
+	<version>1.1-SNAPSHOT</version>
+	<name>ISDSWebServices</name>
+	<url>http://maven.apache.org</url>
 
-    <plugins>     
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxws-maven-plugin</artifactId>
-        <version>2.4.1</version>
-        <configuration>
-          <!-- Needed with JAXP 1.5 -->
-          <vmArgs>
-            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-          </vmArgs>
-        </configuration>
-        <executions>
-          <execution>
-            <id>db</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <target>2.0</target>
-              <staleFile>${project.build.directory}/jaxws/stale/wsdl.db.done</staleFile>
-              <packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
-              <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
-              <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
-              <extension>true</extension>
-              <wsdlFiles>
-                <wsdlFile>db_manipulations.wsdl</wsdlFile>
-                <wsdlFile>db_search.wsdl</wsdlFile>
-                <wsdlFile>db_access.wsdl</wsdlFile>
-              </wsdlFiles>
-            </configuration>
-            <goals>
-              <goal>wsimport</goal>
-            </goals>
-          </execution>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.3.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>mimepull</artifactId>
+					<groupId>org.jvnet</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 
-          <execution>
-            <id>dm</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <target>2.0</target>
-              <staleFile>${project.build.directory}/jaxws/stale/wsdl.dm.done</staleFile>
-              <packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
-              <sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
-              <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
-              <bindingDirectory>src/main/resources/wsdl</bindingDirectory>
-              <extension>true</extension>
-              <wsdlFiles> 
-                <wsdlFile>dm_info.wsdl</wsdlFile>
-                <wsdlFile>dm_operations.wsdl</wsdlFile>
-                <wsdlFile>dm_VoDZ.wsdl</wsdlFile>
-              </wsdlFiles> 
-            </configuration>
-            <goals>
-              <goal>wsimport</goal>
-            </goals>
-          </execution>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/wsdl</directory>
+			</resource>
+		</resources>
 
-        </executions>
-        
-      </plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<!-- Needed with JAXP 1.5 -->
+					<vmArgs>
+						<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+					</vmArgs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>db</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target>2.0</target>
+							<staleFile>${project.build.directory}/jaxws/stale/wsdl.db.done</staleFile>
+							<packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
+							<sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
+							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+							<extension>true</extension>
+							<wsdlFiles>
+								<wsdlFile>db_manipulations.wsdl</wsdlFile>
+								<wsdlFile>db_search.wsdl</wsdlFile>
+								<wsdlFile>db_access.wsdl</wsdlFile>
+							</wsdlFiles>
+						</configuration>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
 
-    </plugins>
-    
-  </build>
+					<execution>
+						<id>dm</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<target>2.0</target>
+							<staleFile>${project.build.directory}/jaxws/stale/wsdl.dm.done</staleFile>
+							<packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
+							<sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
+							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+							<bindingDirectory>src/main/resources/wsdl</bindingDirectory>
+							<extension>true</extension>
+							<wsdlFiles>
+								<wsdlFile>dm_info.wsdl</wsdlFile>
+								<wsdlFile>dm_operations.wsdl</wsdlFile>
+								<wsdlFile>dm_VoDZ.wsdl</wsdlFile>
+							</wsdlFiles>
+						</configuration>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+
+				</executions>
+
+			</plugin>
+
+		</plugins>
+
+	</build>
 </project>
