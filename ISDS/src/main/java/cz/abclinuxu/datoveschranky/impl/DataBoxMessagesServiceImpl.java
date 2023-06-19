@@ -198,6 +198,7 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 				isVODZ = record.isDmVODZ();
 			}
 			env.setVODZ(isVODZ);
+			env.setDmType(record.getDmType());
 			env.setState(MessageState.valueOf(record.getDmMessageStatus()
 					.intValue()));
 			// identifikace zprávy odesílatelem
