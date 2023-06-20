@@ -305,6 +305,10 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 				owner.getAdZipCode(), owner.getAdCity(), owner.getAdState());
 		result.setAddress(address);
 		result.setIC(owner.getIc());
+		result.setFirmName(owner.getFirmName());
+		result.setPnFirstName(owner.getPnFirstName());
+		result.setPnMiddleName(owner.getPnMiddleName());
+		result.setPnLastName(owner.getPnLastName());
 		Address addressDetail = new Address();
 		addressDetail.setCity(owner.getAdCity());
 		addressDetail
