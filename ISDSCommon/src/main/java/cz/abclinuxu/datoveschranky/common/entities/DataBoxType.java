@@ -18,10 +18,10 @@ public enum DataBoxType {
 	PFO_ADVOK("PFO_ADVOK", 31), // DS advokáta (od 1. 7. 2012)
 	PFO_DANPOR("PFO_DANPOR", 32), // DS daňového poradce (od 1. 7. 2012)
 	PFO_INSSPR("PFO_INSSPR", 33), // DS insolvenčního správce
-	PFO_AUDITOR("PFO_AUDITOR", 34), PFO_ZNALEC("PFO_ZNALEC", 35), PFO_TLUMOCNIK(
-			"PFO_TLUMOCNIK", 36), FO("FO", 40), // DS
-												// fyzické
-												// osoby,
+	PFO_AUDITOR("PFO_AUDITOR", 34),
+	PFO_ZNALEC("PFO_ZNALEC", 35),
+	PFO_TLUMOCNIK("PFO_TLUMOCNIK", 36),
+	FO("FO", 40), // DS fyzické osoby,
 	PFO_REQ("PFO_REQ", 50), TEST("TEST", 60);
 
 	private final String name;
