@@ -227,6 +227,10 @@ public class DataBoxManager implements DataBoxMessagesService,
 		throw new UnsupportedOperationException("Not supported.");
 	}
 
+	public MessageEnvelope getMessageEnvelope(MessageEnvelope envelope) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
 	private void loginImpl(String username, String password) throws Exception {
 		String userPassword = username + ":" + password;
 		Base64 base64 = new Base64(0, null, false);
