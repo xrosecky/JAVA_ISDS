@@ -117,4 +117,14 @@ public interface DataBoxMessagesService {
 	 */
 	public List<MessageStateChange> GetMessageStateChanges(Date from, Date to);
 
+	/**
+	 * Stáhne obálku zprávy
+	 *
+	 * @param envelope obálka zprávy
+	 *
+	 * @return obálka
+	 *
+	 */
+	public MessageEnvelope getMessageEnvelope(MessageEnvelope envelope);
+
 }

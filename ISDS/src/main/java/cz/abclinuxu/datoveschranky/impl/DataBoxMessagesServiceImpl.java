@@ -16,6 +16,8 @@ import cz.abclinuxu.datoveschranky.ws.dm.TDelivery;
 import cz.abclinuxu.datoveschranky.ws.dm.THash;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TRecordsArray;
+import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessageEnvelope;
+import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessageEnvelope.DmDm;
 import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesArray;
 import cz.abclinuxu.datoveschranky.ws.dm.TStateChangesRecord;
 import cz.abclinuxu.datoveschranky.ws.dm.TStatus;
@@ -159,6 +161,44 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 			throw new DataBoxException(
 					"Chyba pri zapisu do vystupniho proudu.", ioe);
 		}
+	}
+
+	public MessageEnvelope getMessageEnvelope(MessageEnvelope envelope) {
+		String dmId = envelope.getMessageID();
+		Holder<TReturnedMessageEnvelope> dmReturnedMessageEnvelope = new Holder<TReturnedMessageEnvelope>();
+		Holder<TStatus> dmStatus = new Holder<TStatus>();
+		dataMessageInfo.messageEnvelopeDownload(dmId, dmReturnedMessageEnvelope, dmStatus);
+		ErrorHandling.throwIfError(String.format(
+				"Nemohu stahnout obalku pro zpravu s id=%s.",
+				envelope.getMessageID()), dmStatus.value);
+		TReturnedMessageEnvelope message = dmReturnedMessageEnvelope.value;
+		MessageEnvelope result = new MessageEnvelope();
+		result.setDmType(message.getDmType());
+		if (message.getDmAcceptanceTime() != null) {
+			result.setAcceptanceTime(message.getDmAcceptanceTime().toGregorianCalendar());
+		}
+		if (message.getDmDeliveryTime() != null) {
+			result.setDeliveryTime(message.getDmDeliveryTime().toGregorianCalendar());
+		}
+		result.setVODZ(message.isDmVODZ());
+		DmDm dm = message.getDmDm();
+		result.setSender(new DataBox(dm.getDbIDSender(), dm.getDmSender() ,dm.getDmSenderAddress()));
+		result.setRecipient(new DataBox(dm.getDbIDRecipient(), dm.getDmRecipient(), dm.getDmRecipientAddress()));
+		result.setAnnotation(dm.getDmAnnotation());
+		result.setMessageID(dm.getDmID());
+		// identifikace zprávy odesílatelem
+		String senderIdent = dm.getDmSenderIdent();
+		String senderRefNumber = dm.getDmSenderRefNumber();
+		result.setSenderIdent(new DocumentIdent(senderRefNumber, senderIdent));
+		// identifikace zprávy příjemcem
+		String recipientIdent = message.getDmDm().getDmRecipientIdent();
+		String recipientRefNumber = dm.getDmRecipientRefNumber();
+		result.setRecipientIdent(new DocumentIdent(recipientRefNumber,
+				recipientIdent));
+		result.setToHands(dm.getDmToHands());
+		result.setAllowSubstDelivery(dm.isDmAllowSubstDelivery());
+		result.setPersonalDelivery(result.getPersonalDelivery());
+		return result;
 	}
 
 	protected List<MessageEnvelope> createMessages(TRecordsArray records,
