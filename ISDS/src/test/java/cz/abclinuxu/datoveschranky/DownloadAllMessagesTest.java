@@ -59,12 +59,10 @@ public class DownloadAllMessagesTest {
 				String id = envelope.getMessageID();
 				Assert.assertFalse(seen.contains(id));
 				seen.add(id);
-				if (envelope.getState().canBeDownloaded()) {
+				if (envelope.getState().canBeDownloaded() && !envelope.isVODZ()) {
 					Message mess = downloadService.downloadMessage(envelope,
 							new ByteArrayAttachmentStorer());
-				} else {
-					System.out.println("Skipping message with state:"
-							+ envelope.getState().toString());
+					Assert.assertNotNull(mess);
 				}
 			}
 		}
@@ -72,7 +70,6 @@ public class DownloadAllMessagesTest {
 				.getListOfReceivedMessages(begin.getTime(), end.getTime(),
 						null, 0, MAX);
 		Assert.assertEquals(seen.size(), messages.size());
-		System.out.println(seen.size());
 	}
 
 }

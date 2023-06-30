@@ -206,31 +206,31 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 		List<MessageEnvelope> result = new ArrayList<MessageEnvelope>();
 		for (TRecord record : records.getDmRecord()) {
 			// odesílatel
-			String senderID = record.getDbIDSender().getValue();
-			String senderIdentity = record.getDmSender().getValue();
-			String senderAddress = record.getDmSenderAddress().getValue();
+			String senderID = record.getDbIDSender();
+			String senderIdentity = record.getDmSender();
+			String senderAddress = record.getDmSenderAddress();
 			DataBox sender = new DataBox(senderID, senderIdentity,
 					senderAddress);
 			// příjemce
-			String recipientID = record.getDbIDRecipient().getValue();
-			String recipientIdentity = record.getDmRecipient().getValue();
-			String recipientAddress = record.getDmRecipientAddress().getValue();
+			String recipientID = record.getDbIDRecipient();
+			String recipientIdentity = record.getDmRecipient();
+			String recipientAddress = record.getDmRecipientAddress();
 			DataBox recipient = new DataBox(recipientID, recipientIdentity,
 					recipientAddress);
 			// anotace
-			String annotation = record.getDmAnnotation().getValue();
+			String annotation = record.getDmAnnotation();
 			if (annotation == null) { // může se stát, že anotace je null...
 				annotation = "";
 			}
 			String messageID = record.getDmID();
 			MessageEnvelope env = new MessageEnvelope(type, sender, recipient,
 					messageID, annotation);
-			if (record.getDmAcceptanceTime().getValue() != null) {
-				env.setAcceptanceTime(record.getDmAcceptanceTime().getValue()
+			if (record.getDmAcceptanceTime() != null) {
+				env.setAcceptanceTime(record.getDmAcceptanceTime()
 						.toGregorianCalendar());
 			}
-			if (record.getDmDeliveryTime().getValue() != null) {
-				env.setDeliveryTime(record.getDmDeliveryTime().getValue()
+			if (record.getDmDeliveryTime() != null) {
+				env.setDeliveryTime(record.getDmDeliveryTime()
 						.toGregorianCalendar());
 			}
 			boolean isVODZ = false;
@@ -242,19 +242,17 @@ public class DataBoxMessagesServiceImpl implements DataBoxMessagesService {
 			env.setState(MessageState.valueOf(record.getDmMessageStatus()
 					.intValue()));
 			// identifikace zprávy odesílatelem
-			String senderIdent = record.getDmSenderIdent().getValue();
-			String senderRefNumber = record.getDmSenderRefNumber().getValue();
+			String senderIdent = record.getDmSenderIdent();
+			String senderRefNumber = record.getDmSenderRefNumber();
 			env.setSenderIdent(new DocumentIdent(senderRefNumber, senderIdent));
 			// identifikace zprávy příjemcem
-			String recipientIdent = record.getDmRecipientIdent().getValue();
-			String recipientRefNumber = record.getDmRecipientRefNumber()
-					.getValue();
+			String recipientIdent = record.getDmRecipientIdent();
+			String recipientRefNumber = record.getDmRecipientRefNumber();
 			env.setRecipientIdent(new DocumentIdent(recipientRefNumber,
 					recipientIdent));
-			env.setToHands(record.getDmToHands().getValue());
-			env.setAllowSubstDelivery(record.getDmAllowSubstDelivery()
-					.getValue());
-			env.setPersonalDelivery(record.getDmPersonalDelivery().getValue());
+			env.setToHands(record.getDmToHands());
+			env.setAllowSubstDelivery(record.isDmAllowSubstDelivery());
+			env.setPersonalDelivery(record.isDmPersonalDelivery());
 			// a máme hotovo :-)
 			result.add(env);
 		}

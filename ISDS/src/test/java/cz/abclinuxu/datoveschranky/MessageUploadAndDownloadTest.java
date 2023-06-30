@@ -1,6 +1,7 @@
 package cz.abclinuxu.datoveschranky;
 
 import cz.abclinuxu.datoveschranky.common.entities.Attachment;
+import cz.abclinuxu.datoveschranky.common.entities.BigMessage;
 import cz.abclinuxu.datoveschranky.common.entities.DataBox;
 import cz.abclinuxu.datoveschranky.common.entities.DeliveryInfo;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
@@ -8,11 +9,13 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
+import cz.abclinuxu.datoveschranky.common.entities.UploadedAttachment;
 import cz.abclinuxu.datoveschranky.common.entities.content.ByteContent;
 import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.impl.MessageValidator;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +23,9 @@ import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -70,6 +75,13 @@ public class MessageUploadAndDownloadTest {
 		DataBoxServices services = helper.connectAsFO();
 		String recipientID = helper.getProperties().getProperty("ovm.id");
 		testSendMessage(services, recipientID);
+	}
+
+	//@Test
+	public void testSendBigMessageAsFO() throws Exception {
+		DataBoxServices services = helper.connectAsFO();
+		String recipientID = helper.getProperties().getProperty("ovm.id");
+		testSendBigMessage(services, recipientID);
 	}
 
 	@Test
@@ -160,6 +172,25 @@ public class MessageUploadAndDownloadTest {
 		}
 	}
 
+	private void testSendBigMessage(DataBoxServices services, String recipientID)
+			throws Exception {
+		DataBoxUploadService uploadService = services.getDataBoxUploadService();
+		MessageEnvelope env = new MessageEnvelope();
+		env.setRecipient(new DataBox(recipientID));
+		env.setAnnotation("Óda_na_příliš_žluťoučkého_koně");
+		List<UploadedAttachment> uploadedAttachments = new ArrayList<UploadedAttachment>();
+		Attachment attachment = new Attachment();
+		attachment.setDescription("ahoj.xml");
+		attachment.setMetaType("main");
+		attachment.setMimeType("text/plain");
+		attachment.setContents(new ByteContent("TEST".getBytes("UTF-8")));
+		UploadedAttachment uploadedAttachment = uploadService.uploadAttachment(attachment);
+		uploadedAttachments.add(uploadedAttachment);
+		// a ted ji poslem
+		BigMessage message = new BigMessage(env, null, uploadedAttachments);
+		uploadService.sendBigMessage(message);
+	}
+	
 	private void testGetListOfSentMessages(DataBoxServices services)
 			throws Exception {
 		List<MessageEnvelope> messages = services.getDataBoxMessagesService()

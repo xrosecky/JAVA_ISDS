@@ -25,12 +25,14 @@ import cz.abclinuxu.datoveschranky.ws.dm.TMessDownOutput;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage;
 import cz.abclinuxu.datoveschranky.ws.dm.TReturnedMessage.DmDm;
 import cz.abclinuxu.datoveschranky.ws.dm.TSignedMessDownOutput;
+import cz.abclinuxu.datoveschranky.ws.jaxb.GetDeliveryInfoResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -146,7 +148,7 @@ public class MessageValidator {
 		}
 		TMessDownOutput out = (TMessDownOutput) ((JAXBElement) result.value)
 				.getValue();
-		TReturnedMessage tMessage = out.getDmReturnedMessage().getValue();
+		TReturnedMessage tMessage = out.getDmReturnedMessage();
 		MessageEnvelope envelope = null;
 		if (result.rootUri.endsWith("/v20/SentMessage")) {
 			envelope = this.buildMessageEnvelope(tMessage, MessageType.SENT);
@@ -182,14 +184,16 @@ public class MessageValidator {
 		byte[] asXML = validator.readPKCS7(asPCKS7);
 		MarshallerResult result = null;
 		try {
-			result = load(TDeliveryMessageOutput.class, asXML);
+			result = load(GetDeliveryInfoResponse.class, asXML);
 		} catch (Exception ex) {
 			throw new DataBoxException("Nemohu demarsalovat zpravu", ex);
 		}
+		GetDeliveryInfoResponse delivery = (GetDeliveryInfoResponse) result.value;
+		/*
 		TDeliveryMessageOutput delivery = (TDeliveryMessageOutput) ((JAXBElement) result.value)
 				.getValue();
-		return MessageValidator.buildDeliveryInfo(delivery.getDmDelivery()
-				.getValue());
+				*/
+		return MessageValidator.buildDeliveryInfo(delivery.getDmDelivery());
 	}
 
 	/**
@@ -382,7 +386,7 @@ public class MessageValidator {
 		TReturnedMessage tMessage = null;
 		if (value instanceof TMessDownOutput) {
 			TMessDownOutput out = ((TMessDownOutput) value);
-			tMessage = (TReturnedMessage) out.getDmReturnedMessage().getValue();
+			tMessage = (TReturnedMessage) out.getDmReturnedMessage();
 		} else if (value instanceof TSignedMessDownOutput) {
 			TSignedMessDownOutput out = ((TSignedMessDownOutput) value);
 			byte[] signature = out.getDmSignature();
@@ -437,6 +441,7 @@ public class MessageValidator {
 
 	private static <E> MarshallerResult load(Class<E> clazz, byte[] what)
 			throws Exception {
+		try {
 		JAXBContext context = getContext(clazz);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		SAXParserFactory SAXfactory = SAXParserFactory.newInstance();
@@ -448,6 +453,10 @@ public class MessageValidator {
 				new ByteArrayInputStream(what)));
 		return new MarshallerResult(unmarshaller.unmarshal(source),
 				xmlFilter.rootURI);
+		} catch (Exception ex) {
+			System.out.println(new String(what, StandardCharsets.UTF_8));
+			throw ex;
+		}
 	}
 
 	private static JAXBContext getContext(Class<?> clazz) throws JAXBException {

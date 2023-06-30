@@ -1,6 +1,9 @@
 package cz.abclinuxu.datoveschranky.common.interfaces;
 
+import cz.abclinuxu.datoveschranky.common.entities.Attachment;
+import cz.abclinuxu.datoveschranky.common.entities.BigMessage;
 import cz.abclinuxu.datoveschranky.common.entities.Message;
+import cz.abclinuxu.datoveschranky.common.entities.UploadedAttachment;
 
 /**
  * Služba zodpovědná za odesílání zpráv.
@@ -16,5 +19,9 @@ public interface DataBoxUploadService {
 	 *            zpráva k odeslání
 	 */
 	public void sendMessage(Message mess);
+
+	public void sendBigMessage(BigMessage message);
+
+	public UploadedAttachment uploadAttachment(Attachment attachment);
 
 }
