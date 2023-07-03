@@ -66,6 +66,9 @@
 							<sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
 							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
 							<extension>true</extension>
+							<bindingFiles>
+								<bindingFile>${basedir}/src/bindings/binding.xjb</bindingFile>
+							</bindingFiles>
 							<wsdlFiles>
 								<wsdlFile>db_manipulations.wsdl</wsdlFile>
 								<wsdlFile>db_search.wsdl</wsdlFile>
@@ -88,6 +91,9 @@
 							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
 							<bindingDirectory>src/main/resources/wsdl</bindingDirectory>
 							<extension>true</extension>
+							<bindingFiles>
+								<bindingFile>${basedir}/src/bindings/binding.xjb</bindingFile>
+							</bindingFiles>
 							<wsdlFiles>
 								<wsdlFile>dm_info.wsdl</wsdlFile>
 								<wsdlFile>dm_operations.wsdl</wsdlFile>

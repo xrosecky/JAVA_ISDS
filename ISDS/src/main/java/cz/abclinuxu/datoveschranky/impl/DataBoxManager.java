@@ -82,8 +82,11 @@ public class DataBoxManager implements DataBoxServices {
 					.createService(
 							ServiceBuilder.createDmOperationsWebService(),
 							DmOperationsPortType.class, "dz");
+			DmVoDZPortType dataBigMessageOperationsService = auth
+					.createService(ServiceBuilder.createDmVoDZWebService(),
+							DmVoDZPortType.class, "vodz");
 			dataBoxUploadService = new DataBoxUploadServiceImpl(
-					dataMessageOperationsService);
+					dataMessageOperationsService, dataBigMessageOperationsService);
 		}
 		return dataBoxUploadService;
 	}

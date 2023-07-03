@@ -56,7 +56,10 @@ public class ThreadSafeDataBoxManager implements DataBoxServices {
 		DmOperationsPortType dataMessageOperationsService = auth.createService(
 				ServiceBuilder.createDmOperationsWebService(),
 				DmOperationsPortType.class, "dz");
-		return new DataBoxUploadServiceImpl(dataMessageOperationsService);
+		DmVoDZPortType dataBigMessageOperationsService = auth.createService(
+				ServiceBuilder.createDmVoDZWebService(), DmVoDZPortType.class,
+				"vodz");
+		return new DataBoxUploadServiceImpl(dataMessageOperationsService, dataBigMessageOperationsService);
 	}
 
 	public DataBoxSearchService getDataBoxSearchService() {
