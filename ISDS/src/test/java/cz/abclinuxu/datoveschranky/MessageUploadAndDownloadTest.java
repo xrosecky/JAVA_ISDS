@@ -9,9 +9,11 @@ import cz.abclinuxu.datoveschranky.common.entities.MessageEnvelope;
 import cz.abclinuxu.datoveschranky.common.entities.MessageState;
 import cz.abclinuxu.datoveschranky.common.entities.MessageStateChange;
 import cz.abclinuxu.datoveschranky.common.entities.MessageType;
+import cz.abclinuxu.datoveschranky.common.entities.StatusCode;
 import cz.abclinuxu.datoveschranky.common.entities.UploadedAttachment;
 import cz.abclinuxu.datoveschranky.common.entities.content.ByteContent;
 import cz.abclinuxu.datoveschranky.common.impl.ByteArrayAttachmentStorer;
+import cz.abclinuxu.datoveschranky.common.impl.DataBoxException;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxServices;
 import cz.abclinuxu.datoveschranky.common.interfaces.DataBoxUploadService;
 import cz.abclinuxu.datoveschranky.impl.MessageValidator;
@@ -239,10 +241,18 @@ public class MessageUploadAndDownloadTest {
 		List<MessageEnvelope> envelopes = services.getDataBoxMessagesService()
 				.getListOfReceivedMessages(begin.getTime(), end.getTime(),
 						null, 0, 15);
+		Message mess2  = null;
 		for (MessageEnvelope env : envelopes) {
 			Message mess1 = testIntegrity(services, env);
-			Message mess2 = services.getDataBoxDownloadService()
+			try {
+				mess2 = services.getDataBoxDownloadService()
 					.downloadMessage(env, new ByteArrayAttachmentStorer());
+			} catch (DataBoxException de) {
+				if (StatusCode.byCode(de.getStatus().getStatusCode()) == StatusCode.VODZ_SERVICE_MISMATCH) {
+					mess2 = services.getDataBoxDownloadService()
+						.downloadBigMessage(env, new ByteArrayAttachmentStorer());
+				}
+			}
 			List<Attachment> list1 = mess1.getAttachments();
 			List<Attachment> list2 = mess2.getAttachments();
 			Assert.assertEquals(list1.size(), list2.size());
@@ -260,8 +270,15 @@ public class MessageUploadAndDownloadTest {
 			MessageEnvelope envelope) throws Exception {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
+			try {
 			services.getDataBoxDownloadService().downloadSignedMessage(
 					envelope, os);
+			} catch (DataBoxException de) {
+				if (StatusCode.byCode(de.getStatus().getStatusCode()) == StatusCode.VODZ_SERVICE_MISMATCH) {
+					services.getDataBoxDownloadService()
+						.downloadSignedBigMessage(envelope, os);
+				}
+			}
 		} finally {
 			os.close();
 		}
