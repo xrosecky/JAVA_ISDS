@@ -8,18 +8,20 @@ public enum StatusCode {
 	TOO_GENERIC_SEARCH_QUERY("0003", "Výběr zadán příliš obecně, výsledků je příliš mnoho", false),
 	TIMESTAMP_COULD_NOT_BE_OBTAINED("0005", "Nepodařilo se získat časové razítko pro elektronickou pečeť MV (pečetění datové zprávy při jejím stažení)", true),
 	PDZ_NOT_ALLOWED("0009", "Do této schránky není možno zaslat Poštovní datovou zprávu", false),
-	SENDING_PDZ_NOT_ALLOWED("1232", "Odesilatel ani příjemce datové zprávy není OVM a příjemce nedovolil příjem Poštovních datových zpráv", false),
-	SENDING_INITIATORY_PDZ_WITHOUT_CONTRACT_NOT_ALLOWED("1242", "Není možné zasílat iniciační datovou zprávu bez smlouvy s provozovatelem systému", false),
-	REPLY_PDZ_EXPIRED("1234", "Nemáte možnost odesílat odpovědní zprávu do zvolené schránky s identifikátorem uvedeným v poli pro Vaše číslo jednací", false),
-	ATTACHMENTS_FOR_BIG_MESSAGE_UNDER_MINIMAL_SIZE("1297", "Přílohy datové zprávy nedosahují minimální délky pro VODZ", false),
-	ATTACHMENTS_SIZE_EXCEEDED("1296", "Přílohy datové zprávy přesahují povolenu délku", false),
 	MESSAGE_TOO_BIG("1200", "Překročen limit na velikost datové zprávy", false),
-	INFORMATION_STATES("0000", "INFORMATION_STATES", false),
+	SENDING_PDZ_NOT_ALLOWED("1232", "Odesilatel ani příjemce datové zprávy není OVM a příjemce nedovolil příjem Poštovních datových zpráv", false),
+	REPLY_PDZ_EXPIRED("1234", "Nemáte možnost odesílat odpovědní zprávu do zvolené schránky s identifikátorem uvedeným v poli pro Vaše číslo jednací", false),
+	SENDING_INITIATORY_PDZ_WITHOUT_CONTRACT_NOT_ALLOWED("1242", "Není možné zasílat iniciační datovou zprávu bez smlouvy s provozovatelem systému", false),
+	VODZ_SERVICE_MISMATCH("1281", "Zvolená služba není určena pro tento typ zprávy", false),
+	ATTACHMENTS_SIZE_EXCEEDED("1296", "Přílohy datové zprávy přesahují povolenu délku", false),
+	ATTACHMENTS_FOR_BIG_MESSAGE_UNDER_MINIMAL_SIZE("1297", "Přílohy datové zprávy nedosahují minimální délky pro VODZ", false),
 	// generic errors
+	INFORMATION_STATES("0000-1000", "INFORMATION_STATES", false),
 	VIOLATION_OF_APP_LOGIC_BY_A_CLIENT_REQ("1000-1999", " Narušení aplikační logiky klientským požadavkem", false),
 	WS_OR_XML_ERRORS("2000-2999", "Chyby ve struktuře webové komunikace a v zadaných XML datech", false),
 	SPECIAL_ERRORS("3000-3999", "Speciální chyby", true),
 	FUNCTIONAL_FAILURE("9000-9999", "Funkční selhání některé komponenty ISDS nebo externího zdroje", true),
+	// unknown error
 	UNKNOWN_ERROR("XXXX", "Neznámá chyba", false);
 
 	private final String code;
