@@ -50,7 +50,7 @@ public class ServiceBuilder {
 		QName qName = new QName("http://isds.czechpoint.cz/v20",
 				"DataBoxSupplementary");
 		URL url = ServiceBuilder.class
-				.getResource("/wsdl/db_supplementary.wsdl");
+				.getResource("/wsdl/db_access.wsdl");
 		return new DataBoxAccess(url, qName);
 	}
 
