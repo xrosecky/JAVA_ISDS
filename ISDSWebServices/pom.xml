@@ -65,10 +65,12 @@
 							<packageName>cz.abclinuxu.datoveschranky.ws.db</packageName>
 							<sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
 							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+							<wsdlLocation>classpath:wsdl/*</wsdlLocation>
 							<extension>true</extension>
-							<bindingFiles>
-								<bindingFile>${basedir}/src/bindings/binding.xjb</bindingFile>
-							</bindingFiles>
+							<args>
+								<arg>-b</arg>
+								<arg>src/bindings/binding.xjb</arg>
+							</args>
 							<wsdlFiles>
 								<wsdlFile>db_manipulations.wsdl</wsdlFile>
 								<wsdlFile>db_search.wsdl</wsdlFile>
@@ -89,11 +91,13 @@
 							<packageName>cz.abclinuxu.datoveschranky.ws.dm</packageName>
 							<sourceDestDir>target/generated-sources/wsdl</sourceDestDir>
 							<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
+							<wsdlLocation>classpath:wsdl/*</wsdlLocation>
 							<bindingDirectory>src/main/resources/wsdl</bindingDirectory>
 							<extension>true</extension>
-							<bindingFiles>
-								<bindingFile>${basedir}/src/bindings/binding.xjb</bindingFile>
-							</bindingFiles>
+							<args>
+								<arg>-b</arg>
+								<arg>src/bindings/binding.xjb</arg>
+							</args>
 							<wsdlFiles>
 								<wsdlFile>dm_info.wsdl</wsdlFile>
 								<wsdlFile>dm_operations.wsdl</wsdlFile>
