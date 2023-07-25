@@ -48,7 +48,7 @@ public class ServiceBuilder {
 
 	public static DataBoxAccess createDataBoxAccessService() {
 		QName qName = new QName("http://isds.czechpoint.cz/v20",
-				"DataBoxSupplementary");
+				"DataBoxAccess");
 		URL url = ServiceBuilder.class
 				.getResource("/wsdl/db_access.wsdl");
 		return new DataBoxAccess(url, qName);
