@@ -290,7 +290,11 @@ public class DataBoxSearchServiceImpl implements DataBoxSearchService {
 	static DataBoxWithDetails create(TDbOwnerInfoExt owner) {
 		DataBoxWithDetails result = new DataBoxWithDetails(owner.getDbID());
 		result.setDataBoxType(typesInverted.get(owner.getDbType()));
-		result.setIdentity(owner.getFirmName());
+		if (owner.getFirmName() != null) {
+			result.setIdentity(owner.getFirmName());
+		} else if (result.getDataBoxType() == DataBoxType.FO){
+			result.setIdentity(owner.getPnFirstName() + " " + owner.getPnLastName());
+		}
 		String street = null;
 		if (owner.getAdNumberInMunicipality() == null
 				|| owner.getAdNumberInMunicipality().trim().equals("")) {
